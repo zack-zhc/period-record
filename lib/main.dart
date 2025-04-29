@@ -1,0 +1,169 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:test_1/home_page.dart';
+import 'package:test_1/period.dart';
+import 'package:test_1/period_provider.dart';
+import 'package:test_1/stats_page.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
+void main() {
+  runApp(
+    MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => PeriodProvider())],
+      child: MaterialApp(home: const MainApp()),
+    ),
+  );
+}
+
+class MainApp extends StatefulWidget {
+  const MainApp({super.key});
+
+  @override
+  State<MainApp> createState() => _MainAppState();
+}
+
+// 然后修改_pages数组
+class _MainAppState extends State<MainApp> {
+  @override
+  void initState() {
+    super.initState();
+    // 使用addPostFrameCallback确保widget树已构建完成
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<PeriodProvider>(context, listen: false).loadPeriods();
+    });
+  }
+
+  int _currentIndex = 0;
+
+  final List<Widget> _pages = [
+    const HomePage(), // 使用新的主页组件
+    const StatsPage(), // 统计页
+  ];
+
+  Future<void> _showAddPeriodDialog(BuildContext context) async {
+    final dateRange = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+      initialDateRange: DateTimeRange(
+        start: DateTime.now(),
+        end: DateTime.now().add(const Duration(hours: 1)),
+      ),
+    );
+
+    if (dateRange != null && context.mounted) {
+      await Provider.of<PeriodProvider>(
+        context,
+        listen: false,
+      ).addPeriod(dateRange.start, dateRange.end);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<PeriodProvider>(
+      builder: (context, periodProvider, child) {
+        var title = '记录生理期';
+        if (_currentIndex == 1) {
+          title = '生理期记录统计';
+        }
+        return MaterialApp(
+          theme: ThemeData(useMaterial3: true),
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('zh', 'CN'), // 中文
+            Locale('en', 'US'), // 英文
+          ],
+          home: Scaffold(
+            body: _pages[_currentIndex],
+            appBar: AppBar(
+              title: Text(title),
+              actions:
+                  _currentIndex == 1
+                      ? [
+                        IconButton(
+                          onPressed: () => _showAddPeriodDialog(context),
+                          icon: const Icon(Icons.add),
+                        ),
+                      ]
+                      : null,
+            ),
+            floatingActionButton:
+                _currentIndex == 0
+                    ? FloatingActionButton(
+                      onPressed:
+                          () => {
+                            if (periodProvider.lastPeriod == null)
+                              {
+                                // 创建一个Period对象并添加到数据库中
+                                Provider.of<PeriodProvider>(
+                                  context,
+                                  listen: false,
+                                ).addPeriod(DateTime.now(), null),
+                              }
+                            else
+                              {
+                                if (periodProvider.lastPeriod!.end != null)
+                                  {
+                                    // 创建一个Period对象并添加到数据库中
+                                    Provider.of<PeriodProvider>(
+                                      context,
+                                      listen: false,
+                                    ).addPeriod(DateTime.now(), null),
+                                  }
+                                else
+                                  {
+                                    // 编辑最后一个周期的结束时间
+                                    Provider.of<PeriodProvider>(
+                                      context,
+                                      listen: false,
+                                    ).editPeriod(
+                                      Period.initialize(
+                                        start:
+                                            periodProvider.lastPeriod!.start!,
+                                        end: DateTime.now(),
+                                        id: periodProvider.lastPeriod!.id,
+                                      ),
+                                    ),
+                                  },
+                              },
+                          },
+                      child: Icon(
+                        periodProvider.lastPeriod == null
+                            ? Icons.add
+                            : (periodProvider.lastPeriod!.end != null
+                                ? Icons.add
+                                : Icons.check),
+                      ),
+                    )
+                    : null,
+            bottomNavigationBar: NavigationBar(
+              selectedIndex: _currentIndex,
+              onDestinationSelected: (index) {
+                setState(() {
+                  _currentIndex = index;
+                });
+              },
+              destinations: const [
+                NavigationDestination(
+                  icon: Icon(Icons.bar_chart_outlined),
+                  selectedIcon: Icon(Icons.bar_chart),
+                  label: '统计',
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.settings_outlined),
+                  selectedIcon: Icon(Icons.settings),
+                  label: '设置',
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
