@@ -49,7 +49,8 @@ class PeriodProvider with ChangeNotifier {
   }
 
   Future<void> addPeriod(DateTime? start, DateTime? end) async {
-    final period = Period.initialize(start: start!, end: end);
+    var id = await getIdFromDatabase();
+    final period = Period.initialize(start: start!, end: end, id: id);
     await _insertPeriod(period);
   }
 

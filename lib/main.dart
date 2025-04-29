@@ -81,7 +81,7 @@ class _MainAppState extends State<MainApp> {
           home: Scaffold(
             body: _pages[_currentIndex],
             appBar: AppBar(
-              title: Text(title),
+              title: Text(title, style: TextStyle(fontWeight: FontWeight.bold),),
               actions:
                   _currentIndex == 1
                       ? [
@@ -150,14 +150,14 @@ class _MainAppState extends State<MainApp> {
               },
               destinations: const [
                 NavigationDestination(
+                  icon: Icon(Icons.calendar_today_outlined),
+                  selectedIcon: Icon(Icons.calendar_today),
+                  label: '记录',
+                ),
+                NavigationDestination(
                   icon: Icon(Icons.bar_chart_outlined),
                   selectedIcon: Icon(Icons.bar_chart),
                   label: '统计',
-                ),
-                NavigationDestination(
-                  icon: Icon(Icons.settings_outlined),
-                  selectedIcon: Icon(Icons.settings),
-                  label: '设置',
                 ),
               ],
             ),

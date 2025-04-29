@@ -12,13 +12,14 @@ class StatsPage extends StatelessWidget {
       context: context,
       builder:
           (context) => AlertDialog(
-            title: const Text('确认删除'),
-            content: const Text('确定要删除这个周期记录吗？'),
+            title: const Text('要删除这个周期记录吗？'),
+            content: const Text('这将永久删除该记录。'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: const Text('取消'),
               ),
+
               TextButton(
                 onPressed: () {
                   Provider.of<PeriodProvider>(
@@ -27,7 +28,7 @@ class StatsPage extends StatelessWidget {
                   ).deletePeriod(period.id);
                   Navigator.pop(context);
                 },
-                child: const Text('删除', style: TextStyle(color: Colors.red)),
+                child: Text('删除'),
               ),
             ],
           ),
@@ -69,7 +70,12 @@ class StatsPage extends StatelessWidget {
         final periods = periodProvider.periods;
 
         if (periods.isEmpty) {
-          return const Center(child: Text('暂无生理期记录'));
+          return Center(
+            child: Text(
+              '没有生理期记录',
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+          );
         }
 
         return ListView.builder(
@@ -85,15 +91,18 @@ class StatsPage extends StatelessWidget {
               title += ' - $endDate';
             }
 
-            var days = -1;
+            var days = 0;
             if (period.start != null && period.end != null) {
-              days = period.end!.difference(period.start!).inDays + 1;
+              days = period.end!.difference(period.start!).inDays;
             }
             var subtitle = '';
             if (endDate == null) {
               subtitle = '该周期未结束';
             } else {
               subtitle = '该周期持续了 $days 天';
+              if (days == 0) {
+                subtitle = '该周期开始结束于同一天';
+              }
             }
 
             return Card(

@@ -18,7 +18,7 @@ class Period {
   factory Period.initialize({required DateTime start, DateTime? end, int? id}) {
     final now = DateTime.now();
     return Period(
-      id: 0, // 临时ID，插入数据库后会生成新ID
+      id: id ?? 0, // 临时ID，插入数据库后会生成新ID
       createdAt: now,
       start: start,
       end: end,
