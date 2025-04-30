@@ -74,14 +74,45 @@ class _MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMediumScreen = screenWidth >= 600; // 中等屏幕
+    final isExpandedScreen = screenWidth >= 840; // 扩展屏幕
+
     return Consumer<PeriodProvider>(
       builder: (context, periodProvider, child) {
         var title = '记录生理期';
         if (_currentIndex == 1) {
           title = '生理期记录统计';
         }
+
         return Scaffold(
-          body: _pages[_currentIndex],
+          body: Row(
+            children: [
+              if (isMediumScreen) // 中等和扩展屏幕都显示NavigationRail
+                NavigationRail(
+                  extended: isExpandedScreen, // 扩展屏幕时显示完整标签
+                  selectedIndex: _currentIndex,
+                  onDestinationSelected: (index) {
+                    setState(() {
+                      _currentIndex = index;
+                    });
+                  },
+                  destinations: const [
+                    NavigationRailDestination(
+                      icon: Icon(Icons.calendar_today_outlined),
+                      selectedIcon: Icon(Icons.calendar_today),
+                      label: Text('记录'),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.bar_chart_outlined),
+                      selectedIcon: Icon(Icons.bar_chart),
+                      label: Text('统计'),
+                    ),
+                  ],
+                ),
+              Expanded(child: _pages[_currentIndex]), // 主要内容区域
+            ],
+          ),
           appBar: AppBar(
             title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
             actions:
@@ -142,26 +173,30 @@ class _MainAppState extends State<MainApp> {
                     ),
                   )
                   : null,
-          bottomNavigationBar: NavigationBar(
-            selectedIndex: _currentIndex,
-            onDestinationSelected: (index) {
-              setState(() {
-                _currentIndex = index;
-              });
-            },
-            destinations: const [
-              NavigationDestination(
-                icon: Icon(Icons.calendar_today_outlined),
-                selectedIcon: Icon(Icons.calendar_today),
-                label: '记录',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.bar_chart_outlined),
-                selectedIcon: Icon(Icons.bar_chart),
-                label: '统计',
-              ),
-            ],
-          ),
+          bottomNavigationBar:
+              isMediumScreen
+                  ? null // 宽屏时不显示底部导航
+                  : NavigationBar(
+                    // 窄屏时显示底部导航
+                    selectedIndex: _currentIndex,
+                    onDestinationSelected: (index) {
+                      setState(() {
+                        _currentIndex = index;
+                      });
+                    },
+                    destinations: const [
+                      NavigationDestination(
+                        icon: Icon(Icons.calendar_today_outlined),
+                        selectedIcon: Icon(Icons.calendar_today),
+                        label: '记录',
+                      ),
+                      NavigationDestination(
+                        icon: Icon(Icons.bar_chart_outlined),
+                        selectedIcon: Icon(Icons.bar_chart),
+                        label: '统计',
+                      ),
+                    ],
+                  ),
         );
       },
     );
