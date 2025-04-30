@@ -45,6 +45,7 @@ class StatsPage extends StatelessWidget {
           period.start != null && period.end != null
               ? DateTimeRange(start: period.start!, end: period.end!)
               : null,
+      locale: Localizations.localeOf(context), // 确保使用当前语言环境
     );
 
     if (dateRange != null && context.mounted) {

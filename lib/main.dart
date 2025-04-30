@@ -10,7 +10,19 @@ void main() {
   runApp(
     MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => PeriodProvider())],
-      child: MaterialApp(home: const MainApp()),
+      child: MaterialApp(
+        theme: ThemeData(useMaterial3: true),
+        home: const MainApp(),
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('zh', 'CN'), // 中文简体
+          Locale('en', 'US'), // 英文
+        ],
+      ),
     ),
   );
 }
@@ -49,6 +61,7 @@ class _MainAppState extends State<MainApp> {
         start: DateTime.now(),
         end: DateTime.now().add(const Duration(hours: 1)),
       ),
+      locale: Localizations.localeOf(context), // 确保使用当前语言环境
     );
 
     if (dateRange != null && context.mounted) {
@@ -67,100 +80,87 @@ class _MainAppState extends State<MainApp> {
         if (_currentIndex == 1) {
           title = '生理期记录统计';
         }
-        return MaterialApp(
-          theme: ThemeData(useMaterial3: true),
-          localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: const [
-            Locale('zh', 'CN'), // 中文
-            Locale('en', 'US'), // 英文
-          ],
-          home: Scaffold(
-            body: _pages[_currentIndex],
-            appBar: AppBar(
-              title: Text(title, style: TextStyle(fontWeight: FontWeight.bold),),
-              actions:
-                  _currentIndex == 1
-                      ? [
-                        IconButton(
-                          onPressed: () => _showAddPeriodDialog(context),
-                          icon: const Icon(Icons.add),
-                        ),
-                      ]
-                      : null,
-            ),
-            floatingActionButton:
-                _currentIndex == 0
-                    ? FloatingActionButton(
-                      onPressed:
-                          () => {
-                            if (periodProvider.lastPeriod == null)
-                              {
-                                // 创建一个Period对象并添加到数据库中
-                                Provider.of<PeriodProvider>(
-                                  context,
-                                  listen: false,
-                                ).addPeriod(DateTime.now(), null),
-                              }
-                            else
-                              {
-                                if (periodProvider.lastPeriod!.end != null)
-                                  {
-                                    // 创建一个Period对象并添加到数据库中
-                                    Provider.of<PeriodProvider>(
-                                      context,
-                                      listen: false,
-                                    ).addPeriod(DateTime.now(), null),
-                                  }
-                                else
-                                  {
-                                    // 编辑最后一个周期的结束时间
-                                    Provider.of<PeriodProvider>(
-                                      context,
-                                      listen: false,
-                                    ).editPeriod(
-                                      Period.initialize(
-                                        start:
-                                            periodProvider.lastPeriod!.start!,
-                                        end: DateTime.now(),
-                                        id: periodProvider.lastPeriod!.id,
-                                      ),
-                                    ),
-                                  },
-                              },
-                          },
-                      child: Icon(
-                        periodProvider.lastPeriod == null
-                            ? Icons.add
-                            : (periodProvider.lastPeriod!.end != null
-                                ? Icons.add
-                                : Icons.check),
+        return Scaffold(
+          body: _pages[_currentIndex],
+          appBar: AppBar(
+            title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
+            actions:
+                _currentIndex == 1
+                    ? [
+                      IconButton(
+                        onPressed: () => _showAddPeriodDialog(context),
+                        icon: const Icon(Icons.add),
                       ),
-                    )
+                    ]
                     : null,
-            bottomNavigationBar: NavigationBar(
-              selectedIndex: _currentIndex,
-              onDestinationSelected: (index) {
-                setState(() {
-                  _currentIndex = index;
-                });
-              },
-              destinations: const [
-                NavigationDestination(
-                  icon: Icon(Icons.calendar_today_outlined),
-                  selectedIcon: Icon(Icons.calendar_today),
-                  label: '记录',
-                ),
-                NavigationDestination(
-                  icon: Icon(Icons.bar_chart_outlined),
-                  selectedIcon: Icon(Icons.bar_chart),
-                  label: '统计',
-                ),
-              ],
-            ),
+          ),
+          floatingActionButton:
+              _currentIndex == 0
+                  ? FloatingActionButton(
+                    onPressed:
+                        () => {
+                          if (periodProvider.lastPeriod == null)
+                            {
+                              // 创建一个Period对象并添加到数据库中
+                              Provider.of<PeriodProvider>(
+                                context,
+                                listen: false,
+                              ).addPeriod(DateTime.now(), null),
+                            }
+                          else
+                            {
+                              if (periodProvider.lastPeriod!.end != null)
+                                {
+                                  // 创建一个Period对象并添加到数据库中
+                                  Provider.of<PeriodProvider>(
+                                    context,
+                                    listen: false,
+                                  ).addPeriod(DateTime.now(), null),
+                                }
+                              else
+                                {
+                                  // 编辑最后一个周期的结束时间
+                                  Provider.of<PeriodProvider>(
+                                    context,
+                                    listen: false,
+                                  ).editPeriod(
+                                    Period.initialize(
+                                      start: periodProvider.lastPeriod!.start!,
+                                      end: DateTime.now(),
+                                      id: periodProvider.lastPeriod!.id,
+                                    ),
+                                  ),
+                                },
+                            },
+                        },
+                    child: Icon(
+                      periodProvider.lastPeriod == null
+                          ? Icons.add
+                          : (periodProvider.lastPeriod!.end != null
+                              ? Icons.add
+                              : Icons.check),
+                    ),
+                  )
+                  : null,
+          bottomNavigationBar: NavigationBar(
+            selectedIndex: _currentIndex,
+            onDestinationSelected: (index) {
+              setState(() {
+                _currentIndex = index;
+              });
+            },
+            destinations: const [
+              NavigationDestination(
+                icon: Icon(Icons.calendar_today_outlined),
+                selectedIcon: Icon(Icons.calendar_today),
+                label: '记录',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.bar_chart_outlined),
+                selectedIcon: Icon(Icons.bar_chart),
+                label: '统计',
+              ),
+            ],
           ),
         );
       },
