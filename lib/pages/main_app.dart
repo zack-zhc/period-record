@@ -4,6 +4,7 @@ import 'package:test_1/pages/home_page.dart';
 import 'package:test_1/period.dart';
 import 'package:test_1/period_provider.dart';
 import 'package:test_1/pages/stats_page.dart';
+import 'package:test_1/pages/settings_page.dart'; // 导入设置页面
 
 class MainApp extends StatefulWidget {
   const MainApp({super.key});
@@ -27,28 +28,8 @@ class _MainAppState extends State<MainApp> {
 
   final List<Widget> _pages = [
     const HomePage(), // 使用新的主页组件
-    const StatsPage(), // 统计页
+    const SettingsPage(), // 改为设置页
   ];
-
-  Future<void> _showAddPeriodDialog(BuildContext context) async {
-    final dateRange = await showDateRangePicker(
-      context: context,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-      initialDateRange: DateTimeRange(
-        start: DateTime.now(),
-        end: DateTime.now().add(const Duration(hours: 1)),
-      ),
-      locale: Localizations.localeOf(context), // 确保使用当前语言环境
-    );
-
-    if (dateRange != null && context.mounted) {
-      await Provider.of<PeriodProvider>(
-        context,
-        listen: false,
-      ).addPeriod(dateRange.start, dateRange.end);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,11 +39,6 @@ class _MainAppState extends State<MainApp> {
 
     return Consumer<PeriodProvider>(
       builder: (context, periodProvider, child) {
-        var title = '记录生理期';
-        if (_currentIndex == 1) {
-          title = '生理期记录统计';
-        }
-
         return Scaffold(
           body: Row(
             children: [
@@ -82,75 +58,15 @@ class _MainAppState extends State<MainApp> {
                       label: Text('记录'),
                     ),
                     NavigationRailDestination(
-                      icon: Icon(Icons.bar_chart_outlined),
-                      selectedIcon: Icon(Icons.bar_chart),
-                      label: Text('统计'),
+                      icon: Icon(Icons.settings_outlined),
+                      selectedIcon: Icon(Icons.settings),
+                      label: Text('设置'),
                     ),
                   ],
                 ),
               Expanded(child: _pages[_currentIndex]), // 主要内容区域
             ],
           ),
-          appBar: AppBar(
-            title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
-            actions:
-                _currentIndex == 1
-                    ? [
-                      IconButton(
-                        onPressed: () => _showAddPeriodDialog(context),
-                        icon: const Icon(Icons.add),
-                      ),
-                    ]
-                    : null,
-          ),
-          floatingActionButton:
-              _currentIndex == 0
-                  ? FloatingActionButton(
-                    onPressed:
-                        () => {
-                          if (periodProvider.lastPeriod == null)
-                            {
-                              // 创建一个Period对象并添加到数据库中
-                              Provider.of<PeriodProvider>(
-                                context,
-                                listen: false,
-                              ).addPeriod(DateTime.now(), null),
-                            }
-                          else
-                            {
-                              if (periodProvider.lastPeriod!.end != null)
-                                {
-                                  // 创建一个Period对象并添加到数据库中
-                                  Provider.of<PeriodProvider>(
-                                    context,
-                                    listen: false,
-                                  ).addPeriod(DateTime.now(), null),
-                                }
-                              else
-                                {
-                                  // 编辑最后一个周期的结束时间
-                                  Provider.of<PeriodProvider>(
-                                    context,
-                                    listen: false,
-                                  ).editPeriod(
-                                    Period.initialize(
-                                      start: periodProvider.lastPeriod!.start!,
-                                      end: DateTime.now(),
-                                      id: periodProvider.lastPeriod!.id,
-                                    ),
-                                  ),
-                                },
-                            },
-                        },
-                    child: Icon(
-                      periodProvider.lastPeriod == null
-                          ? Icons.add
-                          : (periodProvider.lastPeriod!.end != null
-                              ? Icons.add
-                              : Icons.check),
-                    ),
-                  )
-                  : null,
           bottomNavigationBar:
               isMediumScreen
                   ? null // 宽屏时不显示底部导航
@@ -169,9 +85,9 @@ class _MainAppState extends State<MainApp> {
                         label: '记录',
                       ),
                       NavigationDestination(
-                        icon: Icon(Icons.bar_chart_outlined),
-                        selectedIcon: Icon(Icons.bar_chart),
-                        label: '统计',
+                        icon: Icon(Icons.settings_outlined),
+                        selectedIcon: Icon(Icons.settings),
+                        label: '设置',
                       ),
                     ],
                   ),

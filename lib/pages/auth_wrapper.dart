@@ -1,12 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_1/utils/auth_util.dart';
 import 'package:test_1/pages/main_app.dart';
 
-class AuthWrapper extends StatelessWidget {
+class AuthWrapper extends StatefulWidget {
   const AuthWrapper({super.key});
 
   @override
+  State<AuthWrapper> createState() => _AuthWrapperState();
+}
+
+class _AuthWrapperState extends State<AuthWrapper> {
+  late SharedPreferences _prefs;
+  bool? _biometricEnabled;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPreferences();
+  }
+
+  Future<void> _loadPreferences() async {
+    _prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _biometricEnabled = _prefs.getBool('biometric_enabled') ?? true;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (_biometricEnabled == null) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    // 如果生物识别未启用，直接进入主应用
+    if (_biometricEnabled == false) {
+      return const MainApp();
+    }
+
     return FutureBuilder<bool>(
       future: AuthUtil.checkBiometricsSupport(),
       builder: (context, snapshot) {

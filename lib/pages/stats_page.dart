@@ -61,6 +61,26 @@ class StatsPage extends StatelessWidget {
     }
   }
 
+  Future<void> _showAddPeriodDialog(BuildContext context) async {
+    final dateRange = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+      initialDateRange: DateTimeRange(
+        start: DateTime.now(),
+        end: DateTime.now().add(const Duration(hours: 1)),
+      ),
+      locale: Localizations.localeOf(context), // 确保使用当前语言环境
+    );
+
+    if (dateRange != null && context.mounted) {
+      await Provider.of<PeriodProvider>(
+        context,
+        listen: false,
+      ).addPeriod(dateRange.start, dateRange.end);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<PeriodProvider>(
@@ -70,67 +90,84 @@ class StatsPage extends StatelessWidget {
         }
         final periods = periodProvider.periods;
 
-        if (periods.isEmpty) {
-          return Center(
-            child: Text(
-              '没有生理期记录',
-              style: Theme.of(context).textTheme.bodyLarge,
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              '生理期记录统计', // 修改跳转后的标题
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
-          );
-        }
-
-        return ListView.builder(
-          itemCount: periods.length,
-          itemBuilder: (context, index) {
-            final period = periods[index];
-            // YY-MM-dd
-            var startDate = period.start?.toString().substring(0, 10);
-            var endDate = period.end?.toString().substring(0, 10);
-
-            var title = '周期： $startDate';
-            if (endDate != null) {
-              title += ' - $endDate';
-            }
-
-            var days = 0;
-            if (period.start != null && period.end != null) {
-              days = period.end!.difference(period.start!).inDays;
-            }
-            var subtitle = '';
-            if (endDate == null) {
-              subtitle = '该周期未结束';
-            } else {
-              subtitle = '该周期持续了 $days 天';
-              if (days == 0) {
-                subtitle = '该周期开始结束于同一天';
-              }
-            }
-
-            return Card(
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: InkWell(
-                onTap: () => _showEditDialog(context, period),
-                onLongPress: () => _showDeleteDialog(context, period),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        subtitle,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ],
-                  ),
-                ),
+            actions: [
+              IconButton(
+                onPressed: () => _showAddPeriodDialog(context),
+                icon: const Icon(Icons.add),
               ),
-            );
-          },
+            ],
+          ),
+          body:
+              periods.isEmpty
+                  ? Center(
+                    child: Text(
+                      '没有生理期记录',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  )
+                  : ListView.builder(
+                    itemCount: periods.length,
+                    itemBuilder: (context, index) {
+                      final period = periods[index];
+                      // YY-MM-dd
+                      var startDate = period.start?.toString().substring(0, 10);
+                      var endDate = period.end?.toString().substring(0, 10);
+
+                      var title = '周期： $startDate';
+                      if (endDate != null) {
+                        title += ' - $endDate';
+                      }
+
+                      var days = 0;
+                      if (period.start != null && period.end != null) {
+                        days = period.end!.difference(period.start!).inDays;
+                      }
+                      var subtitle = '';
+                      if (endDate == null) {
+                        subtitle = '该周期未结束';
+                      } else {
+                        subtitle = '该周期持续了 $days 天';
+                        if (days == 0) {
+                          subtitle = '该周期开始结束于同一天';
+                        }
+                      }
+
+                      return Card(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        child: InkWell(
+                          onTap: () => _showEditDialog(context, period),
+                          onLongPress: () => _showDeleteDialog(context, period),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  title,
+                                  style:
+                                      Theme.of(context).textTheme.titleMedium,
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  subtitle,
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
         );
       },
     );
