@@ -53,4 +53,31 @@ class Period {
       'updated_at': DateTime.now().millisecondsSinceEpoch,
     };
   }
+
+  // 添加 toJson 方法
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'start': start?.millisecondsSinceEpoch,
+      'end': end?.millisecondsSinceEpoch,
+      'createdAt': createdAt.millisecondsSinceEpoch,
+      'updatedAt': updatedAt.millisecondsSinceEpoch,
+    };
+  }
+
+  factory Period.fromJson(Map<String, dynamic> json) {
+    return Period(
+      id: json['id'],
+      start:
+          json['start'] != null
+              ? DateTime.fromMillisecondsSinceEpoch(json['start'])
+              : null,
+      end:
+          json['end'] != null
+              ? DateTime.fromMillisecondsSinceEpoch(json['end'])
+              : null,
+      createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt']),
+      updatedAt: DateTime.fromMillisecondsSinceEpoch(json['updatedAt']),
+    );
+  }
 }

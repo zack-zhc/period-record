@@ -30,7 +30,7 @@ class SettingsPage extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.security),
-            title: const Text('隐私设置'),
+            title: const Text('安全'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
               Navigator.of(context).push(

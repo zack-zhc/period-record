@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:test_1/period.dart';
 import 'package:test_1/database_helper.dart';
@@ -66,5 +68,27 @@ class PeriodProvider with ChangeNotifier {
   Future<void> deletePeriod(int id) async {
     await _dbHelper.deletePeriod(id);
     await loadPeriods();
+  }
+
+  Future<String> exportPeriodsToJson() async {
+    final periodsJson = _periods.map((period) => period.toJson()).toList();
+    return jsonEncode(periodsJson);
+  }
+
+  Future<void> importPeriodsFromJson(String jsonData) async {
+    try {
+      final List<dynamic> jsonList = jsonDecode(jsonData);
+      if (jsonList.isNotEmpty) {
+        await _dbHelper.deleteAllPeriods();
+        _periods = [];
+        for (var json in jsonList) {
+          final period = Period.fromJson(json);
+          await _insertPeriod(period);
+        }
+      }
+    } catch (e) {
+      print('adsfasfasfasdfasdfasd, $e');
+      throw Exception('导入失败: 数据格式不正确');
+    }
   }
 }

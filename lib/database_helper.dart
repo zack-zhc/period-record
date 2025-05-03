@@ -90,4 +90,9 @@ class DatabaseHelper {
     }
     return null;
   }
+
+  Future<void> deleteAllPeriods() async {
+    final db = await database;
+    await db.delete('periods');
+  }
 }
