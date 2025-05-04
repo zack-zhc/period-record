@@ -7,7 +7,6 @@ import 'package:test_1/utils/auth_util.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:test_1/period_provider.dart';
-import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 
 class PrivacyPage extends StatefulWidget {
