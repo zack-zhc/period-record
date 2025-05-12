@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:test_1/pages/privacy_page.dart';
 import 'package:test_1/pages/theme_settings_page.dart';
+import 'package:test_1/pages/about_page.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -56,7 +57,9 @@ class SettingsPage extends StatelessWidget {
             title: const Text('关于应用'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
-              // 跳转到关于页面
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const AboutPage()),
+              );
             },
           ),
         ],
