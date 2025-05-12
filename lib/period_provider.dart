@@ -14,15 +14,30 @@ class PeriodProvider with ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  // 添加一个计算属性来获取最近的一个周期，根据update_at字段排序
+  // 添加一个计算属性来获取最近的一个周期，规则如下
+  // 找到没有结束日期的周期，如果结果不止一个，按updatedAt排序，取距离现在最近的那一个
+  // 如果没有找到没有结束日期的周期，对所有的周期按找结束日期排序，取距离现在最近的那一个
   Period? get lastPeriod {
-    if (_periods.isNotEmpty) {
-      return _periods.reduce(
-        (a, b) => a.updatedAt.isAfter(b.updatedAt) ? a : b,
-      );
-    } else {
-      return null;
+    // 1. 查找所有没有结束日期的周期
+    final unfinishedPeriods = _periods.where((p) => p.end == null).toList();
+
+    if (unfinishedPeriods.isNotEmpty) {
+      // 如果有多个未结束周期，按updatedAt降序排序取第一个
+      unfinishedPeriods.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+      return unfinishedPeriods.first;
     }
+
+    // 2. 如果没有未结束周期，查找所有有结束日期的周期
+    final finishedPeriods = _periods.where((p) => p.end != null).toList();
+
+    if (finishedPeriods.isNotEmpty) {
+      // 按结束日期降序排序取第一个
+      finishedPeriods.sort((a, b) => b.end!.compareTo(a.end!));
+      return finishedPeriods.first;
+    }
+
+    // 3. 没有任何周期的情况
+    return null;
   }
 
   Future<void> loadPeriods() async {
