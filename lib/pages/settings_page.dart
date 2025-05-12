@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:test_1/pages/privacy_page.dart';
+import 'package:test_1/pages/theme_settings_page.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -25,7 +26,11 @@ class SettingsPage extends StatelessWidget {
             title: const Text('主题设置'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
-              // 跳转到主题设置页面
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const ThemeSettingsPage(),
+                ),
+              );
             },
           ),
           ListTile(
