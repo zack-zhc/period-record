@@ -103,50 +103,52 @@ class StatsPage extends StatelessWidget {
               ),
             ],
           ),
-          body: LayoutBuilder(
-            builder: (context, constraints) {
-              // 当屏幕宽度大于600时使用GridView，否则使用ListView
-              final isWideScreen = constraints.maxWidth > 600;
+          body: SafeArea(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                // 当屏幕宽度大于600时使用GridView，否则使用ListView
+                final isWideScreen = constraints.maxWidth > 600;
 
-              if (periods.isEmpty) {
-                return Center(
-                  child: Text(
-                    '没有生理期记录',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                );
-              }
-
-              return isWideScreen
-                  ? GridView.builder(
-                    padding: const EdgeInsets.all(16),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 16,
-                          childAspectRatio: 4, // 调整这个值使高度更紧凑
-                        ),
-                    itemCount: periods.length,
-                    itemBuilder: (context, index) {
-                      final period = periods[index];
-                      return _buildPeriodCard(context, period);
-                    },
-                  )
-                  : ListView.builder(
-                    itemCount: periods.length,
-                    itemBuilder: (context, index) {
-                      final period = periods[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
-                        child: _buildPeriodCard(context, period),
-                      );
-                    },
+                if (periods.isEmpty) {
+                  return Center(
+                    child: Text(
+                      '没有生理期记录',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
                   );
-            },
+                }
+
+                return isWideScreen
+                    ? GridView.builder(
+                      padding: const EdgeInsets.all(16),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 16,
+                            mainAxisSpacing: 16,
+                            childAspectRatio: 4, // 调整这个值使高度更紧凑
+                          ),
+                      itemCount: periods.length,
+                      itemBuilder: (context, index) {
+                        final period = periods[index];
+                        return _buildPeriodCard(context, period);
+                      },
+                    )
+                    : ListView.builder(
+                      itemCount: periods.length,
+                      itemBuilder: (context, index) {
+                        final period = periods[index];
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          child: _buildPeriodCard(context, period),
+                        );
+                      },
+                    );
+              },
+            ),
           ),
         );
       },
