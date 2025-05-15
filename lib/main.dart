@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // 添加这行导入
 import 'package:provider/provider.dart';
 import 'package:test_1/period_provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -7,6 +8,15 @@ import 'package:test_1/theme_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // 添加沉浸式导航栏设置
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      systemNavigationBarColor: Colors.transparent,
+      systemNavigationBarDividerColor: Colors.transparent,
+    ),
+  );
+
   runApp(
     MultiProvider(
       providers: [
