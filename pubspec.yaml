@@ -1,12 +1,13 @@
 name: test_1
 description: '生理期记录工具'
 publish_to: 'none'
-version: 0.4.5
+version: 0.4.6
 
 environment:
   sdk: ^3.7.2
 
 dependencies:
+  table_calendar: ^3.0.9
   package_info_plus: ^4.0.0
   flutter:
     sdk: flutter

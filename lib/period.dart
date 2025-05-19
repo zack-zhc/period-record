@@ -15,7 +15,11 @@ class Period {
        updatedAt = updatedAt ?? DateTime.now();
 
   // 初始化方法
-  factory Period.initialize({required DateTime start, DateTime? end, int? id}) {
+  factory Period.initialize({
+    required DateTime? start,
+    DateTime? end,
+    int? id,
+  }) {
     final now = DateTime.now();
     return Period(
       id: id ?? 0, // 临时ID，插入数据库后会生成新ID
