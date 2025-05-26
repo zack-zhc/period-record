@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:test_1/pages/privacy_page.dart';
-import 'package:test_1/pages/theme_settings_page.dart';
+import 'package:test_1/components/biometric_lock_tile.dart';
+import 'package:test_1/components/data_backup_tile.dart';
+import 'package:test_1/components/data_import_tile.dart';
+import 'package:test_1/components/settings_card.dart';
+import 'package:test_1/components/theme_selector.dart';
 import 'package:test_1/pages/about_page.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -14,53 +17,32 @@ class SettingsPage extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          ListTile(
-            leading: const Icon(Icons.notifications),
-            title: const Text('通知设置'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () {
-              // 跳转到通知设置页面
-            },
+          SettingsCard(title: '通用', children: [ThemeSelector()]),
+          SettingsCard(
+            title: '安全',
+            children: [
+              BiometricLockTile(),
+              const DataBackupTile(),
+              const DataImportTile(),
+            ],
           ),
-          ListTile(
-            leading: const Icon(Icons.color_lens),
-            title: const Text('主题设置'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const ThemeSettingsPage(),
+          SettingsCard(
+            title: '其他',
+            children: [
+              ListTile(
+                title: const Text('关于应用'),
+                trailing: FilledButton.tonal(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const AboutPage(),
+                      ),
+                    );
+                  },
+                  child: Text('打开'),
                 ),
-              );
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.security),
-            title: const Text('安全'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const PrivacyPage()),
-              );
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.help_outline),
-            title: const Text('帮助与反馈'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () {
-              // 跳转到帮助页面
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.info_outline),
-            title: const Text('关于应用'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const AboutPage()),
-              );
-            },
+              ),
+            ],
           ),
         ],
       ),
