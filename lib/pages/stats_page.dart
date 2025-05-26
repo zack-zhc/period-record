@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:table_calendar/table_calendar.dart';
 import 'package:test_1/period.dart';
 import 'package:test_1/period_provider.dart';
+import 'package:test_1/components/period_table_calendar.dart';
 
 class StatsPage extends StatelessWidget {
   const StatsPage({super.key});
@@ -51,33 +51,8 @@ class StatsPage extends StatelessWidget {
           ),
           body: LayoutBuilder(
             builder: (context, constraints) {
-              final isLandscape = constraints.maxWidth > constraints.maxHeight;
-
               return SafeArea(
-                child:
-                    periods.isEmpty
-                        ? Center(
-                          child: Text(
-                            '没有生理期记录',
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          ),
-                        )
-                        : isLandscape
-                        ? Row(
-                          children: [
-                            SizedBox(
-                              width: constraints.maxWidth * 0.5,
-                              child: PeriodCalendar(periods: periods),
-                            ),
-                            Expanded(child: PeriodListView(periods: periods)),
-                          ],
-                        )
-                        : Column(
-                          children: [
-                            PeriodCalendar(periods: periods),
-                            Expanded(child: PeriodListView(periods: periods)),
-                          ],
-                        ),
+                child: _buildContentLayout(context, periods, constraints),
               );
             },
           ),
@@ -85,103 +60,59 @@ class StatsPage extends StatelessWidget {
       },
     );
   }
-}
 
-// 日历组件
+  /// 构建页面内容布局
+  ///
+  /// [context] 构建上下文
+  /// [periods] 生理期记录列表
+  /// [constraints] 布局约束条件
+  Widget _buildContentLayout(
+    BuildContext context,
+    List<Period> periods,
+    BoxConstraints constraints,
+  ) {
+    // 检查是否有生理期记录
+    if (periods.isEmpty) {
+      return Center(
+        child: Text('没有生理期记录', style: Theme.of(context).textTheme.bodyLarge),
+      );
+    }
 
-class PeriodCalendar extends StatelessWidget {
-  final List<Period> periods;
+    // 判断当前是否为横屏模式
+    final isLandscape = constraints.maxWidth > constraints.maxHeight;
 
-  const PeriodCalendar({super.key, required this.periods});
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Container(
-          padding: const EdgeInsets.all(16),
-          constraints: BoxConstraints(
-            maxHeight: constraints.maxHeight, // 限制最大高度
-          ),
-          child: SingleChildScrollView(
-            // 添加滚动以防内容过多
-            child: TableCalendar(
-              locale: Localizations.localeOf(context).languageCode,
-              firstDay: DateTime(1900),
-              lastDay: DateTime(2100),
-              focusedDay: DateTime.now(),
-              headerStyle: HeaderStyle(
-                formatButtonVisible: false,
-                titleCentered: true,
-              ),
-              calendarFormat: CalendarFormat.month,
-              availableCalendarFormats: const {CalendarFormat.month: 'Month'},
-              eventLoader: (day) => [],
-              calendarBuilders: CalendarBuilders(
-                defaultBuilder: (context, day, focusedDay) {
-                  final localDay = day.toLocal();
-
-                  final period = periods.firstWhere(
-                    (p) {
-                      if (p.start == null || p.end == null) return false;
-                      return (localDay.isAfter(p.start!) ||
-                              DateUtils.isSameDay(localDay, p.start!)) &&
-                          (localDay.isBefore(p.end!) ||
-                              DateUtils.isSameDay(localDay, p.end!));
-                    },
-                    orElse:
-                        () => Period.initialize(start: null, end: null, id: -1),
-                  );
-                  // print(period.start);
-                  final isFirstDay =
-                      period.start != null &&
-                      DateUtils.isSameDay(localDay, period.start!);
-                  final isLastDay =
-                      period.end != null &&
-                      DateUtils.isSameDay(localDay, period.end!);
-                  final isPeriodDay =
-                      period.start != null && period.end != null;
-
-                  return Container(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 0,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color:
-                          isPeriodDay
-                              ? Theme.of(context).colorScheme.primaryContainer
-                              : null,
-                      borderRadius: BorderRadius.horizontal(
-                        left:
-                            isFirstDay
-                                ? const Radius.circular(16)
-                                : Radius.zero,
-                        right:
-                            isLastDay ? const Radius.circular(16) : Radius.zero,
-                      ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        '${day.day}',
-                        style: TextStyle(
-                          color:
-                              isPeriodDay
-                                  ? Theme.of(
-                                    context,
-                                  ).colorScheme.onPrimaryContainer
-                                  : null,
-                        ),
-                      ),
-                    ),
-                  );
-                },
+    // 根据屏幕方向返回不同的布局
+    return isLandscape
+        ? Row(
+          // 横屏布局 - 左右排列
+          children: [
+            SizedBox(
+              width: constraints.maxWidth * 0.5, // 日历占50%宽度
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: constraints.maxHeight, // 限制最大高度为屏幕高度
+                ),
+                child: SingleChildScrollView(
+                  child: PeriodTableCalendar(periods: periods),
+                ),
               ),
             ),
-          ),
+            Expanded(
+              // 列表占据剩余空间
+              child: PeriodListView(periods: periods),
+            ),
+          ],
+        )
+        : Column(
+          // 竖屏布局 - 上下排列
+          children: [
+            PeriodTableCalendar(periods: periods), // 日历在上方
+            Expanded(
+              // 列表占据剩余空间
+              child: PeriodListView(periods: periods),
+            ),
+          ],
         );
-      },
-    );
   }
 }
 
@@ -216,7 +147,10 @@ class PeriodListView extends StatelessWidget {
 
     var days = 0;
     if (period.start != null && period.end != null) {
-      days = period.end!.difference(period.start!).inDays;
+      // 转换为本地时区后再计算天数差
+      final localStart = period.start!.toLocal();
+      final localEnd = period.end!.toLocal();
+      days = localEnd.difference(localStart).inDays + 1;
     }
     var subtitle = '';
     if (endDate == null) {
