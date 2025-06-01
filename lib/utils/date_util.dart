@@ -49,4 +49,24 @@ class DateUtil {
     if (target == null) return false;
     return DateUtils.isSameDay(day.toLocal(), target.toLocal());
   }
+
+  /// 格式化日期为"YYYY.M.D"格式的字符串
+  ///
+  /// [date] 要格式化的日期
+  /// 返回格式化的字符串，例如"2025.3.20"
+  static String formatDate(DateTime date) {
+    final localDate = date.toLocal();
+    return '${localDate.year}.${localDate.month}.${localDate.day}';
+  }
+
+  /// 计算两个日期之间的持续天数
+  ///
+  /// [start] 开始日期
+  /// [end] 结束日期
+  /// 返回持续天数（包含开始和结束日）
+  static int calculateDurationDays(DateTime start, DateTime end) {
+    final localStart = start.toLocal();
+    final localEnd = end.toLocal();
+    return localEnd.difference(localStart).inDays + 1;
+  }
 }

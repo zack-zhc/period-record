@@ -32,6 +32,11 @@ class SettingsPage extends StatelessWidget {
               ListTile(
                 title: const Text('关于应用'),
                 trailing: FilledButton.tonal(
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStateProperty.all(
+                      Theme.of(context).colorScheme.surfaceContainerHighest,
+                    ),
+                  ),
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(

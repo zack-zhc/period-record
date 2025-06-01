@@ -11,6 +11,19 @@ class PeriodProvider with ChangeNotifier {
 
   List<Period> get periods => _periods;
 
+  /// 获取所有周期并按以下规则排序：
+  /// 1. 没有结束日期的周期排在最前面
+  /// 2. 有结束日期的周期按结束日期降序排列（越靠近现在排名越靠前）
+  List<Period> get sortedPeriods {
+    final unfinished = _periods.where((p) => p.end == null).toList();
+    final finished = _periods.where((p) => p.end != null).toList();
+    
+    // 对已完成周期按结束日期降序排序
+    finished.sort((a, b) => b.end!.compareTo(a.end!));
+    
+    return [...unfinished, ...finished];
+  }
+
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
