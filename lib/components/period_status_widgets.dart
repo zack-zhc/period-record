@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_1/theme/app_colors.dart';
 
 /// 显示天数的通用组件
 class DaysDisplayWidget extends StatelessWidget {
@@ -17,6 +18,9 @@ class DaysDisplayWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     final defaultNumberStyle = Theme.of(context).textTheme.headlineLarge
         ?.copyWith(fontWeight: FontWeight.bold, color: color);
 
@@ -27,10 +31,10 @@ class DaysDisplayWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
       decoration: BoxDecoration(
-        color: color?.withValues(alpha: 0.1),
+        color: _getDaysDisplayBackgroundColor(colors, isDark, color),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: color?.withValues(alpha: 0.3) ?? Colors.transparent,
+          color: _getDaysDisplayBorderColor(colors, isDark, color),
         ),
       ),
       child: Row(
@@ -43,6 +47,28 @@ class DaysDisplayWidget extends StatelessWidget {
       ),
     );
   }
+
+  Color _getDaysDisplayBackgroundColor(
+    ThemeColors colors,
+    bool isDark,
+    Color? color,
+  ) {
+    if (color != null) {
+      return color.withValues(alpha: isDark ? 0.15 : 0.1);
+    }
+    return colors.primaryWithAlpha(isDark ? 0.15 : 0.1);
+  }
+
+  Color _getDaysDisplayBorderColor(
+    ThemeColors colors,
+    bool isDark,
+    Color? color,
+  ) {
+    if (color != null) {
+      return color.withValues(alpha: isDark ? 0.4 : 0.3);
+    }
+    return colors.primaryWithAlpha(isDark ? 0.4 : 0.3);
+  }
 }
 
 /// 无记录状态组件
@@ -51,6 +77,9 @@ class NoPeriodWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       margin: const EdgeInsets.all(20),
       child: Column(
@@ -61,12 +90,7 @@ class NoPeriodWidget extends StatelessWidget {
             height: 120,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [
-                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-                  Theme.of(
-                    context,
-                  ).colorScheme.secondary.withValues(alpha: 0.1),
-                ],
+                colors: _getNoPeriodGradient(colors, isDark),
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -75,7 +99,7 @@ class NoPeriodWidget extends StatelessWidget {
             child: Icon(
               Icons.calendar_today_outlined,
               size: 60,
-              color: Theme.of(context).colorScheme.primary,
+              color: _getNoPeriodIconColor(colors, isDark),
             ),
           ),
           const SizedBox(height: 24),
@@ -83,21 +107,31 @@ class NoPeriodWidget extends StatelessWidget {
             '还没有记录生理期',
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.w600,
-              color: Theme.of(context).colorScheme.onSurface,
+              color: colors.onSurface,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             '点击下方按钮开始记录',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(
-                context,
-              ).colorScheme.onSurface.withValues(alpha: 0.6),
+              color: colors.onSurfaceWithAlpha(ThemeColors.alpha60),
             ),
           ),
         ],
       ),
     );
+  }
+
+  List<Color> _getNoPeriodGradient(ThemeColors colors, bool isDark) {
+    return colors.noPeriodGradient;
+  }
+
+  Color _getNoPeriodIconColor(ThemeColors colors, bool isDark) {
+    if (isDark) {
+      return colors.onPrimaryContainer;
+    } else {
+      return colors.primary;
+    }
   }
 }
 
@@ -109,6 +143,9 @@ class PeriodStartedTodayWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       margin: const EdgeInsets.all(20),
       child: Column(
@@ -119,42 +156,30 @@ class PeriodStartedTodayWidget extends StatelessWidget {
             height: 140,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [
-                  Theme.of(context).colorScheme.error,
-                  Theme.of(context).colorScheme.error.withValues(alpha: 0.8),
-                ],
+                colors: colors.periodStartedGradient,
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.error.withValues(alpha: 0.3),
+                  color: _getPeriodStartedShadowColor(colors, isDark),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
               ],
             ),
-            child: const Icon(Icons.favorite, size: 70, color: Colors.white),
+            child: Icon(Icons.favorite, size: 70, color: AppColors.white),
           ),
           const SizedBox(height: 24),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Theme.of(context).colorScheme.error,
-                  Theme.of(context).colorScheme.error.withValues(alpha: 0.8),
-                ],
-              ),
+              gradient: LinearGradient(colors: colors.periodStartedGradient),
               borderRadius: BorderRadius.circular(25),
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.error.withValues(alpha: 0.3),
+                  color: _getPeriodStartedShadowColor(colors, isDark),
                   blurRadius: 10,
                   offset: const Offset(0, 5),
                 ),
@@ -163,7 +188,7 @@ class PeriodStartedTodayWidget extends StatelessWidget {
             child: Text(
               title,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: Colors.white,
+                color: AppColors.white,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -172,14 +197,20 @@ class PeriodStartedTodayWidget extends StatelessWidget {
           Text(
             '今天是生理期第一天',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(
-                context,
-              ).colorScheme.onSurface.withValues(alpha: 0.7),
+              color: colors.onSurfaceWithAlpha(ThemeColors.alpha70),
             ),
           ),
         ],
       ),
     );
+  }
+
+  Color _getPeriodStartedShadowColor(ThemeColors colors, bool isDark) {
+    if (isDark) {
+      return const Color(0xFFE57373).withValues(alpha: 0.4);
+    } else {
+      return colors.errorWithAlpha(0.3);
+    }
   }
 }
 
@@ -196,6 +227,9 @@ class PeriodInProgressWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       margin: const EdgeInsets.all(20),
       child: Column(
@@ -206,19 +240,14 @@ class PeriodInProgressWidget extends StatelessWidget {
             height: 140,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [
-                  Theme.of(context).colorScheme.error,
-                  Theme.of(context).colorScheme.error.withValues(alpha: 0.7),
-                ],
+                colors: colors.periodInProgressGradient,
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.error.withValues(alpha: 0.3),
+                  color: _getPeriodInProgressShadowColor(colors, isDark),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
@@ -227,7 +256,7 @@ class PeriodInProgressWidget extends StatelessWidget {
             child: Stack(
               alignment: Alignment.center,
               children: [
-                const Icon(Icons.favorite, size: 70, color: Colors.white),
+                Icon(Icons.favorite, size: 70, color: AppColors.white),
                 Positioned(
                   bottom: 20,
                   child: Container(
@@ -236,13 +265,16 @@ class PeriodInProgressWidget extends StatelessWidget {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: AppColors.white,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
                       '第$days天',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.error,
+                        color: _getPeriodInProgressBadgeTextColor(
+                          colors,
+                          isDark,
+                        ),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -255,18 +287,11 @@ class PeriodInProgressWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Theme.of(context).colorScheme.error,
-                  Theme.of(context).colorScheme.error.withValues(alpha: 0.8),
-                ],
-              ),
+              gradient: LinearGradient(colors: colors.periodInProgressGradient),
               borderRadius: BorderRadius.circular(25),
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.error.withValues(alpha: 0.3),
+                  color: _getPeriodInProgressShadowColor(colors, isDark),
                   blurRadius: 10,
                   offset: const Offset(0, 5),
                 ),
@@ -275,7 +300,7 @@ class PeriodInProgressWidget extends StatelessWidget {
             child: Text(
               title,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: Colors.white,
+                color: AppColors.white,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -283,11 +308,35 @@ class PeriodInProgressWidget extends StatelessWidget {
           const SizedBox(height: 16),
           DaysDisplayWidget(
             days: days,
-            color: Theme.of(context).colorScheme.error,
+            color: _getPeriodInProgressDaysColor(colors, isDark),
           ),
         ],
       ),
     );
+  }
+
+  Color _getPeriodInProgressShadowColor(ThemeColors colors, bool isDark) {
+    if (isDark) {
+      return const Color(0xFFF06292).withValues(alpha: 0.4);
+    } else {
+      return colors.errorWithAlpha(0.3);
+    }
+  }
+
+  Color _getPeriodInProgressBadgeTextColor(ThemeColors colors, bool isDark) {
+    if (isDark) {
+      return const Color(0xFFEC407A);
+    } else {
+      return colors.error;
+    }
+  }
+
+  Color _getPeriodInProgressDaysColor(ThemeColors colors, bool isDark) {
+    if (isDark) {
+      return const Color(0xFFEC407A);
+    } else {
+      return colors.error;
+    }
   }
 }
 
@@ -299,6 +348,9 @@ class PeriodEndedWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       margin: const EdgeInsets.all(20),
       child: Column(
@@ -309,46 +361,34 @@ class PeriodEndedWidget extends StatelessWidget {
             height: 120,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [
-                  Theme.of(context).colorScheme.primary,
-                  Theme.of(context).colorScheme.secondary,
-                ],
+                colors: colors.periodEndedGradient,
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.primary.withValues(alpha: 0.3),
+                  color: _getPeriodEndedShadowColor(colors, isDark),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
               ],
             ),
-            child: const Icon(
+            child: Icon(
               Icons.check_circle_outline,
               size: 60,
-              color: Colors.white,
+              color: AppColors.white,
             ),
           ),
           const SizedBox(height: 24),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Theme.of(context).colorScheme.primary,
-                  Theme.of(context).colorScheme.secondary,
-                ],
-              ),
+              gradient: LinearGradient(colors: colors.periodEndedGradient),
               borderRadius: BorderRadius.circular(25),
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.primary.withValues(alpha: 0.3),
+                  color: _getPeriodEndedShadowColor(colors, isDark),
                   blurRadius: 10,
                   offset: const Offset(0, 5),
                 ),
@@ -357,7 +397,7 @@ class PeriodEndedWidget extends StatelessWidget {
             child: Text(
               title,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: Colors.white,
+                color: AppColors.white,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -366,14 +406,20 @@ class PeriodEndedWidget extends StatelessWidget {
           Text(
             '生理期已结束',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(
-                context,
-              ).colorScheme.onSurface.withValues(alpha: 0.7),
+              color: colors.onSurfaceWithAlpha(ThemeColors.alpha70),
             ),
           ),
         ],
       ),
     );
+  }
+
+  Color _getPeriodEndedShadowColor(ThemeColors colors, bool isDark) {
+    if (isDark) {
+      return const Color(0xFF81C784).withValues(alpha: 0.4);
+    } else {
+      return colors.primaryWithAlpha(0.3);
+    }
   }
 }
 
@@ -390,6 +436,9 @@ class DefaultPeriodStatusWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       margin: const EdgeInsets.all(20),
       child: Column(
@@ -400,21 +449,14 @@ class DefaultPeriodStatusWidget extends StatelessWidget {
             height: 120,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [
-                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.8),
-                  Theme.of(
-                    context,
-                  ).colorScheme.secondary.withValues(alpha: 0.8),
-                ],
+                colors: colors.defaultStatusGradient,
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.primary.withValues(alpha: 0.2),
+                  color: _getDefaultStatusShadowColor(colors, isDark),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
@@ -423,25 +465,18 @@ class DefaultPeriodStatusWidget extends StatelessWidget {
             child: Icon(
               Icons.calendar_month_outlined,
               size: 60,
-              color: Colors.white,
+              color: AppColors.white,
             ),
           ),
           const SizedBox(height: 24),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Theme.of(context).colorScheme.primary,
-                  Theme.of(context).colorScheme.secondary,
-                ],
-              ),
+              gradient: LinearGradient(colors: colors.defaultStatusGradient),
               borderRadius: BorderRadius.circular(25),
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.primary.withValues(alpha: 0.3),
+                  color: _getDefaultStatusShadowColor(colors, isDark),
                   blurRadius: 10,
                   offset: const Offset(0, 5),
                 ),
@@ -450,7 +485,7 @@ class DefaultPeriodStatusWidget extends StatelessWidget {
             child: Text(
               title,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: Colors.white,
+                color: AppColors.white,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -458,10 +493,26 @@ class DefaultPeriodStatusWidget extends StatelessWidget {
           const SizedBox(height: 16),
           DaysDisplayWidget(
             days: days,
-            color: Theme.of(context).colorScheme.primary,
+            color: _getDefaultStatusDaysColor(colors, isDark),
           ),
         ],
       ),
     );
+  }
+
+  Color _getDefaultStatusShadowColor(ThemeColors colors, bool isDark) {
+    if (isDark) {
+      return const Color(0xFF9575CD).withValues(alpha: 0.4);
+    } else {
+      return colors.primaryWithAlpha(0.2);
+    }
+  }
+
+  Color _getDefaultStatusDaysColor(ThemeColors colors, bool isDark) {
+    if (isDark) {
+      return const Color(0xFF7E57C2);
+    } else {
+      return colors.primary;
+    }
   }
 }

@@ -4,6 +4,7 @@ import 'package:test_1/period_provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:test_1/pages/auth_wrapper.dart';
 import 'package:test_1/theme_provider.dart';
+import 'package:test_1/theme/app_colors.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,9 +28,9 @@ class MyApp extends StatelessWidget {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData.light(useMaterial3: true),
-      darkTheme: ThemeData.dark(useMaterial3: true),
+      title: '经期记录',
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
       themeMode: themeProvider.themeMode,
       home: const AuthWrapper(),
       localizationsDelegates: const [

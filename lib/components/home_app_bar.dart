@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:test_1/pages/stats_page.dart';
+import 'package:test_1/theme/app_colors.dart';
 
 /// 主页自定义AppBar组件
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -7,6 +8,9 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return AppBar(
       elevation: 0,
       backgroundColor: Colors.transparent,
@@ -15,10 +19,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Theme.of(context).colorScheme.primary,
-              Theme.of(context).colorScheme.secondary,
-            ],
+            colors: colors.appBarGradient,
           ),
         ),
       ),
@@ -27,17 +28,21 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
+              color: _getIconBackgroundColor(colors, isDark),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(Icons.favorite, color: Colors.white, size: 20),
+            child: Icon(
+              Icons.favorite,
+              color: _getIconColor(colors, isDark),
+              size: 20,
+            ),
           ),
           const SizedBox(width: 12),
-          const Text(
+          Text(
             '生理期记录',
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: _getTitleColor(colors, isDark),
               fontSize: 20,
             ),
           ),
@@ -51,16 +56,47 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             icon: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
+                color: _getIconBackgroundColor(colors, isDark),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Icon(Icons.bar_chart, color: Colors.white, size: 20),
+              child: Icon(
+                Icons.bar_chart,
+                color: _getIconColor(colors, isDark),
+                size: 20,
+              ),
             ),
             tooltip: '查看统计',
           ),
         ),
       ],
     );
+  }
+
+  /// 获取图标背景颜色
+  Color _getIconBackgroundColor(ThemeColors colors, bool isDark) {
+    if (isDark) {
+      return colors.onPrimaryContainer.withValues(alpha: 0.2);
+    } else {
+      return AppColors.white.withValues(alpha: 0.2);
+    }
+  }
+
+  /// 获取图标颜色
+  Color _getIconColor(ThemeColors colors, bool isDark) {
+    if (isDark) {
+      return colors.onPrimaryContainer;
+    } else {
+      return AppColors.white;
+    }
+  }
+
+  /// 获取标题颜色
+  Color _getTitleColor(ThemeColors colors, bool isDark) {
+    if (isDark) {
+      return colors.onPrimaryContainer;
+    } else {
+      return AppColors.white;
+    }
   }
 
   /// 导航到统计页面
