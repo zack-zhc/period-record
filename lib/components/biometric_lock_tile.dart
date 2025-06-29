@@ -11,14 +11,24 @@ class BiometricLockTile extends StatefulWidget {
   State<BiometricLockTile> createState() => _BiometricLockTileState();
 }
 
-class _BiometricLockTileState extends State<BiometricLockTile> {
+class _BiometricLockTileState extends State<BiometricLockTile>
+    with SingleTickerProviderStateMixin {
   bool? _biometricEnabled;
   late SharedPreferences _prefs;
+  late AnimationController _animationController;
+  late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
     super.initState();
     _loadPreferences();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 150),
+      vsync: this,
+    );
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.96).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
   }
 
   Future<void> _loadPreferences() async {
@@ -34,10 +44,17 @@ class _BiometricLockTileState extends State<BiometricLockTile> {
   }
 
   Future<void> _toggleBiometric(bool value) async {
+    _animationController.forward().then((_) => _animationController.reverse());
     setState(() {
       _biometricEnabled = value;
     });
     await _prefs.setBool('biometric_enabled', value);
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -46,10 +63,30 @@ class _BiometricLockTileState extends State<BiometricLockTile> {
       return const SizedBox.shrink();
     }
 
-    return ListTile(
-      title: const Text('使用生物识别解锁'),
-      subtitle: const Text('保护您的数据安全'),
-      trailing: Switch(value: _biometricEnabled!, onChanged: _toggleBiometric),
+    return ScaleTransition(
+      scale: _scaleAnimation,
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+        leading: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.secondaryContainer,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(
+            Icons.fingerprint,
+            color: Theme.of(context).colorScheme.secondary,
+            size: 20,
+          ),
+        ),
+        title: const Text('使用生物识别解锁'),
+        subtitle: const Text('保护您的数据安全'),
+        trailing: Switch.adaptive(
+          value: _biometricEnabled!,
+          onChanged: _toggleBiometric,
+          activeColor: Theme.of(context).colorScheme.secondary,
+        ),
+      ),
     );
   }
 }
