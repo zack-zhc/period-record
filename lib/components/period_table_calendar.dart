@@ -15,9 +15,51 @@ class PeriodTableCalendar extends StatelessWidget {
       firstDay: DateTime(1900),
       lastDay: DateTime(2100),
       focusedDay: DateTime.now(),
-      headerStyle: const HeaderStyle(
+      headerStyle: HeaderStyle(
         formatButtonVisible: false,
         titleCentered: true,
+        titleTextStyle:
+            Theme.of(context).textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).colorScheme.onSurface,
+            ) ??
+            const TextStyle(),
+        leftChevronIcon: Icon(
+          Icons.chevron_left,
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
+        rightChevronIcon: Icon(
+          Icons.chevron_right,
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
+      ),
+      calendarStyle: CalendarStyle(
+        outsideDaysVisible: false,
+        weekendTextStyle: TextStyle(color: Theme.of(context).colorScheme.error),
+        holidayTextStyle: TextStyle(color: Theme.of(context).colorScheme.error),
+        defaultTextStyle: TextStyle(
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
+        todayDecoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primaryContainer,
+          shape: BoxShape.circle,
+        ),
+        todayTextStyle: TextStyle(
+          color: Theme.of(context).colorScheme.onPrimaryContainer,
+          fontWeight: FontWeight.bold,
+        ),
+        selectedDecoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primary,
+          shape: BoxShape.circle,
+        ),
+        selectedTextStyle: TextStyle(
+          color: Theme.of(context).colorScheme.onPrimary,
+          fontWeight: FontWeight.bold,
+        ),
+        markerDecoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primary,
+          shape: BoxShape.circle,
+        ),
       ),
       calendarFormat: CalendarFormat.month,
       availableCalendarFormats: const {CalendarFormat.month: 'Month'},
@@ -112,24 +154,44 @@ class PeriodTableCalendar extends StatelessWidget {
     bool isHighlight = false,
   }) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
+      margin: const EdgeInsets.symmetric(horizontal: 1, vertical: 2),
       decoration: BoxDecoration(
         color:
-            isHighlight ? Theme.of(context).colorScheme.primaryContainer : null,
+            isHighlight
+                ? Theme.of(
+                  context,
+                ).colorScheme.primaryContainer.withValues(alpha: 0.8)
+                : null,
         borderRadius: BorderRadius.horizontal(
           left: isRangeStart ? const Radius.circular(16) : Radius.zero,
           right: isRangeEnd ? const Radius.circular(16) : Radius.zero,
         ),
       ),
       child: Center(
-        child: Text(
-          '${day.day}',
-          style: TextStyle(
+        child: Container(
+          width: 32,
+          height: 32,
+          decoration: BoxDecoration(
             color:
-                isPeriodDay
-                    ? Theme.of(context).colorScheme.onPrimaryContainer
+                isRangeStart || isRangeEnd
+                    ? Theme.of(context).colorScheme.primary
                     : null,
-            fontWeight: isRangeStart || isRangeEnd ? FontWeight.bold : null,
+            shape: BoxShape.circle,
+          ),
+          child: Center(
+            child: Text(
+              '${day.day}',
+              style: TextStyle(
+                color:
+                    isPeriodDay
+                        ? (isRangeStart || isRangeEnd
+                            ? Theme.of(context).colorScheme.onPrimary
+                            : Theme.of(context).colorScheme.onPrimaryContainer)
+                        : null,
+                fontWeight: isRangeStart || isRangeEnd ? FontWeight.bold : null,
+                fontSize: 14,
+              ),
+            ),
           ),
         ),
       ),

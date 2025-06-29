@@ -13,13 +13,15 @@ class PeriodGridView extends StatelessWidget {
   Widget build(BuildContext context) {
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2, // 2列布局
-        childAspectRatio: 1, // 调整卡片宽高比
-        crossAxisSpacing: 8, // 列间距
-        mainAxisSpacing: 8, // 行间距
+        crossAxisCount: 2,
+        childAspectRatio: 1.1,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
       ),
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       itemCount: periods.length,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         final period = periods[index];
         return _buildPeriodCard(context, period);
@@ -39,42 +41,92 @@ class PeriodGridView extends StatelessWidget {
     days = DateUtil.calculateDurationDays(localStart, localEnd);
 
     return Card(
+      elevation: 0,
+      color: Theme.of(context).colorScheme.surfaceContainerHighest,
       child: InkWell(
+        borderRadius: BorderRadius.circular(12),
         onTap: () => onTap(context, period),
         onLongPress: () => onLongPress(context, period),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              // 顶部图标和天数
               Row(
-                crossAxisAlignment: CrossAxisAlignment.end, // 改为底部对齐
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primaryContainer,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Icon(
+                      Icons.calendar_today,
+                      size: 14,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
+                  ),
+                  const Spacer(),
                   Text(
                     '$days',
-                    style: Theme.of(
-                      context,
-                    ).textTheme.titleMedium?.copyWith(fontSize: 48),
-                  ),
-                  if (days > 0)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 16),
-                      child: Text(
-                        ' 天',
-                        style: Theme.of(
-                          context,
-                        ).textTheme.titleSmall?.copyWith(fontSize: 16),
-                      ),
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
+                  ),
+                  const SizedBox(width: 2),
+                  Text(
+                    '天',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 8),
-              Text(
-                '${DateUtil.formatDate(period.start!)} - ${DateUtil.formatDate(period.end!)}',
+              // 日期信息
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      '开始',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                        fontSize: 11,
+                      ),
+                    ),
+                    Text(
+                      DateUtil.formatDate(period.start!),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '结束',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                        fontSize: 11,
+                      ),
+                    ),
+                    Text(
+                      DateUtil.formatDate(period.end!),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              // Text(subtitle, style: Theme.of(context).textTheme.bodyMedium),
             ],
           ),
         ),
@@ -88,29 +140,78 @@ class PeriodGridView extends StatelessWidget {
     Function(BuildContext context, Period period) onTap,
     Function(BuildContext context, Period period) onLongPress,
   ) {
-    final title = '该周期还未结束';
     return Card(
-      color: Theme.of(context).colorScheme.error,
+      elevation: 0,
+      color: Theme.of(context).colorScheme.errorContainer,
       child: InkWell(
+        borderRadius: BorderRadius.circular(12),
         onTap: () => onTap(context, period),
         onLongPress: () => onLongPress(context, period),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                title,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onError,
-                ),
+              // 顶部图标和状态
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.error,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Icon(
+                      Icons.schedule,
+                      size: 14,
+                      color: Theme.of(context).colorScheme.onError,
+                    ),
+                  ),
+                  const Spacer(),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.error,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      '进行中',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onError,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 10,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              Text(
-                '开始于：'
-                '${DateUtil.formatDate(period.start!)}',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onError,
+              const SizedBox(height: 8),
+              // 内容
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '该周期还未结束',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onErrorContainer,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '开始于：${DateUtil.formatDate(period.start!)}',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onErrorContainer.withValues(alpha: 0.8),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -130,7 +231,7 @@ class PeriodGridView extends StatelessWidget {
           period.start != null && period.end != null
               ? DateTimeRange(start: period.start!, end: period.end!)
               : null,
-      locale: Localizations.localeOf(context), // 确保使用当前语言环境
+      locale: Localizations.localeOf(context),
     );
 
     if (dateRange != null && context.mounted) {
@@ -152,15 +253,14 @@ class PeriodGridView extends StatelessWidget {
       context: context,
       builder:
           (context) => AlertDialog(
-            title: const Text('要删除这个周期记录吗？'),
-            content: const Text('这将永久删除该记录。'),
+            title: const Text('删除记录'),
+            content: const Text('确定要删除这个生理期记录吗？此操作无法撤销。'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: const Text('取消'),
               ),
-
-              TextButton(
+              FilledButton(
                 onPressed: () {
                   Provider.of<PeriodProvider>(
                     context,
@@ -168,7 +268,11 @@ class PeriodGridView extends StatelessWidget {
                   ).deletePeriod(period.id);
                   Navigator.pop(context);
                 },
-                child: Text('删除'),
+                style: FilledButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                  foregroundColor: Theme.of(context).colorScheme.onError,
+                ),
+                child: const Text('删除'),
               ),
             ],
           ),
@@ -176,14 +280,6 @@ class PeriodGridView extends StatelessWidget {
   }
 
   Widget _buildPeriodCard(BuildContext context, Period period) {
-    // var startDate = period.start?.toString().substring(0, 10);
-    // var endDate = period.end?.toString().substring(0, 10);
-
-    // var title = '周期： $startDate';
-    // if (endDate != null) {
-    //   title += ' - $endDate';
-    // }
-
     Widget card;
 
     if (period.start != null && period.end != null) {
