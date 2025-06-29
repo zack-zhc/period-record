@@ -57,8 +57,62 @@ class HomePage extends StatelessWidget {
           var lastPeriod = periodProvider.lastPeriod;
           if (lastPeriod != null) {
             if (lastPeriod.end == null) {
-              title = '生理期今天刚开始';
-              body = _periodStartedTodayWidget(context, title);
+              final today = DateTime.now();
+              final startDate = lastPeriod.start!;
+              final isStartedToday =
+                  startDate.year == today.year &&
+                  startDate.month == today.month &&
+                  startDate.day == today.day;
+
+              if (isStartedToday) {
+                title = '生理期今天刚开始';
+                body = _periodStartedTodayWidget(context, title);
+              } else {
+                diff = today.difference(startDate).inDays;
+                title = '生理期进行中';
+                body = Container(
+                  color: Theme.of(context).colorScheme.error,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          title,
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodyLarge?.copyWith(
+                            color: Theme.of(context).colorScheme.onError,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '$diff',
+                              style: Theme.of(
+                                context,
+                              ).textTheme.headlineLarge?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.onError,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              '天',
+                              style: Theme.of(
+                                context,
+                              ).textTheme.bodyMedium?.copyWith(
+                                color: Theme.of(context).colorScheme.onError,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
             } else {
               diff = lastPeriod.start!.difference(DateTime.now()).inDays * -1;
               if (diff == 0) {
