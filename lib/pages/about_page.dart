@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:test_1/theme/app_colors.dart';
 
 class AboutPage extends StatefulWidget {
   const AboutPage({super.key});
@@ -36,15 +37,45 @@ class _AboutPageState extends State<AboutPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          '关于应用',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
         elevation: 0,
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        foregroundColor: Theme.of(context).colorScheme.onSurface,
+        backgroundColor: Colors.transparent,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: colors.appBarGradient,
+            ),
+          ),
+        ),
+        title: Text(
+          '关于应用',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: _getTitleColor(colors, isDark),
+            fontSize: 20,
+          ),
+        ),
+        leading: IconButton(
+          icon: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: _getIconBackgroundColor(colors, isDark),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(
+              Icons.arrow_back,
+              color: _getIconColor(colors, isDark),
+              size: 20,
+            ),
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -246,5 +277,32 @@ class _AboutPageState extends State<AboutPage> {
         ),
       ],
     );
+  }
+
+  /// 获取图标背景颜色
+  Color _getIconBackgroundColor(ThemeColors colors, bool isDark) {
+    if (isDark) {
+      return colors.onPrimaryContainer.withValues(alpha: 0.2);
+    } else {
+      return AppColors.white.withValues(alpha: 0.2);
+    }
+  }
+
+  /// 获取图标颜色
+  Color _getIconColor(ThemeColors colors, bool isDark) {
+    if (isDark) {
+      return colors.onPrimaryContainer;
+    } else {
+      return AppColors.white;
+    }
+  }
+
+  /// 获取标题颜色
+  Color _getTitleColor(ThemeColors colors, bool isDark) {
+    if (isDark) {
+      return colors.onPrimaryContainer;
+    } else {
+      return AppColors.white;
+    }
   }
 }

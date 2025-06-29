@@ -5,6 +5,7 @@ import 'package:test_1/period_provider.dart';
 import 'package:test_1/components/stats_overview_card.dart';
 import 'package:test_1/components/calendar_view_card.dart';
 import 'package:test_1/components/record_list_card.dart';
+import 'package:test_1/theme/app_colors.dart';
 
 class StatsPage extends StatelessWidget {
   const StatsPage({super.key});
@@ -53,19 +54,72 @@ class StatsPage extends StatelessWidget {
 
   /// 构建现代化的AppBar
   PreferredSizeWidget _buildModernAppBar(BuildContext context) {
+    final colors = AppColors.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return AppBar(
       elevation: 0,
-      scrolledUnderElevation: 0,
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      surfaceTintColor: Theme.of(context).colorScheme.surfaceTint,
-      title: Text(
-        '生理期统计',
-        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-          fontWeight: FontWeight.w600,
-          color: Theme.of(context).colorScheme.onSurface,
+      backgroundColor: Colors.transparent,
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: colors.appBarGradient,
+          ),
         ),
       ),
+      title: Text(
+        '生理期统计',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: _getTitleColor(colors, isDark),
+          fontSize: 20,
+        ),
+      ),
+      leading: IconButton(
+        icon: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: _getIconBackgroundColor(colors, isDark),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(
+            Icons.arrow_back,
+            color: _getIconColor(colors, isDark),
+            size: 20,
+          ),
+        ),
+        onPressed: () => Navigator.of(context).pop(),
+      ),
     );
+  }
+
+  /// 获取图标背景颜色
+  Color _getIconBackgroundColor(ThemeColors colors, bool isDark) {
+    if (isDark) {
+      return colors.onPrimaryContainer.withValues(alpha: 0.2);
+    } else {
+      return AppColors.white.withValues(alpha: 0.2);
+    }
+  }
+
+  /// 获取图标颜色
+  Color _getIconColor(ThemeColors colors, bool isDark) {
+    if (isDark) {
+      return colors.onPrimaryContainer;
+    } else {
+      return AppColors.white;
+    }
+  }
+
+  /// 获取标题颜色
+  Color _getTitleColor(ThemeColors colors, bool isDark) {
+    if (isDark) {
+      return colors.onPrimaryContainer;
+    } else {
+      return AppColors.white;
+    }
   }
 
   /// 构建页面主体内容

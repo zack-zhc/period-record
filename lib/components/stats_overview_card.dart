@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:test_1/period.dart';
+import 'package:test_1/utils/date_util.dart';
 
 /// 统计概览卡片组件
 class StatsOverviewCard extends StatelessWidget {
@@ -13,7 +14,7 @@ class StatsOverviewCard extends StatelessWidget {
     final totalDays = completedPeriods.fold<int>(
       0,
       (sum, period) =>
-          sum + (period.start!.difference(period.end!).inDays.abs()),
+          sum + DateUtil.calculateDurationDays(period.start!, period.end!),
     );
     final averageDays =
         completedPeriods.isNotEmpty
@@ -22,7 +23,7 @@ class StatsOverviewCard extends StatelessWidget {
 
     return SliverToBoxAdapter(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
         child: Card(
           elevation: 0,
           margin: const EdgeInsets.only(bottom: 16),
