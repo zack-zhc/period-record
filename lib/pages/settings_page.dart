@@ -133,7 +133,7 @@ class _SettingsPageState extends State<SettingsPage>
                   icon: Icons.security,
                   color: Theme.of(context).colorScheme.secondary,
                   children: [
-                    BiometricLockTile(),
+                    BiometricLockTile(forceShow: false),
                     const DataBackupTile(),
                     const DataImportTile(),
                   ],

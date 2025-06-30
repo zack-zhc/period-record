@@ -5,7 +5,8 @@ import 'package:test_1/utils/auth_util.dart';
 
 // 类名改为 BiometricLockTile
 class BiometricLockTile extends StatefulWidget {
-  const BiometricLockTile({super.key});
+  final bool forceShow;
+  const BiometricLockTile({super.key, this.forceShow = false});
 
   @override
   State<BiometricLockTile> createState() => _BiometricLockTileState();
@@ -32,7 +33,7 @@ class _BiometricLockTileState extends State<BiometricLockTile>
   }
 
   Future<void> _loadPreferences() async {
-    if (!await AuthUtil.checkBiometricsSupport()) {
+    if (!widget.forceShow && !await AuthUtil.checkBiometricsSupport()) {
       return;
     }
     _prefs = await SharedPreferences.getInstance();
@@ -60,13 +61,41 @@ class _BiometricLockTileState extends State<BiometricLockTile>
   @override
   Widget build(BuildContext context) {
     if (_biometricEnabled == null) {
+      // 如果强制显示，则显示默认UI
+      if (widget.forceShow) {
+        return ScaleTransition(
+          scale: _scaleAnimation,
+          child: ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+            leading: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.secondaryContainer,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                Icons.fingerprint,
+                color: Theme.of(context).colorScheme.secondary,
+                size: 20,
+              ),
+            ),
+            title: const Text('使用生物识别解锁'),
+            subtitle: const Text('保护您的数据安全'),
+            trailing: Switch.adaptive(
+              value: false,
+              onChanged: null,
+              activeColor: Theme.of(context).colorScheme.secondary,
+            ),
+          ),
+        );
+      }
       return const SizedBox.shrink();
     }
 
     return ScaleTransition(
       scale: _scaleAnimation,
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
         leading: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
