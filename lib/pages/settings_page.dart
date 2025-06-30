@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:test_1/components/biometric_lock_tile.dart';
 import 'package:test_1/components/data_backup_tile.dart';
 import 'package:test_1/components/data_import_tile.dart';
+import 'package:test_1/components/prediction_switch_tile.dart';
 import 'package:test_1/components/settings_card.dart';
 import 'package:test_1/components/theme_selector.dart';
 import 'package:test_1/pages/about_page.dart';
@@ -122,7 +123,7 @@ class _SettingsPageState extends State<SettingsPage>
                   title: '通用',
                   icon: Icons.settings,
                   color: Theme.of(context).colorScheme.primary,
-                  children: [ThemeSelector()],
+                  children: [ThemeSelector(), const PredictionSwitchTile()],
                   delay: 0,
                 ),
 

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:test_1/period.dart';
 import 'package:test_1/database_helper.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PeriodProvider with ChangeNotifier {
   final DatabaseHelper _dbHelper = DatabaseHelper();
@@ -17,10 +18,10 @@ class PeriodProvider with ChangeNotifier {
   List<Period> get sortedPeriods {
     final unfinished = _periods.where((p) => p.end == null).toList();
     final finished = _periods.where((p) => p.end != null).toList();
-    
+
     // 对已完成周期按结束日期降序排序
     finished.sort((a, b) => b.end!.compareTo(a.end!));
-    
+
     return [...unfinished, ...finished];
   }
 
@@ -150,5 +151,26 @@ class PeriodProvider with ChangeNotifier {
     } catch (e) {
       throw Exception('导入失败: ${e.toString()}');
     }
+  }
+
+  // 是否显示生理期预测
+  bool _showPrediction = false;
+  bool get showPrediction => _showPrediction;
+
+  PeriodProvider() {
+    loadShowPredictionPreference();
+  }
+
+  Future<void> setShowPrediction(bool value) async {
+    _showPrediction = value;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('showPrediction', value);
+    notifyListeners();
+  }
+
+  Future<void> loadShowPredictionPreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    _showPrediction = prefs.getBool('showPrediction') ?? true;
+    notifyListeners();
   }
 }

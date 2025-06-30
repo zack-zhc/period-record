@@ -86,4 +86,42 @@ class PeriodStatusLogic {
   static bool shouldShowEndButton(Period? lastPeriod) {
     return lastPeriod != null && lastPeriod.end == null;
   }
+
+  /// 预测距离下次生理期还有多少天
+  /// 返回null表示无法预测（如历史数据不足）
+  static int? calculateNextPeriodPrediction(List<Period> periods) {
+    // 只考虑已完成的周期，按开始时间升序排列
+    final finished =
+        periods.where((p) => p.start != null && p.end != null).toList();
+    if (finished.length < 2) return null; // 至少需要2个周期
+    finished.sort((a, b) => a.start!.compareTo(b.start!));
+
+    // 计算所有周期间隔（本次start - 上次start）
+    List<int> intervals = [];
+    for (int i = 1; i < finished.length; i++) {
+      final prev = finished[i - 1];
+      final curr = finished[i];
+      final interval = curr.start!.difference(prev.start!).inDays;
+      if (interval > 0) {
+        intervals.add(interval);
+      }
+    }
+    if (intervals.isEmpty) return null;
+    final avgInterval =
+        (intervals.reduce((a, b) => a + b) / intervals.length).round();
+
+    // 预测下次生理期开始日 = 最近一次start + 平均间隔
+    final lastStart = finished.last.start!;
+    final nextStart = lastStart.add(Duration(days: avgInterval));
+    final today = DateTime.now();
+    final daysLeft = nextStart.difference(today).inDays;
+    return daysLeft >= 0 ? daysLeft : 0;
+  }
+}
+
+extension PeriodStatusPredictionExt on PeriodStatus {
+  bool get isShowPrediction =>
+      this == PeriodStatus.ended ||
+      this == PeriodStatus.endedToday ||
+      this == PeriodStatus.noPeriod;
 }
