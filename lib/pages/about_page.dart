@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:test_1/theme/app_colors.dart';
+import 'package:test_1/constants/app_constants.dart';
 
 class AboutPage extends StatefulWidget {
   const AboutPage({super.key});
@@ -153,7 +154,7 @@ class _AboutPageState extends State<AboutPage> {
                     // 应用名称
                     Center(
                       child: Text(
-                        '经期记录',
+                        AppConstants.appName,
                         style: Theme.of(
                           context,
                         ).textTheme.headlineMedium?.copyWith(
@@ -166,7 +167,7 @@ class _AboutPageState extends State<AboutPage> {
                     // 应用描述
                     Center(
                       child: Text(
-                        '简单易用的生理期记录工具',
+                        AppConstants.appDescription,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
@@ -187,7 +188,7 @@ class _AboutPageState extends State<AboutPage> {
                               context,
                               Icons.info_outline,
                               '应用名称',
-                              '经期记录',
+                              AppConstants.appName,
                             ),
                             const SizedBox(height: 16),
                             _buildInfoRow(context, Icons.tag, '版本', _version),
@@ -196,7 +197,7 @@ class _AboutPageState extends State<AboutPage> {
                               context,
                               Icons.person_outline,
                               '开发者',
-                              'Zack ZHC',
+                              AppConstants.developerName,
                             ),
                           ],
                         ),
@@ -215,7 +216,7 @@ class _AboutPageState extends State<AboutPage> {
                       ),
                       child: Center(
                         child: Text(
-                          '© 2025 No Company. All rights reserved.',
+                          AppConstants.copyright,
                           style: Theme.of(
                             context,
                           ).textTheme.bodySmall?.copyWith(

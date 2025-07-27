@@ -85,12 +85,13 @@ class StatsPage extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(
-            Icons.arrow_back,
+            // Icons.arrow_back,
+            Icons.bar_chart,
             color: _getIconColor(colors, isDark),
             size: 20,
           ),
         ),
-        onPressed: () => Navigator.of(context).pop(),
+        onPressed: () {},
       ),
     );
   }

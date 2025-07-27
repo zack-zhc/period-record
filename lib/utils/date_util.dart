@@ -76,24 +76,24 @@ class DateUtil {
     // 测试用例1：同一天
     final sameDay = DateTime(2024, 3, 15);
     final result1 = calculateDurationDays(sameDay, sameDay);
-    print('同一天测试: $result1 天 (期望: 1天)');
+    // print('同一天测试: $result1 天 (期望: 1天)');
 
     // 测试用例2：相邻两天
     final day1 = DateTime(2024, 3, 15);
     final day2 = DateTime(2024, 3, 16);
     final result2 = calculateDurationDays(day1, day2);
-    print('相邻两天测试: $result2 天 (期望: 2天)');
+    // print('相邻两天测试: $result2 天 (期望: 2天)');
 
     // 测试用例3：跨多天
     final start = DateTime(2024, 3, 15);
     final end = DateTime(2024, 3, 17);
     final result3 = calculateDurationDays(start, end);
-    print('跨多天测试: $result3 天 (期望: 3天)');
+    // print('跨多天测试: $result3 天 (期望: 3天)');
 
     // 测试用例4：跨月
     final start2 = DateTime(2024, 3, 30);
     final end2 = DateTime(2024, 4, 2);
     final result4 = calculateDurationDays(start2, end2);
-    print('跨月测试: $result4 天 (期望: 4天)');
+    // print('跨月测试: $result4 天 (期望: 4天)');
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:test_1/pages/stats_page.dart';
 import 'package:test_1/theme/app_colors.dart';
 
 /// 主页自定义AppBar组件
@@ -23,52 +22,30 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
       ),
-      title: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: _getIconBackgroundColor(colors, isDark),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(
-              Icons.favorite,
-              color: _getIconColor(colors, isDark),
-              size: 20,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Text(
-            '生理期记录',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: _getTitleColor(colors, isDark),
-              fontSize: 20,
-            ),
-          ),
-        ],
+      title: Text(
+        '生理期记录',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: _getTitleColor(colors, isDark),
+          fontSize: 20,
+        ),
       ),
-      actions: [
-        Container(
-          margin: const EdgeInsets.only(right: 8),
-          child: IconButton(
-            onPressed: () => _navigateToStats(context),
-            icon: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: _getIconBackgroundColor(colors, isDark),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(
-                Icons.bar_chart,
-                color: _getIconColor(colors, isDark),
-                size: 20,
-              ),
-            ),
-            tooltip: '查看统计',
+      leading: IconButton(
+        onPressed: () {},
+        icon: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: _getIconBackgroundColor(colors, isDark),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(
+            Icons.favorite,
+            color: _getIconColor(colors, isDark),
+            size: 20,
           ),
         ),
-      ],
+      ),
+      actions: const [],
     );
   }
 
@@ -97,15 +74,6 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
     } else {
       return AppColors.white;
     }
-  }
-
-  /// 导航到统计页面
-  void _navigateToStats(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const Scaffold(body: StatsPage()),
-      ),
-    );
   }
 
   @override

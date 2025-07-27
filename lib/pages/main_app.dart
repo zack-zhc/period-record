@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:test_1/pages/home_page.dart';
 import 'package:test_1/period_provider.dart';
 import 'package:test_1/pages/settings_page.dart'; // 导入设置页面
+import 'package:test_1/pages/stats_page.dart'; // 导入统计页面
 import 'package:test_1/theme/app_colors.dart';
 
 class MainApp extends StatefulWidget {
@@ -26,8 +27,9 @@ class _MainAppState extends State<MainApp> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    const HomePage(), // 使用新的主页组件
-    const SettingsPage(), // 改为设置页
+    const HomePage(), // 主页组件
+    const StatsPage(), // 统计页面
+    const SettingsPage(), // 设置页面
   ];
 
   @override
@@ -94,6 +96,11 @@ class _MainAppState extends State<MainApp> {
                         label: const Text('记录'),
                       ),
                       NavigationRailDestination(
+                        icon: const Icon(Icons.bar_chart_outlined),
+                        selectedIcon: const Icon(Icons.bar_chart),
+                        label: const Text('统计'),
+                      ),
+                      NavigationRailDestination(
                         icon: const Icon(Icons.settings_outlined),
                         selectedIcon: const Icon(Icons.settings),
                         label: const Text('设置'),
@@ -120,6 +127,11 @@ class _MainAppState extends State<MainApp> {
                         icon: Icon(Icons.calendar_today_outlined),
                         selectedIcon: Icon(Icons.calendar_today),
                         label: '记录',
+                      ),
+                      NavigationDestination(
+                        icon: Icon(Icons.bar_chart_outlined),
+                        selectedIcon: Icon(Icons.bar_chart),
+                        label: '统计',
                       ),
                       NavigationDestination(
                         icon: Icon(Icons.settings_outlined),

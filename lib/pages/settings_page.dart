@@ -15,177 +15,97 @@ class SettingsPage extends StatefulWidget {
   State<SettingsPage> createState() => _SettingsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage>
-    with TickerProviderStateMixin {
-  late AnimationController _fadeController;
-  late AnimationController _slideController;
-  late Animation<double> _fadeAnimation;
-  late Animation<Offset> _slideAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _fadeController = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-    _slideController = AnimationController(
-      duration: const Duration(milliseconds: 600),
-      vsync: this,
-    );
-
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _fadeController, curve: Curves.easeInOut),
-    );
-
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.3),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(parent: _slideController, curve: Curves.easeOutCubic),
-    );
-
-    _fadeController.forward();
-    _slideController.forward();
-  }
-
-  @override
-  void dispose() {
-    _fadeController.dispose();
-    _slideController.dispose();
-    super.dispose();
-  }
-
+class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: colors.appBarGradient,
-            ),
-          ),
-        ),
-        title: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: _getIconBackgroundColor(colors, isDark),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(
-                Icons.settings,
-                color: _getIconColor(colors, isDark),
-                size: 20,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Text(
-              '设置',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: _getTitleColor(colors, isDark),
-                fontSize: 20,
-              ),
-            ),
-          ],
-        ),
-      ),
+      appBar: _buildAppBar(context, colors, isDark),
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Theme.of(context).colorScheme.surface,
-              Theme.of(context).colorScheme.surfaceContainer,
-            ],
-          ),
-        ),
-        child: FadeTransition(
-          opacity: _fadeAnimation,
-          child: SlideTransition(
-            position: _slideAnimation,
-            child: ListView(
-              padding: const EdgeInsets.symmetric(vertical: 8),
+        color: Theme.of(context).colorScheme.surface,
+        child: ListView(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          children: [
+            // 通用设置
+            SettingsCard(
+              title: '通用',
+              icon: Icons.settings,
+              color: Theme.of(context).colorScheme.primary,
+              children: [ThemeSelector(), const PredictionSwitchTile()],
+            ),
+
+            // 安全设置
+            SettingsCard(
+              title: '安全',
+              icon: Icons.security,
+              color: Theme.of(context).colorScheme.secondary,
               children: [
-                // 通用设置
-                _buildAnimatedSettingsCard(
-                  title: '通用',
-                  icon: Icons.settings,
-                  color: Theme.of(context).colorScheme.primary,
-                  children: [ThemeSelector(), const PredictionSwitchTile()],
-                  delay: 0,
-                ),
-
-                // 安全设置
-                _buildAnimatedSettingsCard(
-                  title: '安全',
-                  icon: Icons.security,
-                  color: Theme.of(context).colorScheme.secondary,
-                  children: [
-                    BiometricLockTile(forceShow: false),
-                    const DataBackupTile(),
-                    const DataImportTile(),
-                  ],
-                  delay: 100,
-                ),
-
-                // 其他设置
-                _buildAnimatedSettingsCard(
-                  title: '其他',
-                  icon: Icons.more_horiz,
-                  color: Theme.of(context).colorScheme.tertiary,
-                  children: [_buildAboutTile(context)],
-                  delay: 200,
-                ),
-
-                const SizedBox(height: 32),
-
-                // 底部装饰
-                _buildBottomDecoration(context),
+                BiometricLockTile(forceShow: false),
+                const DataBackupTile(),
+                const DataImportTile(),
               ],
             ),
-          ),
+
+            // 其他设置
+            SettingsCard(
+              title: '其他',
+              icon: Icons.more_horiz,
+              color: Theme.of(context).colorScheme.tertiary,
+              children: [_buildAboutTile(context)],
+            ),
+
+            const SizedBox(height: 32),
+
+            // 底部装饰
+            _buildBottomDecoration(context),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildAnimatedSettingsCard({
-    required String title,
-    required IconData icon,
-    required Color color,
-    required List<Widget> children,
-    required int delay,
-  }) {
-    return TweenAnimationBuilder<double>(
-      duration: Duration(milliseconds: 600 + delay),
-      tween: Tween(begin: 0.0, end: 1.0),
-      curve: Curves.easeOutCubic,
-      builder: (context, value, child) {
-        return Transform.translate(
-          offset: Offset(0, 20 * (1 - value)),
-          child: Opacity(
-            opacity: value,
-            child: SettingsCard(
-              title: title,
-              icon: icon,
-              color: color,
-              children: children,
-            ),
+  PreferredSizeWidget _buildAppBar(
+    BuildContext context,
+    ThemeColors colors,
+    bool isDark,
+  ) {
+    return AppBar(
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: colors.appBarGradient,
           ),
-        );
-      },
+        ),
+      ),
+      title: Text(
+        '设置',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: _getTitleColor(colors, isDark),
+          fontSize: 20,
+        ),
+      ),
+      leading: IconButton(
+        onPressed: () {},
+        icon: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: _getIconBackgroundColor(colors, isDark),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(
+            Icons.settings,
+            color: _getIconColor(colors, isDark),
+            size: 20,
+          ),
+        ),
+      ),
     );
   }
 
