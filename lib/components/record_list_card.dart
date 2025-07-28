@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:test_1/period.dart';
-import 'package:test_1/components/period_grid_view.dart';
+import 'package:period_record/period.dart';
+import 'package:period_record/components/period_grid_view.dart';
 
 /// 记录列表卡片组件
 class RecordListCard extends StatelessWidget {

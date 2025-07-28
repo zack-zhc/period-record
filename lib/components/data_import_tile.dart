@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:test_1/period_provider.dart';
+import 'package:period_record/period_provider.dart';
 import 'dart:io';
 
 class DataImportTile extends StatefulWidget {

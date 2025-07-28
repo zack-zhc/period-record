@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:test_1/theme/app_colors.dart';
-import 'package:test_1/constants/app_constants.dart';
+import 'package:period_record/theme/app_colors.dart';
+import 'package:period_record/constants/app_constants.dart';
 
 class AboutPage extends StatefulWidget {
   const AboutPage({super.key});

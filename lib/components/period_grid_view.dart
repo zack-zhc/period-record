@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:test_1/period.dart';
-import 'package:test_1/period_provider.dart';
-import 'package:test_1/utils/date_util.dart';
+import 'package:period_record/period.dart';
+import 'package:period_record/period_provider.dart';
+import 'package:period_record/utils/date_util.dart';
 
 class PeriodGridView extends StatelessWidget {
   final List<Period> periods;

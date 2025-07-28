@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:test_1/period.dart';
-import 'package:test_1/utils/date_util.dart';
+import 'package:period_record/period.dart';
+import 'package:period_record/utils/date_util.dart';
 
 /// 统计概览卡片组件
 class StatsOverviewCard extends StatelessWidget {

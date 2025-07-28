@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:test_1/period.dart';
-import 'package:test_1/components/period_status_widgets.dart';
-import 'package:test_1/models/period_status_logic.dart';
+import 'package:period_record/period.dart';
+import 'package:period_record/components/period_status_widgets.dart';
+import 'package:period_record/models/period_status_logic.dart';
 import 'package:provider/provider.dart';
-import 'package:test_1/period_provider.dart';
+import 'package:period_record/period_provider.dart';
 
 /// 生理期状态主内容区域
 class PeriodStatusContent extends StatelessWidget {

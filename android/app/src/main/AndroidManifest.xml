@@ -6,7 +6,7 @@
 
     
     <application
-        android:label="test_1"
+        android:label="简悦经期"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:supportsRtl="true"

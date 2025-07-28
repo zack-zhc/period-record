@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:test_1/pages/home_page.dart';
-import 'package:test_1/period_provider.dart';
-import 'package:test_1/pages/settings_page.dart'; // 导入设置页面
-import 'package:test_1/pages/stats_page.dart'; // 导入统计页面
-import 'package:test_1/theme/app_colors.dart';
+import 'package:period_record/pages/home_page.dart';
+import 'package:period_record/period_provider.dart';
+import 'package:period_record/pages/settings_page.dart'; // 导入设置页面
+import 'package:period_record/pages/stats_page.dart'; // 导入统计页面
+import 'package:period_record/theme/app_colors.dart';
 
 class MainApp extends StatefulWidget {
   const MainApp({super.key});

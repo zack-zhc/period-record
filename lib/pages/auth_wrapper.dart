@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:test_1/utils/auth_util.dart';
-import 'package:test_1/pages/main_app.dart';
+import 'package:period_record/utils/auth_util.dart';
+import 'package:period_record/pages/main_app.dart';
 
 class AuthWrapper extends StatefulWidget {
   const AuthWrapper({super.key});

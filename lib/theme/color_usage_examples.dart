@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:test_1/theme/app_colors.dart';
+import 'package:period_record/theme/app_colors.dart';
 
 /// 颜色使用示例
 /// 展示如何在应用中使用新的颜色系统

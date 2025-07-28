@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:test_1/period.dart';
-import 'package:test_1/period_provider.dart';
-import 'package:test_1/components/stats_overview_card.dart';
-import 'package:test_1/components/calendar_view_card.dart';
-import 'package:test_1/components/record_list_card.dart';
-import 'package:test_1/theme/app_colors.dart';
+import 'package:period_record/period.dart';
+import 'package:period_record/period_provider.dart';
+import 'package:period_record/components/stats_overview_card.dart';
+import 'package:period_record/components/calendar_view_card.dart';
+import 'package:period_record/components/record_list_card.dart';
+import 'package:period_record/theme/app_colors.dart';
 
 class StatsPage extends StatelessWidget {
   const StatsPage({super.key});

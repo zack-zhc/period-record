@@ -1,7 +1,7 @@
 // 文件名改为 biometric_lock_tile.dart
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:test_1/utils/auth_util.dart';
+import 'package:period_record/utils/auth_util.dart';
 
 // 类名改为 BiometricLockTile
 class BiometricLockTile extends StatefulWidget {

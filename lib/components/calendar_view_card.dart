@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:test_1/period.dart';
-import 'package:test_1/components/period_table_calendar.dart';
+import 'package:period_record/period.dart';
+import 'package:period_record/components/period_table_calendar.dart';
 
 /// 日历视图卡片组件
 class CalendarViewCard extends StatelessWidget {

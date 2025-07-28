@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:test_1/period.dart';
-import 'package:test_1/utils/date_util.dart';
+import 'package:period_record/period.dart';
+import 'package:period_record/utils/date_util.dart';
 
 class PeriodTableCalendar extends StatelessWidget {
   final List<Period> periods;

@@ -70,6 +70,28 @@ class DateUtil {
     return localEnd.difference(localStart).inDays + 1;
   }
 
+  /// 计算从开始日期到今天的天数
+  ///
+  /// [startDate] 开始日期
+  /// [today] 今天的日期（可选，默认为当前日期）
+  /// 返回从开始日期到今天的天数（第一天算作第1天）
+  static int calculateDaysFromStart(DateTime startDate, [DateTime? today]) {
+    final localStartDate = startDate.toLocal();
+    final localToday = (today ?? DateTime.now()).toLocal();
+    return localToday.difference(localStartDate).inDays + 1;
+  }
+
+  /// 计算从开始日期到今天的天数（用于已结束的周期）
+  ///
+  /// [startDate] 开始日期
+  /// [today] 今天的日期（可选，默认为当前日期）
+  /// 返回从开始日期到今天的天数
+  static int calculateDaysSinceStart(DateTime startDate, [DateTime? today]) {
+    final localStartDate = startDate.toLocal();
+    final localToday = (today ?? DateTime.now()).toLocal();
+    return localStartDate.difference(localToday).inDays * -1;
+  }
+
   /// 测试天数计算是否正确
   /// 用于验证计算逻辑
   static void testDurationCalculation() {

@@ -1,4 +1,5 @@
-import 'package:test_1/period.dart';
+import 'package:period_record/period.dart';
+import 'package:period_record/utils/date_util.dart';
 
 /// 生理期状态枚举
 enum PeriodStatus { noPeriod, startedToday, inProgress, endedToday, ended }
@@ -42,7 +43,7 @@ class PeriodStatusLogic {
           days: 0,
         );
       } else {
-        final days = today.difference(startDate).inDays;
+        final days = DateUtil.calculateDaysFromStart(startDate, today);
         return PeriodStatusInfo(
           status: PeriodStatus.inProgress,
           title: '生理期进行中',
@@ -51,7 +52,7 @@ class PeriodStatusLogic {
       }
     } else {
       // 生理期已结束
-      final days = lastPeriod.start!.difference(today).inDays * -1;
+      final days = DateUtil.calculateDaysSinceStart(lastPeriod.start!, today);
 
       if (days == 0) {
         return const PeriodStatusInfo(
@@ -71,9 +72,7 @@ class PeriodStatusLogic {
 
   /// 判断两个日期是否为同一天
   static bool _isSameDay(DateTime date1, DateTime date2) {
-    return date1.year == date2.year &&
-        date1.month == date2.month &&
-        date1.day == date2.day;
+    return DateUtil.isSameDay(date1, date2);
   }
 
   /// 判断是否应该显示添加按钮

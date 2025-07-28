@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:test_1/pages/settings_page.dart';
-import 'package:test_1/pages/stats_page.dart';
+import 'package:period_record/pages/settings_page.dart';
+import 'package:period_record/pages/stats_page.dart';
 
 /// 快速操作卡片组件
 class QuickActionsCard extends StatelessWidget {

@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:test_1/period.dart';
-import 'package:test_1/database_helper.dart';
+import 'package:period_record/period.dart';
+import 'package:period_record/database_helper.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:shared_preferences/shared_preferences.dart';
 

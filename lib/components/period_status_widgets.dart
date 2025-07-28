@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:test_1/theme/app_colors.dart';
+import 'package:period_record/theme/app_colors.dart';
 
 /// 显示天数的通用组件
 class DaysDisplayWidget extends StatelessWidget {

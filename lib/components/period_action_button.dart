@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:test_1/period.dart';
-import 'package:test_1/period_provider.dart';
-import 'package:test_1/models/period_status_logic.dart';
-import 'package:test_1/theme/app_colors.dart';
+import 'package:period_record/period.dart';
+import 'package:period_record/period_provider.dart';
+import 'package:period_record/models/period_status_logic.dart';
+import 'package:period_record/theme/app_colors.dart';
 
 /// 生理期操作浮动按钮
 class PeriodActionButton extends StatelessWidget {

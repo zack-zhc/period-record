@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:test_1/period_provider.dart';
+import 'package:period_record/period_provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:test_1/pages/auth_wrapper.dart';
-import 'package:test_1/theme_provider.dart';
-import 'package:test_1/theme/app_colors.dart';
-import 'package:test_1/constants/app_constants.dart';
+import 'package:period_record/pages/auth_wrapper.dart';
+import 'package:period_record/theme_provider.dart';
+import 'package:period_record/theme/app_colors.dart';
+import 'package:period_record/constants/app_constants.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

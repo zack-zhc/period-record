@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:test_1/components/biometric_lock_tile.dart';
-import 'package:test_1/components/data_backup_tile.dart';
-import 'package:test_1/components/data_import_tile.dart';
-import 'package:test_1/components/prediction_switch_tile.dart';
-import 'package:test_1/components/settings_card.dart';
-import 'package:test_1/components/theme_selector.dart';
-import 'package:test_1/pages/about_page.dart';
-import 'package:test_1/theme/app_colors.dart';
+import 'package:period_record/pages/about_page.dart';
+import 'package:period_record/pages/appearance_page.dart';
+import 'package:period_record/pages/privacy_data_page.dart';
+import 'package:period_record/theme/app_colors.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -28,41 +24,198 @@ class _SettingsPageState extends State<SettingsPage> {
         child: ListView(
           padding: const EdgeInsets.symmetric(vertical: 8),
           children: [
-            // 通用设置
-            SettingsCard(
-              title: '通用',
-              icon: Icons.settings,
-              color: Theme.of(context).colorScheme.primary,
-              children: [ThemeSelector(), const PredictionSwitchTile()],
-            ),
+            // 提醒设置
+            _buildReminderSettingsTile(context),
 
-            // 安全设置
-            SettingsCard(
-              title: '安全',
-              icon: Icons.security,
-              color: Theme.of(context).colorScheme.secondary,
-              children: [
-                BiometricLockTile(forceShow: false),
-                const DataBackupTile(),
-                const DataImportTile(),
-              ],
-            ),
+            // 默认周期设置
+            _buildDefaultCycleSettingsTile(context),
 
-            // 其他设置
-            SettingsCard(
-              title: '其他',
-              icon: Icons.more_horiz,
-              color: Theme.of(context).colorScheme.tertiary,
-              children: [_buildAboutTile(context)],
-            ),
+            // 默认经期设置
+            _buildDefaultPeriodSettingsTile(context),
 
-            const SizedBox(height: 32),
+            // 外观
+            _buildThemeSettingsTile(context),
 
-            // 底部装饰
-            _buildBottomDecoration(context),
+            // 隐私与数据
+            _buildPrivacyDataSettingsTile(context),
+
+            // 关于应用
+            _buildAboutSettingsTile(context),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildReminderSettingsTile(BuildContext context) {
+    return ListTile(
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primaryContainer,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(
+          Icons.notifications,
+          color: Theme.of(context).colorScheme.onPrimaryContainer,
+          size: 20,
+        ),
+      ),
+      title: const Text('提醒设置'),
+      subtitle: const Text('管理生理期和排卵期提醒'),
+      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+      onTap: () {
+        // Navigator.of(context).push();
+      },
+    );
+  }
+
+  Widget _buildDefaultCycleSettingsTile(BuildContext context) {
+    return ListTile(
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.secondaryContainer,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(
+          Icons.calendar_month,
+          color: Theme.of(context).colorScheme.onSecondaryContainer,
+          size: 20,
+        ),
+      ),
+      title: const Text('默认周期设置'),
+      subtitle: const Text('设置默认的生理周期天数'),
+      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+      onTap: () {
+        // 这里可以导航到默认周期设置页面
+        showDialog(
+          context: context,
+          builder:
+              (context) => AlertDialog(
+                title: const Text('默认周期设置'),
+                content: const Text('设置默认的生理周期天数（通常为28天）'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('确定'),
+                  ),
+                ],
+              ),
+        );
+      },
+    );
+  }
+
+  Widget _buildDefaultPeriodSettingsTile(BuildContext context) {
+    return ListTile(
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.tertiaryContainer,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(
+          Icons.water_drop,
+          color: Theme.of(context).colorScheme.onTertiaryContainer,
+          size: 20,
+        ),
+      ),
+      title: const Text('默认经期设置'),
+      subtitle: const Text('设置默认的经期持续天数'),
+      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+      onTap: () {
+        // 这里可以导航到默认经期设置页面
+        showDialog(
+          context: context,
+          builder:
+              (context) => AlertDialog(
+                title: const Text('默认经期设置'),
+                content: const Text('设置默认的经期持续天数（通常为5天）'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('确定'),
+                  ),
+                ],
+              ),
+        );
+      },
+    );
+  }
+
+  Widget _buildThemeSettingsTile(BuildContext context) {
+    return ListTile(
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.secondaryContainer,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(
+          Icons.palette,
+          color: Theme.of(context).colorScheme.onSecondaryContainer,
+          size: 20,
+        ),
+      ),
+      title: const Text('外观'),
+      subtitle: const Text('选择应用主题和外观'),
+      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+      onTap: () {
+        Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (context) => const AppearancePage()));
+      },
+    );
+  }
+
+  Widget _buildPrivacyDataSettingsTile(BuildContext context) {
+    return ListTile(
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.tertiaryContainer,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(
+          Icons.privacy_tip,
+          color: Theme.of(context).colorScheme.onTertiaryContainer,
+          size: 20,
+        ),
+      ),
+      title: const Text('隐私与数据'),
+      subtitle: const Text('管理数据隐私和安全设置'),
+      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => const PrivacyDataPage()),
+        );
+      },
+    );
+  }
+
+  Widget _buildAboutSettingsTile(BuildContext context) {
+    return ListTile(
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.tertiaryContainer,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(
+          Icons.info_outline,
+          color: Theme.of(context).colorScheme.onTertiaryContainer,
+          size: 20,
+        ),
+      ),
+      title: const Text('关于应用'),
+      subtitle: const Text('查看应用信息和版本'),
+      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+      onTap: () {
+        Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (context) => const AboutPage()));
+      },
     );
   }
 
@@ -137,32 +290,6 @@ class _SettingsPageState extends State<SettingsPage> {
           ).push(MaterialPageRoute(builder: (context) => const AboutPage()));
         },
         child: const Text('打开'),
-      ),
-    );
-  }
-
-  Widget _buildBottomDecoration(BuildContext context) {
-    return Center(
-      child: Column(
-        children: [
-          Container(
-            width: 40,
-            height: 4,
-            decoration: BoxDecoration(
-              color: Theme.of(
-                context,
-              ).colorScheme.outline.withValues(alpha: 0.3),
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            '设置完成',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ],
       ),
     );
   }
