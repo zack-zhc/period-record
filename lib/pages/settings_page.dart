@@ -262,38 +262,6 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget _buildAboutTile(BuildContext context) {
-    return ListTile(
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.tertiaryContainer,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(
-          Icons.info_outline,
-          color: Theme.of(context).colorScheme.onTertiaryContainer,
-          size: 20,
-        ),
-      ),
-      title: const Text('关于应用'),
-      subtitle: const Text('查看应用信息和版本'),
-      trailing: TextButton(
-        style: TextButton.styleFrom(
-          minimumSize: const Size(48, 32),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        ),
-        onPressed: () {
-          Navigator.of(
-            context,
-          ).push(MaterialPageRoute(builder: (context) => const AboutPage()));
-        },
-        child: const Text('打开'),
-      ),
-    );
-  }
-
   /// 获取图标背景颜色
   Color _getIconBackgroundColor(ThemeColors colors, bool isDark) {
     if (isDark) {
