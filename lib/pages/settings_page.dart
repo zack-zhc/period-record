@@ -15,236 +15,252 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: _buildAppBar(context, colors, isDark),
+      // 使用Material 3的AppBar设计
+      appBar: AppBar(
+        title: const Text('设置'),
+        centerTitle: false,
+        // 移除自定义背景色和elevation，使用Material 3的默认样式
+      ),
       body: Container(
         color: Theme.of(context).colorScheme.surface,
         child: ListView(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.all(16.0),
           children: [
-            // 提醒设置
-            _buildReminderSettingsTile(context),
+            // 生理周期设置组
+            _buildSettingsGroup(
+              context,
+              title: '生理周期设置',
+              children: [
+                // 提醒设置
+                _buildSettingsTile(
+                  context,
+                  icon: Icons.notifications,
+                  title: '提醒设置',
+                  subtitle: '管理生理期和排卵期提醒',
+                  onTap: () {
+                    // 暂时保留空实现，等待导航逻辑
+                  },
+                ),
 
-            // 默认周期设置
-            _buildDefaultCycleSettingsTile(context),
+                // 默认周期设置
+                _buildSettingsTile(
+                  context,
+                  icon: Icons.calendar_month,
+                  title: '默认周期设置',
+                  subtitle: '设置默认的生理周期天数',
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder:
+                          (context) => AlertDialog(
+                            title: const Text('默认周期设置'),
+                            content: const Text('设置默认的生理周期天数（通常为28天）'),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: const Text('确定'),
+                              ),
+                            ],
+                          ),
+                    );
+                  },
+                ),
 
-            // 默认经期设置
-            _buildDefaultPeriodSettingsTile(context),
+                // 默认经期设置
+                _buildSettingsTile(
+                  context,
+                  icon: Icons.water_drop,
+                  title: '默认经期设置',
+                  subtitle: '设置默认的经期持续天数',
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder:
+                          (context) => AlertDialog(
+                            title: const Text('默认经期设置'),
+                            content: const Text('设置默认的经期持续天数（通常为5天）'),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: const Text('确定'),
+                              ),
+                            ],
+                          ),
+                    );
+                  },
+                ),
+              ],
+            ),
 
-            // 外观
-            _buildThemeSettingsTile(context),
+            const SizedBox(height: 16),
 
-            // 隐私与数据
-            _buildPrivacyDataSettingsTile(context),
+            // 外观与设置组
+            _buildSettingsGroup(
+              context,
+              title: '外观与设置',
+              children: [
+                // 外观
+                _buildSettingsTile(
+                  context,
+                  icon: Icons.palette,
+                  title: '外观',
+                  subtitle: '选择应用主题和外观',
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const AppearancePage(),
+                        // 添加过渡动画
+                        fullscreenDialog: false,
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
 
-            // 关于应用
-            _buildAboutSettingsTile(context),
+            const SizedBox(height: 16),
+
+            // 隐私与信息组
+            _buildSettingsGroup(
+              context,
+              title: '隐私与信息',
+              children: [
+                // 隐私与数据
+                _buildSettingsTile(
+                  context,
+                  icon: Icons.privacy_tip,
+                  title: '隐私与数据',
+                  subtitle: '管理数据隐私和安全设置',
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const PrivacyDataPage(),
+                        fullscreenDialog: false,
+                      ),
+                    );
+                  },
+                ),
+
+                // 关于应用
+                _buildSettingsTile(
+                  context,
+                  icon: Icons.info_outline,
+                  title: '关于应用',
+                  subtitle: '查看应用信息和版本',
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const AboutPage(),
+                        fullscreenDialog: false,
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildReminderSettingsTile(BuildContext context) {
-    return ListTile(
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primaryContainer,
-          borderRadius: BorderRadius.circular(8),
+  // Material 3风格的设置项组
+  Widget _buildSettingsGroup(
+    BuildContext context, {
+    required String title,
+    required List<Widget> children,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 分组标题
+        Padding(
+          padding: const EdgeInsets.only(left: 16.0, bottom: 8.0),
+          child: Text(
+            title,
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
         ),
-        child: Icon(
-          Icons.notifications,
-          color: Theme.of(context).colorScheme.onPrimaryContainer,
-          size: 20,
+
+        // 分组内容卡片
+        Card(
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(children: children),
         ),
-      ),
-      title: const Text('提醒设置'),
-      subtitle: const Text('管理生理期和排卵期提醒'),
-      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-      onTap: () {
-        // Navigator.of(context).push();
-      },
+      ],
     );
   }
 
-  Widget _buildDefaultCycleSettingsTile(BuildContext context) {
-    return ListTile(
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondaryContainer,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(
-          Icons.calendar_month,
-          color: Theme.of(context).colorScheme.onSecondaryContainer,
-          size: 20,
-        ),
-      ),
-      title: const Text('默认周期设置'),
-      subtitle: const Text('设置默认的生理周期天数'),
-      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-      onTap: () {
-        // 这里可以导航到默认周期设置页面
-        showDialog(
-          context: context,
-          builder:
-              (context) => AlertDialog(
-                title: const Text('默认周期设置'),
-                content: const Text('设置默认的生理周期天数（通常为28天）'),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('确定'),
-                  ),
-                ],
+  // Material 3风格的设置项
+  Widget _buildSettingsTile(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+  }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Material(
+      type: MaterialType.transparency,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+          child: Row(
+            children: [
+              // Material 3风格的图标容器
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  icon,
+                  color: colorScheme.onPrimaryContainer,
+                  size: 20,
+                ),
               ),
-        );
-      },
-    );
-  }
 
-  Widget _buildDefaultPeriodSettingsTile(BuildContext context) {
-    return ListTile(
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.tertiaryContainer,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(
-          Icons.water_drop,
-          color: Theme.of(context).colorScheme.onTertiaryContainer,
-          size: 20,
-        ),
-      ),
-      title: const Text('默认经期设置'),
-      subtitle: const Text('设置默认的经期持续天数'),
-      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-      onTap: () {
-        // 这里可以导航到默认经期设置页面
-        showDialog(
-          context: context,
-          builder:
-              (context) => AlertDialog(
-                title: const Text('默认经期设置'),
-                content: const Text('设置默认的经期持续天数（通常为5天）'),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('确定'),
-                  ),
-                ],
+              const SizedBox(width: 16),
+
+              // 标题和副标题
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title, style: Theme.of(context).textTheme.bodyLarge),
+                    Text(
+                      subtitle,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-        );
-      },
-    );
-  }
 
-  Widget _buildThemeSettingsTile(BuildContext context) {
-    return ListTile(
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondaryContainer,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(
-          Icons.palette,
-          color: Theme.of(context).colorScheme.onSecondaryContainer,
-          size: 20,
-        ),
-      ),
-      title: const Text('外观'),
-      subtitle: const Text('选择应用主题和外观'),
-      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-      onTap: () {
-        Navigator.of(
-          context,
-        ).push(MaterialPageRoute(builder: (context) => const AppearancePage()));
-      },
-    );
-  }
-
-  Widget _buildPrivacyDataSettingsTile(BuildContext context) {
-    return ListTile(
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.tertiaryContainer,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(
-          Icons.privacy_tip,
-          color: Theme.of(context).colorScheme.onTertiaryContainer,
-          size: 20,
-        ),
-      ),
-      title: const Text('隐私与数据'),
-      subtitle: const Text('管理数据隐私和安全设置'),
-      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => const PrivacyDataPage()),
-        );
-      },
-    );
-  }
-
-  Widget _buildAboutSettingsTile(BuildContext context) {
-    return ListTile(
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.tertiaryContainer,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(
-          Icons.info_outline,
-          color: Theme.of(context).colorScheme.onTertiaryContainer,
-          size: 20,
-        ),
-      ),
-      title: const Text('关于应用'),
-      subtitle: const Text('查看应用信息和版本'),
-      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-      onTap: () {
-        Navigator.of(
-          context,
-        ).push(MaterialPageRoute(builder: (context) => const AboutPage()));
-      },
-    );
-  }
-
-  PreferredSizeWidget _buildAppBar(
-    BuildContext context,
-    ThemeColors colors,
-    bool isDark,
-  ) {
-    return AppBar(
-      elevation: 4.0,
-      backgroundColor: isDark ? colors.surface : colors.primary,
-      title: Text(
-        '设置',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          color: isDark ? colors.onSurface : colors.onPrimary,
-          fontSize: 20,
-        ),
-      ),
-      leading: IconButton(
-        onPressed: () {},
-        icon: Icon(
-          Icons.settings,
-          color: isDark ? colors.onSurface : colors.onPrimary,
-          size: 24,
+              // 右箭头图标
+              Icon(
+                Icons.chevron_right,
+                size: 24,
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
-
-
 }
