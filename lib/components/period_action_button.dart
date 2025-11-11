@@ -17,98 +17,38 @@ class PeriodActionButton extends StatelessWidget {
     final lastPeriod = periodProvider.lastPeriod;
     final shouldShowAdd = PeriodStatusLogic.shouldShowAddButton(lastPeriod);
 
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: _getButtonGradient(colors, isDark, shouldShowAdd),
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: _getButtonShadowColor(colors, isDark, shouldShowAdd),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
-          ),
-        ],
+    // 根据Material 3规范，FAB按钮在深色模式下使用容器色，浅色模式下使用主色
+    Color buttonBackgroundColor;
+    Color buttonContentColor;
+
+    if (shouldShowAdd) {
+      // 开始记录按钮
+      buttonBackgroundColor = isDark ? colors.primaryContainer : colors.primary;
+      buttonContentColor = isDark ? colors.onPrimaryContainer : colors.onPrimary;
+    } else {
+      // 结束记录按钮
+      buttonBackgroundColor = isDark ? colors.errorContainer : colors.error;
+      buttonContentColor = isDark ? colors.onErrorContainer : colors.onError;
+    }
+
+    return FloatingActionButton.extended(
+      onPressed: () => _handleAction(context),
+      backgroundColor: buttonBackgroundColor,
+      foregroundColor: buttonContentColor,
+      elevation: 6.0, // 使用标准阴影
+      icon: Icon(
+        shouldShowAdd ? Icons.add : Icons.check,
+        size: 24,
       ),
-      child: FloatingActionButton.extended(
-        onPressed: () => _handleAction(context),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        icon: Icon(
-          shouldShowAdd ? Icons.add : Icons.check,
-          color: _getButtonIconColor(colors, isDark, shouldShowAdd),
-          size: 28,
-        ),
-        label: Text(
-          shouldShowAdd ? '开始记录' : '结束本次记录',
-          style: TextStyle(
-            color: _getButtonTextColor(colors, isDark, shouldShowAdd),
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        extendedPadding: const EdgeInsets.symmetric(horizontal: 24),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      label: Text(
+        shouldShowAdd ? '开始记录' : '结束本次记录',
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      ),
+      // 使用标准圆角
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(40.0)),
       ),
     );
-  }
-
-  /// 获取按钮渐变颜色
-  List<Color> _getButtonGradient(
-    ThemeColors colors,
-    bool isDark,
-    bool shouldShowAdd,
-  ) {
-    if (shouldShowAdd) {
-      // 开始记录按钮
-      return colors.addButtonGradient;
-    } else {
-      // 结束记录按钮
-      return colors.endButtonGradient;
-    }
-  }
-
-  /// 获取按钮阴影颜色
-  Color _getButtonShadowColor(
-    ThemeColors colors,
-    bool isDark,
-    bool shouldShowAdd,
-  ) {
-    if (shouldShowAdd) {
-      // 开始记录按钮
-      if (isDark) {
-        return const Color(0xFFE91E63).withValues(alpha: 0.4);
-      } else {
-        return colors.primaryWithAlpha(0.3);
-      }
-    } else {
-      // 结束记录按钮
-      if (isDark) {
-        return const Color(0xFF4CAF50).withValues(alpha: 0.4);
-      } else {
-        return colors.errorWithAlpha(0.3);
-      }
-    }
-  }
-
-  /// 获取按钮图标颜色
-  Color _getButtonIconColor(
-    ThemeColors colors,
-    bool isDark,
-    bool shouldShowAdd,
-  ) {
-    return AppColors.white;
-  }
-
-  /// 获取按钮文字颜色
-  Color _getButtonTextColor(
-    ThemeColors colors,
-    bool isDark,
-    bool shouldShowAdd,
-  ) {
-    return AppColors.white;
   }
 
   /// 处理按钮点击事件
@@ -155,10 +95,7 @@ class PeriodActionButton extends StatelessWidget {
 
   /// 获取SnackBar背景颜色
   Color _getSnackBarColor(ThemeColors colors, bool isDark) {
-    if (isDark) {
-      return const Color(0xFFE91E63); // 粉色
-    } else {
-      return colors.primary;
-    }
+    // 根据Material 3规范，在深色模式下使用容器色，确保视觉一致性
+    return isDark ? colors.primaryContainer : colors.primary;
   }
 }
