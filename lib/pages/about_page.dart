@@ -43,37 +43,21 @@ class _AboutPageState extends State<AboutPage> {
 
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: colors.appBarGradient,
-            ),
-          ),
-        ),
+        elevation: 4.0,
+        backgroundColor: isDark ? colors.surface : colors.primary,
         title: Text(
           '关于应用',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: _getTitleColor(colors, isDark),
+            color: isDark ? colors.onSurface : colors.onPrimary,
             fontSize: 20,
           ),
         ),
         leading: IconButton(
-          icon: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: _getIconBackgroundColor(colors, isDark),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(
-              Icons.arrow_back,
-              color: _getIconColor(colors, isDark),
-              size: 20,
-            ),
+          icon: Icon(
+            Icons.arrow_back,
+            color: isDark ? colors.onSurface : colors.onPrimary,
+            size: 24,
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),
@@ -280,30 +264,5 @@ class _AboutPageState extends State<AboutPage> {
     );
   }
 
-  /// 获取图标背景颜色
-  Color _getIconBackgroundColor(ThemeColors colors, bool isDark) {
-    if (isDark) {
-      return colors.onPrimaryContainer.withValues(alpha: 0.2);
-    } else {
-      return AppColors.white.withValues(alpha: 0.2);
-    }
-  }
 
-  /// 获取图标颜色
-  Color _getIconColor(ThemeColors colors, bool isDark) {
-    if (isDark) {
-      return colors.onPrimaryContainer;
-    } else {
-      return AppColors.white;
-    }
-  }
-
-  /// 获取标题颜色
-  Color _getTitleColor(ThemeColors colors, bool isDark) {
-    if (isDark) {
-      return colors.onPrimaryContainer;
-    } else {
-      return AppColors.white;
-    }
-  }
 }

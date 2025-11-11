@@ -62,70 +62,28 @@ class StatsPage extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return AppBar(
-      elevation: 0,
-      backgroundColor: Colors.transparent,
-      flexibleSpace: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: colors.appBarGradient,
-          ),
-        ),
-      ),
+      elevation: 4.0,
+      backgroundColor: isDark ? colors.surface : colors.primary,
       title: Text(
         '生理期统计',
         style: TextStyle(
           fontWeight: FontWeight.bold,
-          color: _getTitleColor(colors, isDark),
+          color: isDark ? colors.onSurface : colors.onPrimary,
           fontSize: 20,
         ),
       ),
       leading: IconButton(
-        icon: Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: _getIconBackgroundColor(colors, isDark),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Icon(
-            // Icons.arrow_back,
-            Icons.bar_chart,
-            color: _getIconColor(colors, isDark),
-            size: 20,
-          ),
+        icon: Icon(
+          Icons.bar_chart,
+          color: isDark ? colors.onSurface : colors.onPrimary,
+          size: 24,
         ),
         onPressed: () {},
       ),
     );
   }
 
-  /// 获取图标背景颜色
-  Color _getIconBackgroundColor(ThemeColors colors, bool isDark) {
-    if (isDark) {
-      return colors.onPrimaryContainer.withValues(alpha: 0.2);
-    } else {
-      return AppColors.white.withValues(alpha: 0.2);
-    }
-  }
 
-  /// 获取图标颜色
-  Color _getIconColor(ThemeColors colors, bool isDark) {
-    if (isDark) {
-      return colors.onPrimaryContainer;
-    } else {
-      return AppColors.white;
-    }
-  }
-
-  /// 获取标题颜色
-  Color _getTitleColor(ThemeColors colors, bool isDark) {
-    if (isDark) {
-      return colors.onPrimaryContainer;
-    } else {
-      return AppColors.white;
-    }
-  }
 
   /// 构建页面主体内容
   Widget _buildBody(BuildContext context, List<Period> periods) {
