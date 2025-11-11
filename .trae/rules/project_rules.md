@@ -1,0 +1,1 @@
+App的设计指南需要严格遵守Google的Material Design规范。采用最新的Material 3规范进行设计。
