@@ -13,27 +13,28 @@ class _AppearancePageState extends State<AppearancePage> {
   @override
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    // 使用Material 3推荐的布局
     return Scaffold(
-      appBar: _buildAppBar(context, colors, isDark),
+      appBar: _buildAppBar(context),
       body: Container(
         color: Theme.of(context).colorScheme.surface,
         child: ListView(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: 12),
           children: [
-            // 主题设置分组
+            // 主题设置分组 - 使用Material 3推荐的间距
             _buildSectionHeader('主题'),
             const ThemeSelector(),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),
 
             // 其他外观设置分组
             _buildSectionHeader('其他'),
             _buildAccentColorTile(context),
             _buildFontSizeTile(context),
 
-            const SizedBox(height: 32),
+            // 添加底部间距以改善滚动体验
+            const SizedBox(height: 48),
           ],
         ),
       ),
@@ -42,7 +43,7 @@ class _AppearancePageState extends State<AppearancePage> {
 
   Widget _buildSectionHeader(String title) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
       child: Text(
         title,
         style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -55,23 +56,28 @@ class _AppearancePageState extends State<AppearancePage> {
 
   Widget _buildAccentColorTile(BuildContext context) {
     return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16),
       leading: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.secondaryContainer,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(12), // 使用更圆润的边框
         ),
         child: Icon(
           Icons.palette,
           color: Theme.of(context).colorScheme.onSecondaryContainer,
-          size: 20,
+          size: 24, // 稍大的图标更符合Material 3
         ),
       ),
       title: const Text('强调色'),
       subtitle: const Text('选择应用的主要颜色'),
-      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+      trailing: Icon(
+        Icons.arrow_forward_ios,
+        size: 18,
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
+      ),
       onTap: () {
-        // 这里可以导航到强调色选择页面
+        // 使用Material 3的AlertDialog样式
         showDialog(
           context: context,
           builder:
@@ -84,6 +90,10 @@ class _AppearancePageState extends State<AppearancePage> {
                     child: const Text('确定'),
                   ),
                 ],
+                // 使用Material 3推荐的形状
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
         );
       },
@@ -92,23 +102,28 @@ class _AppearancePageState extends State<AppearancePage> {
 
   Widget _buildFontSizeTile(BuildContext context) {
     return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16),
       leading: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.tertiaryContainer,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(12), // 使用更圆润的边框
         ),
         child: Icon(
           Icons.text_fields,
           color: Theme.of(context).colorScheme.onTertiaryContainer,
-          size: 20,
+          size: 24, // 稍大的图标更符合Material 3
         ),
       ),
       title: const Text('字体大小'),
       subtitle: const Text('调整应用中的文字大小'),
-      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+      trailing: Icon(
+        Icons.arrow_forward_ios,
+        size: 18,
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
+      ),
       onTap: () {
-        // 这里可以导航到字体大小设置页面
+        // 使用Material 3的AlertDialog样式
         showDialog(
           context: context,
           builder:
@@ -121,33 +136,37 @@ class _AppearancePageState extends State<AppearancePage> {
                     child: const Text('确定'),
                   ),
                 ],
+                // 使用Material 3推荐的形状
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
         );
       },
     );
   }
 
-  PreferredSizeWidget _buildAppBar(
-    BuildContext context,
-    ThemeColors colors,
-    bool isDark,
-  ) {
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
+    // 符合Material 3的AppBar实现
     return AppBar(
-      elevation: 4.0,
-      backgroundColor: isDark ? colors.surface : colors.primary,
+      // Material 3中AppBar使用surface颜色作为背景
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      // 使用Material 3推荐的阴影效果
+      elevation: 0,
+      scrolledUnderElevation: 2,
+      // 应用Material 3的标题样式
       title: Text(
         '外观',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          color: isDark ? colors.onSurface : colors.onPrimary,
-          fontSize: 20,
+        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+          fontWeight: FontWeight.w600,
+          color: Theme.of(context).colorScheme.onSurface,
         ),
       ),
       leading: IconButton(
         onPressed: () => Navigator.of(context).pop(),
         icon: Icon(
           Icons.arrow_back,
-          color: isDark ? colors.onSurface : colors.onPrimary,
+          color: Theme.of(context).colorScheme.onSurface,
           size: 24,
         ),
       ),

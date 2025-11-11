@@ -282,6 +282,7 @@ class _AboutPageState extends State<AboutPage> {
       appBar: AppBar(
         surfaceTintColor: colorScheme.surfaceTint,
         elevation: 0,
+        scrolledUnderElevation: 2,
         centerTitle: false,
         title: Text('关于应用', style: textTheme.titleLarge),
         leading: IconButton(
