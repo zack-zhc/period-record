@@ -24,7 +24,8 @@ class PeriodActionButton extends StatelessWidget {
     if (shouldShowAdd) {
       // 开始记录按钮
       buttonBackgroundColor = isDark ? colors.primaryContainer : colors.primary;
-      buttonContentColor = isDark ? colors.onPrimaryContainer : colors.onPrimary;
+      buttonContentColor =
+          isDark ? colors.onPrimaryContainer : colors.onPrimary;
     } else {
       // 结束记录按钮
       buttonBackgroundColor = isDark ? colors.errorContainer : colors.error;
@@ -36,17 +37,10 @@ class PeriodActionButton extends StatelessWidget {
       backgroundColor: buttonBackgroundColor,
       foregroundColor: buttonContentColor,
       elevation: 6.0, // 使用标准阴影
-      icon: Icon(
-        shouldShowAdd ? Icons.add : Icons.check,
-        size: 24,
-      ),
+      icon: Icon(shouldShowAdd ? Icons.add : Icons.check, size: 24),
       label: Text(
         shouldShowAdd ? '开始记录' : '结束本次记录',
         style: const TextStyle(fontWeight: FontWeight.bold),
-      ),
-      // 使用标准圆角
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(40.0)),
       ),
     );
   }

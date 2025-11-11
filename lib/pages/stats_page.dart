@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:period_record/models/period_status_logic.dart';
 import 'package:provider/provider.dart';
 import 'package:period_record/period.dart';
 import 'package:period_record/period_provider.dart';
@@ -46,7 +47,10 @@ class StatsPage extends StatelessWidget {
           backgroundColor: Theme.of(context).colorScheme.surface,
           appBar: _buildModernAppBar(context),
           body: _buildBody(context, sortedPeriods),
-          floatingActionButton: _buildFloatingActionButton(context),
+          floatingActionButton: _buildFloatingActionButton(
+            context,
+            periodProvider,
+          ),
         );
       },
     );
@@ -145,13 +149,37 @@ class StatsPage extends StatelessWidget {
   }
 
   /// 构建浮动按钮
-  Widget _buildFloatingActionButton(BuildContext context) {
+  Widget _buildFloatingActionButton(
+    BuildContext context,
+    PeriodProvider periodProvider,
+  ) {
+    final colors = AppColors.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final lastPeriod = periodProvider.lastPeriod;
+    final shouldShowAdd = PeriodStatusLogic.shouldShowAddButton(lastPeriod);
+
+    // 根据Material 3规范，FAB按钮在深色模式下使用容器色，浅色模式下使用主色
+    Color buttonBackgroundColor;
+    Color buttonContentColor;
+
+    if (shouldShowAdd) {
+      // 开始记录按钮
+      buttonBackgroundColor = isDark ? colors.primaryContainer : colors.primary;
+      buttonContentColor =
+          isDark ? colors.onPrimaryContainer : colors.onPrimary;
+    } else {
+      // 结束记录按钮
+      buttonBackgroundColor = isDark ? colors.errorContainer : colors.error;
+      buttonContentColor = isDark ? colors.onErrorContainer : colors.onError;
+    }
+
     return FloatingActionButton.extended(
       onPressed: () => _showAddPeriodDialog(context),
       icon: const Icon(Icons.add),
+      elevation: 6.0, // 使用标准阴影
       label: const Text('添加记录'),
-      backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-      foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+      backgroundColor: buttonBackgroundColor,
+      foregroundColor: buttonContentColor,
     );
   }
 }
