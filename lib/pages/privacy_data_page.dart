@@ -3,7 +3,6 @@ import 'package:period_record/components/biometric_lock_tile.dart';
 import 'package:period_record/components/data_backup_tile.dart';
 import 'package:period_record/components/data_import_tile.dart';
 import 'package:period_record/components/prediction_switch_tile.dart';
-import 'package:period_record/theme/app_colors.dart';
 
 class PrivacyDataPage extends StatefulWidget {
   const PrivacyDataPage({super.key});
@@ -15,61 +14,93 @@ class PrivacyDataPage extends StatefulWidget {
 class _PrivacyDataPageState extends State<PrivacyDataPage> {
   @override
   Widget build(BuildContext context) {
-    final colors = AppColors.of(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Scaffold(
-      appBar: _buildAppBar(context, colors, isDark),
+      // 使用Material 3的AppBar设计
+      appBar: AppBar(title: const Text('隐私与数据'), centerTitle: false),
       body: Container(
-        color: Theme.of(context).colorScheme.surface,
+        color:
+            Theme.of(
+              context,
+            ).colorScheme.surface, // 使用Material Design默认的background颜色
         child: ListView(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.only(top: 16.0, bottom: 24.0),
           children: [
-            // 生物识别
-            BiometricLockTile(forceShow: false),
+            // 安全设置组
+            _buildSettingsGroup(
+              context,
+              title: '安全设置',
+              children: [
+                // 生物识别
+                BiometricLockTile(forceShow: false),
+              ],
+            ),
 
-            // 数据备份
-            const DataBackupTile(),
+            const SizedBox(height: 24),
 
-            // 数据导入
-            const DataImportTile(),
+            // 数据管理组
+            _buildSettingsGroup(
+              context,
+              title: '数据管理',
+              children: [
+                // 数据备份
+                const DataBackupTile(),
+                // 添加分隔线
+                const Divider(indent: 16, endIndent: 16),
+                // 数据导入
+                const DataImportTile(),
+              ],
+            ),
 
-            // 预测设置
-            const PredictionSwitchTile(),
+            const SizedBox(height: 24),
 
-            const SizedBox(height: 32),
+            // 隐私设置组
+            _buildSettingsGroup(
+              context,
+              title: '隐私设置',
+              children: [
+                // 预测设置
+                const PredictionSwitchTile(),
+              ],
+            ),
           ],
         ),
       ),
     );
   }
 
-  PreferredSizeWidget _buildAppBar(
-    BuildContext context,
-    ThemeColors colors,
-    bool isDark,
-  ) {
-    return AppBar(
-      elevation: 4.0,
-      backgroundColor: isDark ? colors.surface : colors.primary,
-      title: Text(
-        '隐私与数据',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          color: isDark ? colors.onSurface : colors.onPrimary,
-          fontSize: 20,
+  // Material 3风格的设置项组
+  Widget _buildSettingsGroup(
+    BuildContext context, {
+    required String title,
+    required List<Widget> children,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 分组标题 - 符合Material 3规范
+        Padding(
+          padding: const EdgeInsets.only(left: 16.0, top: 16.0, bottom: 8.0),
+          child: Text(
+            title,
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ),
-      ),
-      leading: IconButton(
-        onPressed: () => Navigator.of(context).pop(),
-        icon: Icon(
-          Icons.arrow_back,
-          color: isDark ? colors.onSurface : colors.onPrimary,
-          size: 24,
+
+        // 分组内容卡片 - Material 3风格的卡片
+        Card(
+          elevation: 1,
+          shadowColor: Theme.of(context).colorScheme.shadow,
+          surfaceTintColor: Theme.of(context).colorScheme.surfaceTint,
+          margin: const EdgeInsets.symmetric(horizontal: 16.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(children: children),
         ),
-      ),
+      ],
     );
   }
-
-
 }
