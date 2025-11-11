@@ -1,220 +1,192 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:period_record/theme/app_colors.dart';
 import 'package:period_record/constants/app_constants.dart';
 
-class AboutPage extends StatefulWidget {
-  const AboutPage({super.key});
-
-  @override
-  State<AboutPage> createState() => _AboutPageState();
-}
-
-class _AboutPageState extends State<AboutPage> {
-  String _version = '未知版本';
-  bool _isLoading = true;
-  String _error = '';
-
-  @override
-  void initState() {
-    super.initState();
-    _initPackageInfo();
-  }
-
-  Future<void> _initPackageInfo() async {
-    try {
-      final packageInfo = await PackageInfo.fromPlatform();
-      setState(() {
-        _version = packageInfo.version;
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _error = '无法获取版本信息: $e';
-        _isLoading = false;
-      });
-    }
-  }
+// 加载状态视图组件
+class AboutLoadingView extends StatelessWidget {
+  const AboutLoadingView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final colors = AppColors.of(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
 
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 4.0,
-        backgroundColor: isDark ? colors.surface : colors.primary,
-        title: Text(
-          '关于应用',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: isDark ? colors.onSurface : colors.onPrimary,
-            fontSize: 20,
-          ),
-        ),
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: isDark ? colors.onSurface : colors.onPrimary,
-            size: 24,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+    return Center(
+      child: CircularProgressIndicator(
+        color: colorScheme.primary,
+        strokeWidth: 4,
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Theme.of(context).colorScheme.surface,
-              Theme.of(context).colorScheme.surfaceContainer,
-            ],
-          ),
-        ),
-        child:
-            _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : _error.isNotEmpty
-                ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.errorContainer,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Icon(
-                          Icons.error_outline,
-                          size: 48,
-                          color: Theme.of(context).colorScheme.onErrorContainer,
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                      Text(
-                        _error,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.onErrorContainer,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                )
-                : ListView(
-                  padding: const EdgeInsets.all(24),
-                  children: [
-                    const SizedBox(height: 40),
-                    // 应用图标
-                    Center(
-                      child: Container(
-                        width: 100,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.primaryContainer,
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.primary.withValues(alpha: 0.2),
-                              blurRadius: 12,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: Icon(
-                          Icons.calendar_today,
-                          size: 48,
-                          color:
-                              Theme.of(context).colorScheme.onPrimaryContainer,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    // 应用名称
-                    Center(
-                      child: Text(
-                        AppConstants.appName,
-                        style: Theme.of(
-                          context,
-                        ).textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    // 应用描述
-                    Center(
-                      child: Text(
-                        AppConstants.appDescription,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 40),
-                    // 应用信息卡片
-                    Card(
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          children: [
-                            _buildInfoRow(
-                              context,
-                              Icons.info_outline,
-                              '应用名称',
-                              AppConstants.appName,
-                            ),
-                            const SizedBox(height: 16),
-                            _buildInfoRow(context, Icons.tag, '版本', _version),
-                            const SizedBox(height: 16),
-                            _buildInfoRow(
-                              context,
-                              Icons.person_outline,
-                              '开发者',
-                              AppConstants.developerName,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 40),
-                    // 版权信息
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color:
-                            Theme.of(
-                              context,
-                            ).colorScheme.surfaceContainerHighest,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Center(
-                        child: Text(
-                          AppConstants.copyright,
-                          style: Theme.of(
-                            context,
-                          ).textTheme.bodySmall?.copyWith(
-                            color:
-                                Theme.of(context).colorScheme.onSurfaceVariant,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                  ],
+    );
+  }
+}
+
+// 错误状态视图组件
+class AboutErrorView extends StatelessWidget {
+  const AboutErrorView({super.key, required this.errorMessage});
+
+  final String errorMessage;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: colorScheme.errorContainer,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: colorScheme.shadow,
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
                 ),
+              ],
+            ),
+            child: Icon(
+              Icons.error_outline_rounded,
+              size: 48,
+              color: colorScheme.onErrorContainer,
+            ),
+          ),
+          const SizedBox(height: 24),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Text(
+              errorMessage,
+              style: textTheme.bodyLarge?.copyWith(
+                color: colorScheme.onErrorContainer,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
       ),
+    );
+  }
+}
+
+// 主要内容视图组件
+class AboutContentView extends StatelessWidget {
+  const AboutContentView({super.key, required this.version});
+
+  final String version;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(16, 24, 16, 32),
+      children: [
+        const SizedBox(height: 24),
+        // 应用图标
+        Center(
+          child: Material(
+            elevation: 4,
+            borderRadius: BorderRadius.circular(24),
+            color: colorScheme.primaryContainer,
+            child: Container(
+              width: 120,
+              height: 120,
+              decoration: BoxDecoration(
+                color: colorScheme.primaryContainer,
+                borderRadius: BorderRadius.circular(24),
+              ),
+              alignment: Alignment.center,
+              child: Icon(
+                Icons.calendar_today_rounded,
+                size: 56,
+                color: colorScheme.onPrimaryContainer,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 32),
+        // 应用名称
+        Center(
+          child: Text(
+            AppConstants.appName,
+            style: textTheme.headlineMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: colorScheme.onSurface,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        const SizedBox(height: 12),
+        // 应用描述
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Text(
+              AppConstants.appDescription,
+              style: textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ),
+        const SizedBox(height: 32),
+        // 应用信息卡片
+        Card(
+          color: colorScheme.surfaceContainerHighest,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          elevation: 0,
+          margin: const EdgeInsets.symmetric(horizontal: 8),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                _buildInfoRow(
+                  context,
+                  Icons.info_outline_rounded,
+                  '应用名称',
+                  AppConstants.appName,
+                ),
+                const Divider(height: 16, indent: 56),
+                _buildInfoRow(context, Icons.tag_rounded, '版本', version),
+                const Divider(height: 16, indent: 56),
+                _buildInfoRow(
+                  context,
+                  Icons.person_outline_rounded,
+                  '开发者',
+                  AppConstants.developerName,
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 32),
+        // 版权信息
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: colorScheme.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Center(
+            child: Text(
+              AppConstants.copyright,
+              style: textTheme.bodySmall?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+        const SizedBox(height: 48),
+      ],
     );
   }
 
@@ -224,19 +196,21 @@ class _AboutPageState extends State<AboutPage> {
     String title,
     String value,
   ) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
-          padding: const EdgeInsets.all(8),
+          width: 48,
+          height: 48,
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primaryContainer,
-            borderRadius: BorderRadius.circular(8),
+            color: colorScheme.primaryContainer,
+            borderRadius: BorderRadius.circular(16),
           ),
-          child: Icon(
-            icon,
-            size: 20,
-            color: Theme.of(context).colorScheme.onPrimaryContainer,
-          ),
+          alignment: Alignment.center,
+          child: Icon(icon, size: 24, color: colorScheme.onPrimaryContainer),
         ),
         const SizedBox(width: 16),
         Expanded(
@@ -245,17 +219,18 @@ class _AboutPageState extends State<AboutPage> {
             children: [
               Text(
                 title,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  fontWeight: FontWeight.w500,
+                style: textTheme.labelMedium?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
                 ),
               ),
-              const SizedBox(height: 2),
+              const SizedBox(height: 4),
               Text(
                 value,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
+                style: textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: colorScheme.onSurface,
+                ),
+                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),
@@ -263,6 +238,72 @@ class _AboutPageState extends State<AboutPage> {
       ],
     );
   }
+}
 
+class AboutPage extends StatefulWidget {
+  const AboutPage({super.key});
 
+  @override
+  State<AboutPage> createState() => _AboutPageState();
+}
+
+class _AboutPageState extends State<AboutPage> {
+  String? _version;
+  bool _isLoading = true;
+  String _error = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPackageInfo();
+  }
+
+  Future<void> _loadPackageInfo() async {
+    try {
+      final packageInfo = await PackageInfo.fromPlatform();
+      setState(() {
+        _version = packageInfo.version;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _error = '加载应用信息失败';
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    return Scaffold(
+      appBar: AppBar(
+        surfaceTintColor: colorScheme.surfaceTint,
+        elevation: 0,
+        centerTitle: false,
+        title: Text('关于应用', style: textTheme.titleLarge),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded),
+          onPressed: () => Navigator.of(context).pop(),
+          tooltip: '返回',
+          color: colorScheme.onSurface,
+        ),
+      ),
+      backgroundColor: colorScheme.surface,
+      body: _buildBody(),
+    );
+  }
+
+  // 使用新创建的组件重构body
+  Widget _buildBody() {
+    if (_isLoading) {
+      return const AboutLoadingView();
+    } else if (_error.isNotEmpty) {
+      return AboutErrorView(errorMessage: _error);
+    } else {
+      return AboutContentView(version: _version ?? '');
+    }
+  }
 }
