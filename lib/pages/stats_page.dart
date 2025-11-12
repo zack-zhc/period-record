@@ -4,9 +4,68 @@ import 'package:provider/provider.dart';
 import 'package:period_record/period.dart';
 import 'package:period_record/period_provider.dart';
 import 'package:period_record/components/stats_overview_card.dart';
-import 'package:period_record/components/calendar_view_card.dart';
 import 'package:period_record/components/record_list_card.dart';
 import 'package:period_record/theme/app_colors.dart';
+
+/// 空状态组件 - 符合应用整体设计风格
+class _EmptyState extends StatelessWidget {
+  const _EmptyState();
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Center(
+      // margin: const EdgeInsets.all(20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 120,
+            height: 120,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: colors.noPeriodGradient,
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.calendar_today_outlined,
+              size: 60,
+              color: _getNoPeriodIconColor(colors, isDark),
+            ),
+          ),
+          const SizedBox(height: 24),
+          Text(
+            '暂无生理期记录',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: colors.onSurface,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '添加您的第一条生理期记录，开始跟踪和统计',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: colors.onSurfaceWithAlpha(0.6),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Color _getNoPeriodIconColor(ThemeColors colors, bool isDark) {
+    if (isDark) {
+      return colors.onPrimaryContainer;
+    } else {
+      return colors.primary;
+    }
+  }
+}
 
 class StatsPage extends StatelessWidget {
   const StatsPage({super.key});
@@ -44,8 +103,8 @@ class StatsPage extends StatelessWidget {
         final sortedPeriods = periodProvider.sortedPeriods;
 
         return Scaffold(
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          appBar: _buildModernAppBar(context),
+          // backgroundColor: Theme.of(context).colorScheme.surface,
+          appBar: AppBar(title: Text('生理期统计')),
           body: _buildBody(context, sortedPeriods),
           floatingActionButton: _buildFloatingActionButton(
             context,
@@ -56,40 +115,21 @@ class StatsPage extends StatelessWidget {
     );
   }
 
-  /// 构建现代化的AppBar
-  PreferredSizeWidget _buildModernAppBar(BuildContext context) {
-    return AppBar(
-      // 使用默认的elevation行为，而不是硬编码值
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      title: Text(
-        '生理期统计',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          color: Theme.of(context).colorScheme.onSurface,
-          fontSize: 20,
-        ),
-      ),
-    );
-  }
-
   /// 构建页面主体内容
   Widget _buildBody(BuildContext context, List<Period> periods) {
     return SafeArea(
-      child: CustomScrollView(
-        slivers: [
-          // 统计概览卡片
-          if (periods.isNotEmpty) StatsOverviewCard(periods: periods),
+      child:
+          periods.isNotEmpty
+              ? CustomScrollView(
+                slivers: [
+                  // 统计概览卡片
+                  StatsOverviewCard(periods: periods),
 
-          // 日历视图卡片
-          // CalendarViewCard(periods: periods),
-
-          // 记录列表卡片
-          RecordListCard(periods: periods),
-
-          // 添加底部间距，避免FloatingActionButton遮挡内容
-          const SliverToBoxAdapter(child: SizedBox(height: 80)),
-        ],
-      ),
+                  // 记录列表卡片
+                  RecordListCard(periods: periods),
+                ],
+              )
+              : const _EmptyState(),
     );
   }
 
