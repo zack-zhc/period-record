@@ -58,32 +58,19 @@ class StatsPage extends StatelessWidget {
 
   /// 构建现代化的AppBar
   PreferredSizeWidget _buildModernAppBar(BuildContext context) {
-    final colors = AppColors.of(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return AppBar(
-      elevation: 4.0,
-      backgroundColor: isDark ? colors.surface : colors.primary,
+      // 使用默认的elevation行为，而不是硬编码值
+      backgroundColor: Theme.of(context).colorScheme.surface,
       title: Text(
         '生理期统计',
         style: TextStyle(
           fontWeight: FontWeight.bold,
-          color: isDark ? colors.onSurface : colors.onPrimary,
+          color: Theme.of(context).colorScheme.onSurface,
           fontSize: 20,
         ),
       ),
-      leading: IconButton(
-        icon: Icon(
-          Icons.bar_chart,
-          color: isDark ? colors.onSurface : colors.onPrimary,
-          size: 24,
-        ),
-        onPressed: () {},
-      ),
     );
   }
-
-
 
   /// 构建页面主体内容
   Widget _buildBody(BuildContext context, List<Period> periods) {
@@ -94,7 +81,7 @@ class StatsPage extends StatelessWidget {
           if (periods.isNotEmpty) StatsOverviewCard(periods: periods),
 
           // 日历视图卡片
-          CalendarViewCard(periods: periods),
+          // CalendarViewCard(periods: periods),
 
           // 记录列表卡片
           RecordListCard(periods: periods),

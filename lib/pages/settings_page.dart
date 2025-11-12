@@ -219,13 +219,9 @@ class _SettingsPageState extends State<SettingsPage> {
           child: Row(
             children: [
               // Material 3风格的图标容器
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: colorScheme.primaryContainer,
-                  borderRadius: BorderRadius.circular(12),
-                ),
+              SizedBox(
+                width: 24,
+                height: 24,
                 child: Icon(
                   icon,
                   color: colorScheme.onPrimaryContainer,
