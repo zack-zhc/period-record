@@ -14,8 +14,6 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
-    final colors = AppColors.of(context);
-
     return Scaffold(
       // 使用Material 3的AppBar设计
       appBar: AppBar(
@@ -23,145 +21,142 @@ class _SettingsPageState extends State<SettingsPage> {
         centerTitle: false,
         // 移除自定义背景色和elevation，使用Material 3的默认样式
       ),
-      body: Container(
-        color: Theme.of(context).colorScheme.surface,
-        child: ListView(
-          padding: const EdgeInsets.all(16.0),
-          children: [
-            // 生理周期设置组
-            _buildSettingsGroup(
-              context,
-              title: '生理周期设置',
-              children: [
-                // 提醒设置
-                _buildSettingsTile(
-                  context,
-                  icon: Icons.notifications,
-                  title: '提醒设置',
-                  subtitle: '管理生理期和排卵期提醒',
-                  onTap: () {
-                    // 暂时保留空实现，等待导航逻辑
-                  },
-                ),
+      body: ListView(
+        padding: const EdgeInsets.all(16.0),
+        children: [
+          // 生理周期设置组
+          _buildSettingsGroup(
+            context,
+            title: '生理周期设置',
+            children: [
+              // 提醒设置
+              _buildSettingsTile(
+                context,
+                icon: Icons.notifications,
+                title: '提醒设置',
+                subtitle: '管理生理期和排卵期提醒',
+                onTap: () {
+                  // 暂时保留空实现，等待导航逻辑
+                },
+              ),
 
-                // 默认周期设置
-                _buildSettingsTile(
-                  context,
-                  icon: Icons.calendar_month,
-                  title: '默认周期设置',
-                  subtitle: '设置默认的生理周期天数',
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder:
-                          (context) => AlertDialog(
-                            title: const Text('默认周期设置'),
-                            content: const Text('设置默认的生理周期天数（通常为28天）'),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.of(context).pop(),
-                                child: const Text('确定'),
-                              ),
-                            ],
-                          ),
-                    );
-                  },
-                ),
+              // 默认周期设置
+              _buildSettingsTile(
+                context,
+                icon: Icons.calendar_month,
+                title: '默认周期设置',
+                subtitle: '设置默认的生理周期天数',
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder:
+                        (context) => AlertDialog(
+                          title: const Text('默认周期设置'),
+                          content: const Text('设置默认的生理周期天数（通常为28天）'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: const Text('确定'),
+                            ),
+                          ],
+                        ),
+                  );
+                },
+              ),
 
-                // 默认经期设置
-                _buildSettingsTile(
-                  context,
-                  icon: Icons.water_drop,
-                  title: '默认经期设置',
-                  subtitle: '设置默认的经期持续天数',
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder:
-                          (context) => AlertDialog(
-                            title: const Text('默认经期设置'),
-                            content: const Text('设置默认的经期持续天数（通常为5天）'),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.of(context).pop(),
-                                child: const Text('确定'),
-                              ),
-                            ],
-                          ),
-                    );
-                  },
-                ),
-              ],
-            ),
+              // 默认经期设置
+              _buildSettingsTile(
+                context,
+                icon: Icons.water_drop,
+                title: '默认经期设置',
+                subtitle: '设置默认的经期持续天数',
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder:
+                        (context) => AlertDialog(
+                          title: const Text('默认经期设置'),
+                          content: const Text('设置默认的经期持续天数（通常为5天）'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: const Text('确定'),
+                            ),
+                          ],
+                        ),
+                  );
+                },
+              ),
+            ],
+          ),
 
-            const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-            // 外观与设置组
-            _buildSettingsGroup(
-              context,
-              title: '外观与设置',
-              children: [
-                // 外观
-                _buildSettingsTile(
-                  context,
-                  icon: Icons.palette,
-                  title: '外观',
-                  subtitle: '选择应用主题和外观',
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const AppearancePage(),
-                        // 添加过渡动画
-                        fullscreenDialog: false,
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
+          // 外观与设置组
+          _buildSettingsGroup(
+            context,
+            title: '外观与设置',
+            children: [
+              // 外观
+              _buildSettingsTile(
+                context,
+                icon: Icons.palette,
+                title: '外观',
+                subtitle: '选择应用主题和外观',
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const AppearancePage(),
+                      // 添加过渡动画
+                      fullscreenDialog: false,
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
 
-            const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-            // 隐私与信息组
-            _buildSettingsGroup(
-              context,
-              title: '隐私与信息',
-              children: [
-                // 隐私与数据
-                _buildSettingsTile(
-                  context,
-                  icon: Icons.privacy_tip,
-                  title: '隐私与数据',
-                  subtitle: '管理数据隐私和安全设置',
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const PrivacyDataPage(),
-                        fullscreenDialog: false,
-                      ),
-                    );
-                  },
-                ),
+          // 隐私与信息组
+          _buildSettingsGroup(
+            context,
+            title: '隐私与信息',
+            children: [
+              // 隐私与数据
+              _buildSettingsTile(
+                context,
+                icon: Icons.privacy_tip,
+                title: '隐私与数据',
+                subtitle: '管理数据隐私和安全设置',
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const PrivacyDataPage(),
+                      fullscreenDialog: false,
+                    ),
+                  );
+                },
+              ),
 
-                // 关于应用
-                _buildSettingsTile(
-                  context,
-                  icon: Icons.info_outline,
-                  title: '关于应用',
-                  subtitle: '查看应用信息和版本',
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const AboutPage(),
-                        fullscreenDialog: false,
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
+              // 关于应用
+              _buildSettingsTile(
+                context,
+                icon: Icons.info_outline,
+                title: '关于应用',
+                subtitle: '查看应用信息和版本',
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const AboutPage(),
+                      fullscreenDialog: false,
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
