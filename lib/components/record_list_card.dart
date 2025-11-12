@@ -12,14 +12,8 @@ class RecordListCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Card(
-          elevation: 0,
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: PeriodGridView(periods: periods),
-          ),
-        ),
+        padding: const EdgeInsets.all(12),
+        child: PeriodGridView(periods: periods),
       ),
     );
   }

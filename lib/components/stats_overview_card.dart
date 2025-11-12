@@ -21,80 +21,78 @@ class StatsOverviewCard extends StatelessWidget {
             ? (totalDays / completedPeriods.length).round()
             : 0;
 
-    return SliverToBoxAdapter(
-      child: Card(
-        margin: const EdgeInsets.all(16),
-        clipBehavior: Clip.antiAlias,
-        child: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primaryContainer,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.primary.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Icon(
-                        Icons.analytics_outlined,
-                        color: Theme.of(context).colorScheme.primary,
-                        size: 24,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      '统计概览',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.onPrimaryContainer,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildStatItem(
+    return Card(
+      margin: const EdgeInsets.all(16),
+      clipBehavior: Clip.antiAlias,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primaryContainer,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Theme.of(
                         context,
-                        '总记录',
-                        '${periods.length}',
-                        Icons.calendar_today_outlined,
-                        Colors.blue,
-                      ),
+                      ).colorScheme.primary.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _buildStatItem(
-                        context,
-                        '已完成',
-                        '${completedPeriods.length}',
-                        Icons.check_circle_outline,
-                        Colors.green,
-                      ),
+                    child: Icon(
+                      Icons.analytics_outlined,
+                      color: Theme.of(context).colorScheme.primary,
+                      size: 24,
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _buildStatItem(
-                        context,
-                        '平均天数',
-                        '$averageDays',
-                        Icons.trending_up_outlined,
-                        Colors.orange,
-                      ),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    '统计概览',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
                     ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildStatItem(
+                      context,
+                      '总记录',
+                      '${periods.length}',
+                      Icons.calendar_today_outlined,
+                      Colors.blue,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _buildStatItem(
+                      context,
+                      '已完成',
+                      '${completedPeriods.length}',
+                      Icons.check_circle_outline,
+                      Colors.green,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _buildStatItem(
+                      context,
+                      '平均天数',
+                      '$averageDays',
+                      Icons.trending_up_outlined,
+                      Colors.orange,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),

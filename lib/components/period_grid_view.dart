@@ -13,12 +13,12 @@ class PeriodGridView extends StatelessWidget {
   Widget build(BuildContext context) {
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 1.1,
+        crossAxisCount: 1,
+        childAspectRatio: 3.5,
         crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
+        mainAxisSpacing: 8,
       ),
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      // padding: const EdgeInsets.symmetric(vertical: 8),
       itemCount: periods.length,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -44,7 +44,7 @@ class PeriodGridView extends StatelessWidget {
       elevation: 0,
       color: Theme.of(context).colorScheme.surfaceContainerHighest,
       child: InkWell(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         onTap: () => onTap(context, period),
         onLongPress: () => onLongPress(context, period),
         child: Padding(
@@ -56,16 +56,8 @@ class PeriodGridView extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primaryContainer,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Icon(
-                      Icons.calendar_today,
-                      size: 14,
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    ),
+                    padding: const EdgeInsets.all(3),
+                    child: Icon(Icons.calendar_today, size: 20),
                   ),
                   const Spacer(),
                   Text(
@@ -87,42 +79,65 @@ class PeriodGridView extends StatelessWidget {
               const SizedBox(height: 8),
               // 日期信息
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.end,
+                child: Row(
                   children: [
-                    Text(
-                      '开始',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
-                        fontSize: 11,
-                      ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          '开始',
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurfaceVariant
+                                .withValues(alpha: 0.7),
+                            fontSize: 11,
+                          ),
+                        ),
+                        Text(
+                          DateUtil.formatDate(period.start!),
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodySmall?.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
                     ),
-                    Text(
-                      DateUtil.formatDate(period.start!),
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w500,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      '结束',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
-                        fontSize: 11,
-                      ),
-                    ),
-                    Text(
-                      DateUtil.formatDate(period.end!),
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w500,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
+                    const SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
+
+                      children: [
+                        Text(
+                          '结束',
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurfaceVariant
+                                .withValues(alpha: 0.7),
+                            fontSize: 11,
+                          ),
+                        ),
+                        Text(
+                          DateUtil.formatDate(period.end!),
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodySmall?.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -144,7 +159,7 @@ class PeriodGridView extends StatelessWidget {
       elevation: 0,
       color: Theme.of(context).colorScheme.errorContainer,
       child: InkWell(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         onTap: () => onTap(context, period),
         onLongPress: () => onLongPress(context, period),
         child: Padding(
@@ -170,8 +185,8 @@ class PeriodGridView extends StatelessWidget {
                   const Spacer(),
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 6,
-                      vertical: 2,
+                      horizontal: 8,
+                      vertical: 4,
                     ),
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.error,
@@ -182,7 +197,7 @@ class PeriodGridView extends StatelessWidget {
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Theme.of(context).colorScheme.onError,
                         fontWeight: FontWeight.w500,
-                        fontSize: 10,
+                        fontSize: 12,
                       ),
                     ),
                   ),
