@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:period_record/theme/app_colors.dart';
+import 'package:period_record/pages/settings_page.dart';
+import 'package:period_record/pages/stats_page.dart';
 
 /// 主页自定义AppBar组件
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -7,33 +8,33 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = AppColors.of(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return AppBar(
-      elevation: 4.0,
-      backgroundColor: isDark ? colors.surface : colors.primary,
-      title: Text(
-        '生理期记录',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          color: isDark ? colors.onSurface : colors.onPrimary,
-          fontSize: 20,
-        ),
-      ),
+      title: Text('生理期记录'),
+      centerTitle: true,
       leading: IconButton(
-        onPressed: () {},
-        icon: Icon(
-          Icons.favorite,
-          color: isDark ? colors.onSurface : colors.onPrimary,
-          size: 24,
-        ),
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const Scaffold(body: StatsPage()),
+            ),
+          );
+        },
+        icon: Icon(Icons.bar_chart_outlined, size: 24),
       ),
-      actions: const [],
+      actions: [
+        IconButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const Scaffold(body: SettingsPage()),
+              ),
+            );
+          },
+          icon: Icon(Icons.settings, size: 24),
+        ),
+      ],
     );
   }
-
-
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);

@@ -16,32 +16,10 @@ class HomePage extends StatelessWidget {
       builder: (context, periodProvider, child) {
         return Scaffold(
           appBar: const HomeAppBar(),
-          body: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Theme.of(context).colorScheme.surface,
-                  Theme.of(context).colorScheme.surface.withValues(alpha: 0.8),
-                ],
-              ),
-            ),
-            child: CustomScrollView(
-              slivers: [
-                // 状态显示区域整体居中
-                SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: Center(
-                    child: Container(
-                      margin: const EdgeInsets.all(16),
-                      child: PeriodStatusContent(
-                        lastPeriod: periodProvider.lastPeriod,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+          body: Center(
+            child: Container(
+              margin: const EdgeInsets.all(16),
+              child: PeriodStatusContent(lastPeriod: periodProvider.lastPeriod),
             ),
           ),
           floatingActionButton: PeriodActionButton(

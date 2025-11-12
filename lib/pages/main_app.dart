@@ -36,32 +36,32 @@ class _MainAppState extends State<MainApp> {
     return Consumer<PeriodProvider>(
       builder: (context, periodProvider, child) {
         return Scaffold(
-          body: _pages[_currentIndex], // 主要内容区域
-          bottomNavigationBar: NavigationBar(
-            selectedIndex: _currentIndex,
-            onDestinationSelected: (index) {
-              setState(() {
-                _currentIndex = index;
-              });
-            },
-            destinations: const [
-              NavigationDestination(
-                icon: Icon(Icons.calendar_today_outlined),
-                selectedIcon: Icon(Icons.calendar_today),
-                label: '记录',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.bar_chart_outlined),
-                selectedIcon: Icon(Icons.bar_chart),
-                label: '统计',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.settings_outlined),
-                selectedIcon: Icon(Icons.settings),
-                label: '设置',
-              ),
-            ],
-          ),
+          body: const HomePage(), // 主要内容区域
+          // bottomNavigationBar: NavigationBar(
+          //   selectedIndex: _currentIndex,
+          //   onDestinationSelected: (index) {
+          //     setState(() {
+          //       _currentIndex = index;
+          //     });
+          //   },
+          //   destinations: const [
+          //     NavigationDestination(
+          //       icon: Icon(Icons.calendar_today_outlined),
+          //       selectedIcon: Icon(Icons.calendar_today),
+          //       label: '记录',
+          //     ),
+          //     NavigationDestination(
+          //       icon: Icon(Icons.bar_chart_outlined),
+          //       selectedIcon: Icon(Icons.bar_chart),
+          //       label: '统计',
+          //     ),
+          //     NavigationDestination(
+          //       icon: Icon(Icons.settings_outlined),
+          //       selectedIcon: Icon(Icons.settings),
+          //       label: '设置',
+          //     ),
+          //   ],
+          // ),
         );
       },
     );
