@@ -121,20 +121,18 @@ class StatsPage extends StatelessWidget {
       child:
           periods.isNotEmpty
               ? Column(
-                  children: [
-                    // 统计概览卡片 - 固定不滚动
-                    StatsOverviewCard(periods: periods),
-                    
-                    // 记录列表卡片 - 可滚动
-                    Expanded(
-                      child: CustomScrollView(
-                        slivers: [
-                          RecordListCard(periods: periods),
-                        ],
-                      ),
+                children: [
+                  // 统计概览卡片 - 固定不滚动
+                  StatsOverviewCard(periods: periods),
+
+                  // 记录列表卡片 - 可滚动
+                  Expanded(
+                    child: CustomScrollView(
+                      slivers: [RecordListCard(periods: periods)],
                     ),
-                  ],
-                )
+                  ),
+                ],
+              )
               : const _EmptyState(),
     );
   }

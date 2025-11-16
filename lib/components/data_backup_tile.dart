@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:period_record/theme/app_colors.dart';
 import 'package:provider/provider.dart';
 import 'package:period_record/period_provider.dart';
 import 'dart:convert';
@@ -63,14 +64,14 @@ class _DataBackupTileState extends State<DataBackupTile>
               children: [
                 Icon(
                   Icons.check_circle,
-                  color: Theme.of(context).colorScheme.onPrimary,
+                  color: AppColors.of(context).onPrimary,
                   size: 20,
                 ),
                 const SizedBox(width: 8),
                 const Text('数据备份成功'),
               ],
             ),
-            backgroundColor: Theme.of(context).colorScheme.primary,
+            backgroundColor: AppColors.of(context).primary,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
@@ -86,14 +87,14 @@ class _DataBackupTileState extends State<DataBackupTile>
               children: [
                 Icon(
                   Icons.error_outline,
-                  color: Theme.of(context).colorScheme.onError,
+                  color: AppColors.of(context).onError,
                   size: 20,
                 ),
                 const SizedBox(width: 8),
                 Expanded(child: Text('备份失败: ${e.toString()}')),
               ],
             ),
-            backgroundColor: Theme.of(context).colorScheme.error,
+            backgroundColor: AppColors.of(context).error,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
@@ -115,18 +116,14 @@ class _DataBackupTileState extends State<DataBackupTile>
     return ScaleTransition(
       scale: _scaleAnimation,
       child: ListTile(
-        leading: Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.secondaryContainer,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(
-            Icons.backup,
-            color: Theme.of(context).colorScheme.onSecondaryContainer,
-            size: 20,
-          ),
-        ),
+        // leading: Container(
+        //   padding: const EdgeInsets.all(8),
+        //   child: Icon(
+        //     Icons.backup,
+        //     color: AppColors.of(context).onSecondaryContainer,
+        //     size: 20,
+        //   ),
+        // ),
         title: const Text('备份数据到本地'),
         subtitle: const Text('将数据保存到本地文件'),
         trailing:
@@ -137,19 +134,19 @@ class _DataBackupTileState extends State<DataBackupTile>
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
                     valueColor: AlwaysStoppedAnimation<Color>(
-                      Theme.of(context).colorScheme.primary,
+                      AppColors.of(context).primary,
                     ),
                   ),
                 )
                 : Container(
                   padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primaryContainer,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
+                  // decoration: BoxDecoration(
+                  //   color: AppColors.of(context).primaryContainer,
+                  //   borderRadius: BorderRadius.circular(8),
+                  // ),
                   child: Icon(
                     Icons.download,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    color: AppColors.of(context).onPrimaryContainer,
                     size: 20,
                   ),
                 ),

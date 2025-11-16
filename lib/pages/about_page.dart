@@ -203,12 +203,12 @@ class AboutContentView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
-          width: 48,
-          height: 48,
-          decoration: BoxDecoration(
-            color: colorScheme.primaryContainer,
-            borderRadius: BorderRadius.circular(16),
-          ),
+          width: 32,
+          height: 32,
+          // decoration: BoxDecoration(
+          //   color: colorScheme.primaryContainer,
+          //   borderRadius: BorderRadius.circular(16),
+          // ),
           alignment: Alignment.center,
           child: Icon(icon, size: 24, color: colorScheme.onPrimaryContainer),
         ),
@@ -281,7 +281,7 @@ class _AboutPageState extends State<AboutPage> {
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: colorScheme.surfaceTint,
-        elevation: 0,
+        // elevation: 0,
         scrolledUnderElevation: 2,
         centerTitle: false,
         title: Text('关于应用', style: textTheme.titleLarge),

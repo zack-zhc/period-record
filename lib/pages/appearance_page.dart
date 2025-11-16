@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:period_record/components/theme_selector.dart';
-import 'package:period_record/theme/app_colors.dart';
 
 class AppearancePage extends StatefulWidget {
   const AppearancePage({super.key});
@@ -12,8 +11,6 @@ class AppearancePage extends StatefulWidget {
 class _AppearancePageState extends State<AppearancePage> {
   @override
   Widget build(BuildContext context) {
-    final colors = AppColors.of(context);
-
     // 使用Material 3推荐的布局
     return Scaffold(
       appBar: _buildAppBar(context),
@@ -46,10 +43,10 @@ class _AppearancePageState extends State<AppearancePage> {
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
       child: Text(
         title,
-        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-          fontWeight: FontWeight.w600,
-          color: Theme.of(context).colorScheme.primary,
-        ),
+        // style: Theme.of(context).textTheme.titleMedium?.copyWith(
+        //   fontWeight: FontWeight.w600,
+        //   color: Theme.of(context).colorScheme.primary,
+        // ),
       ),
     );
   }
@@ -59,13 +56,9 @@ class _AppearancePageState extends State<AppearancePage> {
       contentPadding: const EdgeInsets.symmetric(horizontal: 16),
       leading: Container(
         padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondaryContainer,
-          borderRadius: BorderRadius.circular(12), // 使用更圆润的边框
-        ),
         child: Icon(
           Icons.palette,
-          color: Theme.of(context).colorScheme.onSecondaryContainer,
+          color: Theme.of(context).colorScheme.primary,
           size: 24, // 稍大的图标更符合Material 3
         ),
       ),
@@ -105,13 +98,9 @@ class _AppearancePageState extends State<AppearancePage> {
       contentPadding: const EdgeInsets.symmetric(horizontal: 16),
       leading: Container(
         padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.tertiaryContainer,
-          borderRadius: BorderRadius.circular(12), // 使用更圆润的边框
-        ),
         child: Icon(
           Icons.text_fields,
-          color: Theme.of(context).colorScheme.onTertiaryContainer,
+          color: Theme.of(context).colorScheme.primary,
           size: 24, // 稍大的图标更符合Material 3
         ),
       ),

@@ -20,10 +20,6 @@ class ThemeSelector extends StatelessWidget {
       contentPadding: const EdgeInsets.symmetric(horizontal: 16),
       leading: Container(
         padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primaryContainer,
-          borderRadius: BorderRadius.circular(8),
-        ),
         child: Icon(
           themeIcons[currentIndex],
           color: Theme.of(context).colorScheme.primary,

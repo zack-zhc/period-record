@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:period_record/theme/app_colors.dart';
 import 'package:provider/provider.dart';
 import 'package:period_record/period_provider.dart';
 import 'dart:io';
@@ -76,14 +77,14 @@ class _DataImportTileState extends State<DataImportTile>
                   children: [
                     Icon(
                       Icons.check_circle,
-                      color: Theme.of(context).colorScheme.onPrimary,
+                      color: AppColors.of(context).onPrimary,
                       size: 20,
                     ),
                     const SizedBox(width: 8),
                     const Text('数据导入成功'),
                   ],
                 ),
-                backgroundColor: Theme.of(context).colorScheme.primary,
+                backgroundColor: AppColors.of(context).primary,
                 behavior: SnackBarBehavior.floating,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -101,14 +102,14 @@ class _DataImportTileState extends State<DataImportTile>
               children: [
                 Icon(
                   Icons.error_outline,
-                  color: Theme.of(context).colorScheme.onError,
+                  color: AppColors.of(context).onError,
                   size: 20,
                 ),
                 const SizedBox(width: 8),
                 Expanded(child: Text('导入失败: ${e.toString()}')),
               ],
             ),
-            backgroundColor: Theme.of(context).colorScheme.error,
+            backgroundColor: AppColors.of(context).error,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
@@ -130,18 +131,14 @@ class _DataImportTileState extends State<DataImportTile>
     return ScaleTransition(
       scale: _scaleAnimation,
       child: ListTile(
-        leading: Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.tertiaryContainer,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(
-            Icons.file_upload,
-            color: Theme.of(context).colorScheme.onTertiaryContainer,
-            size: 20,
-          ),
-        ),
+        // leading: Container(
+        //   padding: const EdgeInsets.all(8),
+        //   child: Icon(
+        //     Icons.file_upload,
+        //     color: AppColors.of(context).onTertiaryContainer,
+        //     size: 20,
+        //   ),
+        // ),
         title: const Text('导入数据'),
         subtitle: const Text('从本地文件导入周期数据'),
         trailing:
@@ -152,19 +149,19 @@ class _DataImportTileState extends State<DataImportTile>
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
                     valueColor: AlwaysStoppedAnimation<Color>(
-                      Theme.of(context).colorScheme.primary,
+                      AppColors.of(context).primary,
                     ),
                   ),
                 )
                 : Container(
                   padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primaryContainer,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
+                  // decoration: BoxDecoration(
+                  //   color: AppColors.of(context).primaryContainer,
+                  //   borderRadius: BorderRadius.circular(8),
+                  // ),
                   child: Icon(
-                    Icons.upload_file,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    Icons.file_upload,
+                    color: AppColors.of(context).onPrimaryContainer,
                     size: 20,
                   ),
                 ),

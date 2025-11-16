@@ -224,29 +224,19 @@ class AppTheme {
 
   /// 亮色主题
   static ThemeData get lightTheme {
-    return ThemeData.light(useMaterial3: true).copyWith(
-      // 可以在这里自定义亮色主题的颜色
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: const Color(0xFFE91E63), // 粉色作为种子颜色
-        brightness: Brightness.light,
-      ),
+    return ThemeData(
+      colorSchemeSeed: const Color(0xFFE91E63),
+      useMaterial3: true,
+      brightness: Brightness.light,
     );
   }
 
   /// 暗色主题
   static ThemeData get darkTheme {
-    return ThemeData.dark(useMaterial3: true).copyWith(
-      // 自定义暗色主题的颜色方案
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: const Color(0xFFE91E63), // 粉色作为种子颜色
-        brightness: Brightness.dark,
-      ).copyWith(
-        // 优化暗色主题的容器颜色，使其更适合AppBar
-        primaryContainer: const Color(0xFF2D1B2E), // 深紫红色
-        secondaryContainer: const Color(0xFF1F1B2E), // 深蓝紫色
-        onPrimaryContainer: const Color(0xFFF8BBD9), // 浅粉色文字
-        onSecondaryContainer: const Color(0xFFE1BEE7), // 浅紫色文字
-      ),
+    return ThemeData(
+      colorSchemeSeed: const Color(0xFFE91E63),
+      useMaterial3: true,
+      brightness: Brightness.dark,
     );
   }
 }

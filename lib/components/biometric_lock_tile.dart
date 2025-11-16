@@ -1,5 +1,6 @@
 // 文件名改为 biometric_lock_tile.dart
 import 'package:flutter/material.dart';
+import 'package:period_record/theme/app_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:period_record/utils/auth_util.dart';
 
@@ -70,12 +71,12 @@ class _BiometricLockTileState extends State<BiometricLockTile>
             leading: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.secondaryContainer,
+                color: AppColors.of(context).secondaryContainer,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
                 Icons.fingerprint,
-                color: Theme.of(context).colorScheme.secondary,
+                color: AppColors.of(context).secondary,
                 size: 20,
               ),
             ),
@@ -84,7 +85,7 @@ class _BiometricLockTileState extends State<BiometricLockTile>
             trailing: Switch.adaptive(
               value: false,
               onChanged: null,
-              activeColor: Theme.of(context).colorScheme.secondary,
+              activeColor: AppColors.of(context).secondary,
             ),
           ),
         );
@@ -99,12 +100,12 @@ class _BiometricLockTileState extends State<BiometricLockTile>
         leading: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.secondaryContainer,
+            color: AppColors.of(context).secondaryContainer,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(
             Icons.fingerprint,
-            color: Theme.of(context).colorScheme.secondary,
+            color: AppColors.of(context).secondary,
             size: 20,
           ),
         ),
@@ -113,7 +114,7 @@ class _BiometricLockTileState extends State<BiometricLockTile>
         trailing: Switch.adaptive(
           value: _biometricEnabled!,
           onChanged: _toggleBiometric,
-          activeColor: Theme.of(context).colorScheme.secondary,
+          activeColor: AppColors.of(context).secondary,
         ),
       ),
     );

@@ -176,7 +176,7 @@ class _SettingsPageState extends State<SettingsPage> {
           child: Text(
             title,
             style: Theme.of(context).textTheme.titleSmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              color: AppColors.of(context).onSurfaceVariant,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -202,8 +202,6 @@ class _SettingsPageState extends State<SettingsPage> {
     required String subtitle,
     required VoidCallback onTap,
   }) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     return Material(
       type: MaterialType.transparency,
       child: InkWell(
@@ -219,7 +217,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 height: 24,
                 child: Icon(
                   icon,
-                  color: colorScheme.onPrimaryContainer,
+                  color: AppColors.of(context).onPrimaryContainer,
                   size: 20,
                 ),
               ),
@@ -235,7 +233,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     Text(
                       subtitle,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
+                        color: AppColors.of(context).onSurfaceVariant,
                       ),
                     ),
                   ],
@@ -246,7 +244,7 @@ class _SettingsPageState extends State<SettingsPage> {
               Icon(
                 Icons.chevron_right,
                 size: 24,
-                color: colorScheme.onSurfaceVariant,
+                color: AppColors.of(context).onSurfaceVariant,
               ),
             ],
           ),
