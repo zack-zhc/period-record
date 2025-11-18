@@ -77,7 +77,7 @@ class StatsOverviewCard extends StatelessWidget {
     ];
 
     return Card(
-      margin: const EdgeInsets.all(16),
+      margin: const EdgeInsets.all(8),
       elevation: 0,
       color: colorScheme.surface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
