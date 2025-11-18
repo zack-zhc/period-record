@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:period_record/period.dart';
 import 'package:period_record/utils/date_util.dart';
+import 'package:period_record/theme/app_colors.dart';
 
 /// 统计概览卡片组件
 class StatsOverviewCard extends StatelessWidget {
@@ -32,35 +33,46 @@ class StatsOverviewCard extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
-    // 使用 2x2 网格显示四个纯色卡片，风格参考示例
+    // 从 ThemeExtension 获取自定义统计颜色（若不存在则回退到 AppColors 常量）
+    final statsExt = Theme.of(context).extension<StatsColors>();
+    final greenBg = statsExt?.statsGreen ?? AppColors.statsGreen;
+    final greenOn = statsExt?.onStatsGreen ?? AppColors.onStatsGreen;
+    final redBg = statsExt?.statsRed ?? AppColors.statsRed;
+    final redOn = statsExt?.onStatsRed ?? AppColors.onStatsRed;
+    final yellowBg = statsExt?.statsYellow ?? AppColors.statsYellow;
+    final yellowOn = statsExt?.onStatsYellow ?? AppColors.onStatsYellow;
+    final blueBg = statsExt?.statsBlue ?? AppColors.statsBlue;
+    final blueOn = statsExt?.onStatsBlue ?? AppColors.onStatsBlue;
+
+    // 使用 2x2 网格显示四个纯色卡片,颜色顺序:绿/红/黄/蓝
     final tiles = [
       _buildColorTile(
         context,
         title: '总记录',
         value: '${periods.length}',
-        background: colorScheme.primaryContainer,
-        onBackground: colorScheme.onPrimaryContainer,
+        background: greenBg,
+        onBackground: greenOn,
       ),
       _buildColorTile(
         context,
         title: '已完成',
         value: '${completedPeriods.length}',
-        background: colorScheme.errorContainer,
-        onBackground: colorScheme.onErrorContainer,
+        background: redBg,
+        onBackground: redOn,
       ),
       _buildColorTile(
         context,
         title: '平均天数',
         value: '$averageDays',
-        background: colorScheme.tertiaryContainer,
-        onBackground: colorScheme.onTertiaryContainer,
+        background: yellowBg,
+        onBackground: yellowOn,
       ),
       _buildColorTile(
         context,
         title: '最长周期',
         value: '$longestDays',
-        background: colorScheme.secondaryContainer,
-        onBackground: colorScheme.onSecondaryContainer,
+        background: blueBg,
+        onBackground: blueOn,
       ),
     ];
 
@@ -115,7 +127,7 @@ class StatsOverviewCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: Colors.black.withValues(alpha: 0.06),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -127,7 +139,7 @@ class StatsOverviewCard extends StatelessWidget {
           Text(
             title,
             style: textTheme.bodySmall?.copyWith(
-              color: onBackground.withOpacity(0.95),
+              color: onBackground.withValues(alpha: 0.95),
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -144,7 +156,7 @@ class StatsOverviewCard extends StatelessWidget {
           Text(
             '',
             style: textTheme.bodySmall?.copyWith(
-              color: onBackground.withOpacity(0.85),
+              color: onBackground.withValues(alpha: 0.85),
             ),
           ),
         ],

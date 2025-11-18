@@ -210,6 +210,71 @@ class AppColors {
   /// 橙色 - 用于统计图表
   static const Color orange = Colors.orange;
 
+  // ==================== 统计卡片专用颜色 ====================
+
+  /// 统计卡片绿色背景
+  static const Color statsGreen = Color(0xFF81C784);
+  static const Color onStatsGreen = Color(0xFF1B5E20);
+  // Dark mode variant
+  static const Color statsGreenDark = Color(0xFF2E7D32);
+  static const Color onStatsGreenDark = Color(0xFFFFFFFF);
+
+  /// 统计卡片红色背景
+  static const Color statsRed = Color(0xFFEF5350);
+  static const Color onStatsRed = Color(0xFFFFFFFF);
+  // Dark mode variant
+  static const Color statsRedDark = Color(0xFFD32F2F);
+  static const Color onStatsRedDark = Color(0xFFFFFFFF);
+
+  /// 统计卡片黄色背景
+  static const Color statsYellow = Color(0xFFFFB74D);
+  static const Color onStatsYellow = Color(0xFF4E342E);
+  // Dark mode variant
+  static const Color statsYellowDark = Color(0xFFF9A825);
+  static const Color onStatsYellowDark = Color(0xFF212121);
+
+  /// 统计卡片蓝色背景
+  static const Color statsBlue = Color(0xFF64B5F6);
+  static const Color onStatsBlue = Color(0xFFFFFFFF);
+  // Dark mode variant
+  static const Color statsBlueDark = Color(0xFF1976D2);
+  static const Color onStatsBlueDark = Color(0xFFFFFFFF);
+
+  /// 获取基于当前主题的统计卡片颜色（亮/暗模式自动切换）
+  static Color statsGreenFor(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? statsGreenDark
+          : statsGreen;
+  static Color onStatsGreenFor(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? onStatsGreenDark
+          : onStatsGreen;
+
+  static Color statsRedFor(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark ? statsRedDark : statsRed;
+  static Color onStatsRedFor(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? onStatsRedDark
+          : onStatsRed;
+
+  static Color statsYellowFor(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? statsYellowDark
+          : statsYellow;
+  static Color onStatsYellowFor(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? onStatsYellowDark
+          : onStatsYellow;
+
+  static Color statsBlueFor(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? statsBlueDark
+          : statsBlue;
+  static Color onStatsBlueFor(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? onStatsBlueDark
+          : onStatsBlue;
+
   /// 从BuildContext获取主题颜色
   static ThemeColors of(BuildContext context) {
     return ThemeColors(Theme.of(context).colorScheme);
@@ -224,19 +289,120 @@ class AppTheme {
 
   /// 亮色主题
   static ThemeData get lightTheme {
+    final scheme = ColorScheme.fromSeed(
+      seedColor: const Color(0xFFE91E63),
+      brightness: Brightness.light,
+    );
+
     return ThemeData(
-      colorSchemeSeed: const Color(0xFFE91E63),
+      colorScheme: scheme,
       useMaterial3: true,
       brightness: Brightness.light,
+      extensions: <ThemeExtension<dynamic>>[
+        StatsColors(
+          statsGreen: AppColors.statsGreen,
+          onStatsGreen: AppColors.onStatsGreen,
+          statsRed: AppColors.statsRed,
+          onStatsRed: AppColors.onStatsRed,
+          statsYellow: AppColors.statsYellow,
+          onStatsYellow: AppColors.onStatsYellow,
+          statsBlue: AppColors.statsBlue,
+          onStatsBlue: AppColors.onStatsBlue,
+        ),
+      ],
     );
   }
 
   /// 暗色主题
   static ThemeData get darkTheme {
+    final scheme = ColorScheme.fromSeed(
+      seedColor: const Color(0xFFE91E63),
+      brightness: Brightness.dark,
+    );
+
     return ThemeData(
-      colorSchemeSeed: const Color(0xFFE91E63),
+      colorScheme: scheme,
       useMaterial3: true,
       brightness: Brightness.dark,
+      extensions: <ThemeExtension<dynamic>>[
+        StatsColors(
+          statsGreen: AppColors.statsGreenDark,
+          onStatsGreen: AppColors.onStatsGreenDark,
+          statsRed: AppColors.statsRedDark,
+          onStatsRed: AppColors.onStatsRedDark,
+          statsYellow: AppColors.statsYellowDark,
+          onStatsYellow: AppColors.onStatsYellowDark,
+          statsBlue: AppColors.statsBlueDark,
+          onStatsBlue: AppColors.onStatsBlueDark,
+        ),
+      ],
+    );
+  }
+}
+
+/// ThemeExtension 用于在 ThemeData 中扩展自定义颜色
+@immutable
+class StatsColors extends ThemeExtension<StatsColors> {
+  final Color statsGreen;
+  final Color onStatsGreen;
+
+  final Color statsRed;
+  final Color onStatsRed;
+
+  final Color statsYellow;
+  final Color onStatsYellow;
+
+  final Color statsBlue;
+  final Color onStatsBlue;
+
+  const StatsColors({
+    required this.statsGreen,
+    required this.onStatsGreen,
+    required this.statsRed,
+    required this.onStatsRed,
+    required this.statsYellow,
+    required this.onStatsYellow,
+    required this.statsBlue,
+    required this.onStatsBlue,
+  });
+
+  @override
+  StatsColors copyWith({
+    Color? statsGreen,
+    Color? onStatsGreen,
+    Color? statsRed,
+    Color? onStatsRed,
+    Color? statsYellow,
+    Color? onStatsYellow,
+    Color? statsBlue,
+    Color? onStatsBlue,
+  }) {
+    return StatsColors(
+      statsGreen: statsGreen ?? this.statsGreen,
+      onStatsGreen: onStatsGreen ?? this.onStatsGreen,
+      statsRed: statsRed ?? this.statsRed,
+      onStatsRed: onStatsRed ?? this.onStatsRed,
+      statsYellow: statsYellow ?? this.statsYellow,
+      onStatsYellow: onStatsYellow ?? this.onStatsYellow,
+      statsBlue: statsBlue ?? this.statsBlue,
+      onStatsBlue: onStatsBlue ?? this.onStatsBlue,
+    );
+  }
+
+  @override
+  StatsColors lerp(ThemeExtension<StatsColors>? other, double t) {
+    if (other is! StatsColors) return this;
+    return StatsColors(
+      statsGreen: Color.lerp(statsGreen, other.statsGreen, t) ?? statsGreen,
+      onStatsGreen:
+          Color.lerp(onStatsGreen, other.onStatsGreen, t) ?? onStatsGreen,
+      statsRed: Color.lerp(statsRed, other.statsRed, t) ?? statsRed,
+      onStatsRed: Color.lerp(onStatsRed, other.onStatsRed, t) ?? onStatsRed,
+      statsYellow: Color.lerp(statsYellow, other.statsYellow, t) ?? statsYellow,
+      onStatsYellow:
+          Color.lerp(onStatsYellow, other.onStatsYellow, t) ?? onStatsYellow,
+      statsBlue: Color.lerp(statsBlue, other.statsBlue, t) ?? statsBlue,
+      onStatsBlue: Color.lerp(onStatsBlue, other.onStatsBlue, t) ?? onStatsBlue,
     );
   }
 }
