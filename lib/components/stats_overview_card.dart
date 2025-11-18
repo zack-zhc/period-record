@@ -21,125 +21,130 @@ class StatsOverviewCard extends StatelessWidget {
             ? (totalDays / completedPeriods.length).round()
             : 0;
 
+    // 计算最长周期（用于第四个卡片）
+    final longestDays =
+        completedPeriods.isNotEmpty
+            ? completedPeriods
+                .map((p) => DateUtil.calculateDurationDays(p.start!, p.end!))
+                .reduce((a, b) => a > b ? a : b)
+            : 0;
+
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    // 使用 2x2 网格显示四个纯色卡片，风格参考示例
+    final tiles = [
+      _buildColorTile(
+        context,
+        title: '总记录',
+        value: '${periods.length}',
+        background: colorScheme.primaryContainer,
+        onBackground: colorScheme.onPrimaryContainer,
+      ),
+      _buildColorTile(
+        context,
+        title: '已完成',
+        value: '${completedPeriods.length}',
+        background: colorScheme.errorContainer,
+        onBackground: colorScheme.onErrorContainer,
+      ),
+      _buildColorTile(
+        context,
+        title: '平均天数',
+        value: '$averageDays',
+        background: colorScheme.tertiaryContainer,
+        onBackground: colorScheme.onTertiaryContainer,
+      ),
+      _buildColorTile(
+        context,
+        title: '最长周期',
+        value: '$longestDays',
+        background: colorScheme.secondaryContainer,
+        onBackground: colorScheme.onSecondaryContainer,
+      ),
+    ];
+
     return Card(
       margin: const EdgeInsets.all(16),
-      clipBehavior: Clip.antiAlias,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primaryContainer,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.primary.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Icon(
-                      Icons.analytics_outlined,
-                      color: Theme.of(context).colorScheme.primary,
-                      size: 24,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Text(
-                    '统计概览',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    ),
-                  ),
-                ],
+      elevation: 0,
+      color: colorScheme.surface,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 标题（移除左侧图标，保持对齐与样式）
+            Text(
+              '统计概览',
+              style: textTheme.titleLarge?.copyWith(
+                color: colorScheme.onSurface,
+                fontWeight: FontWeight.w700,
               ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildStatItem(
-                      context,
-                      '总记录',
-                      '${periods.length}',
-                      Icons.calendar_today_outlined,
-                      Colors.blue,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: _buildStatItem(
-                      context,
-                      '已完成',
-                      '${completedPeriods.length}',
-                      Icons.check_circle_outline,
-                      Colors.green,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: _buildStatItem(
-                      context,
-                      '平均天数',
-                      '$averageDays',
-                      Icons.trending_up_outlined,
-                      Colors.orange,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 12),
+            GridView.count(
+              crossAxisCount: 2,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              childAspectRatio: 1.4,
+              children: tiles,
+            ),
+          ],
         ),
       ),
     );
   }
 
-  /// 构建统计项
-  Widget _buildStatItem(
-    BuildContext context,
-    String label,
-    String value,
-    IconData icon,
-    Color color,
-  ) {
+  // 单个纯色卡片（标题 + 大数字 + 可选子文本）
+  Widget _buildColorTile(
+    BuildContext context, {
+    required String title,
+    required String value,
+    required Color background,
+    required Color onBackground,
+  }) {
+    final textTheme = Theme.of(context).textTheme;
+
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 14),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+        color: background,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(8),
+          Text(
+            title,
+            style: textTheme.bodySmall?.copyWith(
+              color: onBackground.withOpacity(0.95),
+              fontWeight: FontWeight.w600,
             ),
-            child: Icon(icon, color: color, size: 22),
           ),
-          const SizedBox(height: 8),
+          const Spacer(),
           Text(
             value,
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.onPrimaryContainer,
+            style: textTheme.headlineMedium?.copyWith(
+              color: onBackground,
+              fontWeight: FontWeight.w800,
             ),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 6),
+          // 可选副文本（目前留空，占位）
           Text(
-            label,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(
-                context,
-              ).colorScheme.onPrimaryContainer.withValues(alpha: 0.8),
-              fontWeight: FontWeight.w500,
+            '',
+            style: textTheme.bodySmall?.copyWith(
+              color: onBackground.withOpacity(0.85),
             ),
           ),
         ],
