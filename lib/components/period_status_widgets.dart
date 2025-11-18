@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:period_record/theme/app_colors.dart';
 
-/// 显示天数的通用组件
 class DaysDisplayWidget extends StatelessWidget {
   final int days;
   final TextStyle? numberStyle;
@@ -148,59 +147,109 @@ class PeriodStartedTodayWidget extends StatelessWidget {
 
     return Container(
       margin: const EdgeInsets.all(20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 140,
-            height: 140,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: colors.periodStartedGradient,
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: _getPeriodStartedShadowColor(colors, isDark),
-                  blurRadius: 20,
-                  offset: const Offset(0, 10),
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        elevation: 6,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 140,
+                height: 140,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: colors.periodStartedGradient,
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: _getPeriodStartedShadowColor(colors, isDark),
+                      blurRadius: 18,
+                      offset: const Offset(0, 10),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            child: Icon(Icons.favorite, size: 70, color: AppColors.white),
-          ),
-          const SizedBox(height: 24),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(colors: colors.periodStartedGradient),
-              borderRadius: BorderRadius.circular(25),
-              boxShadow: [
-                BoxShadow(
-                  color: _getPeriodStartedShadowColor(colors, isDark),
-                  blurRadius: 10,
-                  offset: const Offset(0, 5),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Icon(Icons.favorite, size: 70, color: AppColors.white),
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: Container(
+                        width: 18,
+                        height: 18,
+                        decoration: BoxDecoration(
+                          color: AppColors.white.withOpacity(0.15),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: AppColors.white.withOpacity(0.25),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            child: Text(
-              title,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: AppColors.white,
-                fontWeight: FontWeight.w600,
               ),
-            ),
+              const SizedBox(height: 18),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 12,
+                ),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: colors.periodStartedGradient,
+                  ),
+                  borderRadius: BorderRadius.circular(25),
+                  boxShadow: [
+                    BoxShadow(
+                      color: _getPeriodStartedShadowColor(colors, isDark),
+                      blurRadius: 10,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  title,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    color: AppColors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                '今天是生理期第一天',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: colors.onSurfaceWithAlpha(ThemeColors.alpha70),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: colors.errorWithAlpha(0.12),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Text(
+                  '第1天',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: colors.error,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
-          Text(
-            '今天是生理期第一天',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: colors.onSurfaceWithAlpha(ThemeColors.alpha70),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -214,7 +263,6 @@ class PeriodStartedTodayWidget extends StatelessWidget {
   }
 }
 
-/// 生理期进行中组件
 class PeriodInProgressWidget extends StatelessWidget {
   final String title;
   final int days;
