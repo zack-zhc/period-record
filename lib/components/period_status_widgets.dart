@@ -149,9 +149,8 @@ class PeriodStartedTodayWidget extends StatelessWidget {
       margin: const EdgeInsets.all(20),
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        elevation: 6,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+          padding: const EdgeInsets.all(40),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -223,13 +222,13 @@ class PeriodStartedTodayWidget extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 12),
-              Text(
-                '今天是生理期第一天',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: colors.onSurfaceWithAlpha(ThemeColors.alpha70),
-                ),
-              ),
-              const SizedBox(height: 12),
+              // Text(
+              //   '今天是生理期第一天',
+              //   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              //     color: colors.onSurfaceWithAlpha(ThemeColors.alpha70),
+              //   ),
+              // ),
+              // const SizedBox(height: 12),
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 12,
