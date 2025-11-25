@@ -78,175 +78,176 @@ class AboutContentView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, _) {
+        return SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(24, 32, 24, 48),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buildHeroCard(context),
+              const SizedBox(height: 36),
+              _buildFooter(context),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildHeroCard(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
+    final effectiveVersion = version.isNotEmpty ? version : '未知';
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+    return Container(
+      padding: const EdgeInsets.all(28),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [colorScheme.primary, colorScheme.tertiary],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(40),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.primary.withOpacity(0.35),
+            blurRadius: 32,
+            offset: const Offset(0, 18),
+          ),
+        ],
+      ),
+      child: Stack(
         children: [
-          const SizedBox(height: 40),
-          // 应用图标 - 现代化设计
-          Container(
-            width: 140,
-            height: 140,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  colorScheme.primaryContainer,
-                  colorScheme.primaryContainer.withOpacity(0.8),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(32),
-              boxShadow: [
-                BoxShadow(
-                  color: colorScheme.shadow.withOpacity(0.2),
-                  blurRadius: 20,
-                  offset: const Offset(0, 8),
+          Positioned(
+            top: -20,
+            right: -10,
+            child: _HeroBubble(color: colorScheme.onPrimary.withOpacity(0.08)),
+          ),
+          Positioned(
+            bottom: -30,
+            left: -20,
+            child: _HeroBubble(color: colorScheme.onPrimary.withOpacity(0.05)),
+          ),
+          Align(
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  width: 88,
+                  height: 88,
+                  decoration: BoxDecoration(
+                    color: colorScheme.surface.withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(26),
+                    border: Border.all(
+                      color: colorScheme.onPrimary.withOpacity(0.25),
+                      width: 1.5,
+                    ),
+                  ),
+                  child: Icon(
+                    Icons.favorite_rounded,
+                    size: 44,
+                    color: colorScheme.onPrimary,
+                  ),
+                ),
+                const SizedBox(height: 32),
+                Text(
+                  AppConstants.appName,
+                  style: textTheme.displaySmall?.copyWith(
+                    color: colorScheme.onPrimary,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -0.5,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  AppConstants.appDescription,
+                  style: textTheme.titleMedium?.copyWith(
+                    color: colorScheme.onPrimary.withOpacity(0.9),
+                    height: 1.4,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 18,
+                    vertical: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    color: colorScheme.surface.withOpacity(0.18),
+                    borderRadius: BorderRadius.circular(30),
+                    border: Border.all(
+                      color: colorScheme.onPrimary.withOpacity(0.25),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.tag_rounded,
+                        size: 18,
+                        color: colorScheme.onPrimary,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        '版本 $effectiveVersion',
+                        style: textTheme.labelLarge?.copyWith(
+                          color: colorScheme.onPrimary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-            child: Icon(
-              Icons.calendar_today_rounded,
-              size: 64,
-              color: colorScheme.onPrimaryContainer,
-            ),
           ),
-          const SizedBox(height: 32),
-          // 应用名称 - 更现代的排版
-          Text(
-            AppConstants.appName,
-            style: textTheme.displaySmall?.copyWith(
-              fontWeight: FontWeight.w700,
-              color: colorScheme.onSurface,
-              letterSpacing: -0.5,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 16),
-          // 应用描述 - 改进的间距和样式
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: Text(
-              AppConstants.appDescription,
-              style: textTheme.bodyLarge?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-                height: 1.5,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          const SizedBox(height: 48),
-          // 应用信息卡片 - Material 3 风格
-          Card(
-            elevation: 0,
-            color: colorScheme.surfaceContainerHighest,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(28),
-            ),
-            margin: EdgeInsets.zero,
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                children: [
-                  _buildInfoItem(
-                    context,
-                    Icons.info_outline_rounded,
-                    '应用名称',
-                    AppConstants.appName,
-                  ),
-                  const SizedBox(height: 20),
-                  Divider(color: colorScheme.outlineVariant, height: 1),
-                  const SizedBox(height: 20),
-                  _buildInfoItem(context, Icons.tag_rounded, '版本', version),
-                  const SizedBox(height: 20),
-                  Divider(color: colorScheme.outlineVariant, height: 1),
-                  const SizedBox(height: 20),
-                  _buildInfoItem(
-                    context,
-                    Icons.person_outline_rounded,
-                    '开发者',
-                    AppConstants.developerName,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 32),
-          // 版权信息 - 现代化卡片
-          Card(
-            elevation: 0,
-            color: colorScheme.surfaceContainerLow,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            margin: EdgeInsets.zero,
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Text(
-                AppConstants.copyright,
-                style: textTheme.bodyMedium?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                  height: 1.4,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          const SizedBox(height: 40),
         ],
       ),
     );
   }
 
-  Widget _buildInfoItem(
-    BuildContext context,
-    IconData icon,
-    String title,
-    String value,
-  ) {
+  Widget _buildFooter(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
-    return Row(
-      children: [
-        Container(
-          width: 48,
-          height: 48,
-          decoration: BoxDecoration(
-            color: colorScheme.primaryContainer,
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Icon(icon, size: 24, color: colorScheme.onPrimaryContainer),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(color: colorScheme.outlineVariant.withOpacity(0.4)),
+        color: colorScheme.surfaceContainerLow,
+      ),
+      child: Text(
+        '感谢选择 ${AppConstants.appName}。某个静静的夜晚，作者只想有个本地小工具，悄悄记录伴侣的点滴，于是便有了它。愿这份温柔也陪伴你，守护你与自己的节奏。',
+        style: textTheme.bodyLarge?.copyWith(
+          color: colorScheme.onSurfaceVariant,
+          height: 1.4,
         ),
-        const SizedBox(width: 20),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: textTheme.labelLarge?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                value,
-                style: textTheme.bodyLarge?.copyWith(
-                  color: colorScheme.onSurface,
-                  fontWeight: FontWeight.w600,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
-        ),
-      ],
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+}
+
+class _HeroBubble extends StatelessWidget {
+  const _HeroBubble({required this.color});
+
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 120,
+      height: 120,
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(80),
+      ),
     );
   }
 }
