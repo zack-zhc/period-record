@@ -216,19 +216,49 @@ class AboutContentView extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+      padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 26),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(28),
-        border: Border.all(color: colorScheme.outlineVariant.withOpacity(0.4)),
-        color: colorScheme.surfaceContainerLow,
-      ),
-      child: Text(
-        '感谢选择 ${AppConstants.appName}。某个静静的夜晚，作者只想有个本地小工具，悄悄记录伴侣的点滴，于是便有了它。愿这份温柔也陪伴你，守护你与自己的节奏。',
-        style: textTheme.bodyLarge?.copyWith(
-          color: colorScheme.onSurfaceVariant,
-          height: 1.4,
+        borderRadius: BorderRadius.circular(32),
+        gradient: LinearGradient(
+          colors: [
+            colorScheme.secondaryContainer.withOpacity(0.8),
+            colorScheme.surface,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
-        textAlign: TextAlign.center,
+        border: Border.all(color: colorScheme.outlineVariant.withOpacity(0.2)),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.shadow.withOpacity(0.08),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            '感谢选择 ${AppConstants.appName}。',
+            style: textTheme.titleMedium?.copyWith(
+              color: colorScheme.onSurface,
+              fontWeight: FontWeight.w700,
+              fontSize: 20,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 12),
+          Text(
+            '某个静静的夜晚，作者只想为伴侣准备一个温柔的本地记事本，于是便有了它。愿这份心意也在你的日常里点亮一束柔光，陪你细心记录每一次身心律动。',
+            style: textTheme.bodyLarge?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+              height: 1.5,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }
