@@ -279,83 +279,172 @@ class PeriodInProgressWidget extends StatelessWidget {
 
     return Container(
       margin: const EdgeInsets.all(20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 140,
-            height: 140,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: colors.periodInProgressGradient,
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: _getPeriodInProgressShadowColor(colors, isDark),
-                  blurRadius: 20,
-                  offset: const Offset(0, 10),
-                ),
-              ],
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: colors.periodInProgressGradient,
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(28),
+          boxShadow: [
+            BoxShadow(
+              color: _getPeriodInProgressShadowColor(colors, isDark),
+              blurRadius: 28,
+              offset: const Offset(0, 16),
             ),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Icon(Icons.favorite, size: 70, color: AppColors.white),
-                Positioned(
-                  bottom: 20,
-                  child: Container(
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: AppColors.white.withValues(alpha: 0.18),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: AppColors.white.withValues(alpha: 0.35),
+                      ),
+                    ),
+                    child: const Icon(
+                      Icons.favorite,
+                      color: AppColors.white,
+                      size: 30,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '生理期进行中',
+                          style: Theme.of(
+                            context,
+                          ).textTheme.titleMedium?.copyWith(
+                            color: AppColors.white,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '温柔地照顾自己，放慢脚步。',
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodySmall?.copyWith(
+                            color: AppColors.white.withValues(alpha: 0.8),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
+                      horizontal: 14,
+                      vertical: 8,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(12),
+                      color: AppColors.white.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(18),
+                      border: Border.all(
+                        color: AppColors.white.withValues(alpha: 0.35),
+                      ),
                     ),
                     child: Text(
                       '第$days天',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: _getPeriodInProgressBadgeTextColor(
-                          colors,
-                          isDark,
-                        ),
+                        color: AppColors.white,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 24),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(colors: colors.periodInProgressGradient),
-              borderRadius: BorderRadius.circular(25),
-              boxShadow: [
-                BoxShadow(
-                  color: _getPeriodInProgressShadowColor(colors, isDark),
-                  blurRadius: 10,
-                  offset: const Offset(0, 5),
-                ),
-              ],
-            ),
-            child: Text(
-              title,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: AppColors.white,
-                fontWeight: FontWeight.w600,
+                ],
               ),
-            ),
+              const SizedBox(height: 20),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.white.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.auto_awesome,
+                      color: AppColors.white,
+                      size: 22,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        '已持续 $days 天，补水、休息与热敷都能让身体舒服一些。',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: AppColors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 18),
+              Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                children: [
+                  _buildCareChip(
+                    context,
+                    icon: Icons.local_drink,
+                    label: '多补水',
+                  ),
+                  _buildCareChip(
+                    context,
+                    icon: Icons.self_improvement,
+                    label: '放松呼吸',
+                  ),
+                  _buildCareChip(context, icon: Icons.bedtime, label: '早点休息'),
+                ],
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
-          DaysDisplayWidget(
-            days: days,
-            color: _getPeriodInProgressDaysColor(colors, isDark),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCareChip(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      decoration: BoxDecoration(
+        color: AppColors.white.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: AppColors.white.withValues(alpha: 0.25)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 18, color: AppColors.white),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              color: AppColors.white,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ],
       ),
@@ -367,22 +456,6 @@ class PeriodInProgressWidget extends StatelessWidget {
       return const Color(0xFFF06292).withValues(alpha: 0.4);
     } else {
       return colors.errorWithAlpha(0.3);
-    }
-  }
-
-  Color _getPeriodInProgressBadgeTextColor(ThemeColors colors, bool isDark) {
-    if (isDark) {
-      return const Color(0xFFEC407A);
-    } else {
-      return colors.error;
-    }
-  }
-
-  Color _getPeriodInProgressDaysColor(ThemeColors colors, bool isDark) {
-    if (isDark) {
-      return const Color(0xFFEC407A);
-    } else {
-      return colors.error;
     }
   }
 }
