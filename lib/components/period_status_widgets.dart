@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:period_record/models/period_status_logic.dart';
 import 'package:period_record/theme/app_colors.dart';
 
 class DaysDisplayWidget extends StatelessWidget {
@@ -284,8 +285,11 @@ class PeriodInProgressWidget extends StatelessWidget {
                   color,
             )
             .toList();
-    final supportMessage = _getSupportMessage(days);
-    final careTips = _getCareTips(days);
+    final supportMessage = PeriodStatusLogic.supportMessage(
+      PeriodStatus.inProgress,
+      days,
+    );
+    final careTips = PeriodStatusLogic.careTips(PeriodStatus.inProgress, days);
 
     return Container(
       margin: const EdgeInsets.all(20),
@@ -465,43 +469,6 @@ class PeriodInProgressWidget extends StatelessWidget {
       return colors.errorWithAlpha(0.3);
     }
   }
-
-  String _getSupportMessage(int days) {
-    if (days <= 2) {
-      return '刚开始的这几天最容易疲惫，放慢脚步、让身体好好休息。';
-    } else if (days <= 4) {
-      return '已经第 $days 天了，适度热敷和补水能帮助舒缓不适。';
-    }
-    return '已进入第 $days 天，快到尾声，保持轻松心情与柔和拉伸。';
-  }
-
-  List<_CareTip> _getCareTips(int days) {
-    if (days <= 2) {
-      return const [
-        _CareTip(Icons.bedtime, '多休息'),
-        _CareTip(Icons.local_cafe, '暖热饮'),
-        _CareTip(Icons.hot_tub, '热敷腹部'),
-      ];
-    } else if (days <= 4) {
-      return const [
-        _CareTip(Icons.local_drink, '补充水分'),
-        _CareTip(Icons.self_improvement, '深呼吸'),
-        _CareTip(Icons.spa, '轻柔拉伸'),
-      ];
-    }
-    return const [
-      _CareTip(Icons.emoji_emotions, '保持好心情'),
-      _CareTip(Icons.air, '舒展舒气'),
-      _CareTip(Icons.directions_walk, '缓步散心'),
-    ];
-  }
-}
-
-class _CareTip {
-  final IconData icon;
-  final String label;
-
-  const _CareTip(this.icon, this.label);
 }
 
 /// 生理期结束组件

@@ -1,8 +1,16 @@
+import 'package:flutter/material.dart';
 import 'package:period_record/period.dart';
 import 'package:period_record/utils/date_util.dart';
 
 /// 生理期状态枚举
 enum PeriodStatus { noPeriod, startedToday, inProgress, endedToday, ended }
+
+class CareTip {
+  final IconData icon;
+  final String label;
+
+  const CareTip(this.icon, this.label);
+}
 
 /// 生理期状态信息模型
 class PeriodStatusInfo {
@@ -115,6 +123,81 @@ class PeriodStatusLogic {
     final today = DateTime.now();
     final daysLeft = nextStart.difference(today).inDays;
     return daysLeft >= 0 ? daysLeft : 0;
+  }
+
+  static String supportMessage(PeriodStatus status, int days) {
+    switch (status) {
+      case PeriodStatus.startedToday:
+        return '今天刚刚开始，经期的第一天，多聆听身体的节奏。';
+      case PeriodStatus.inProgress:
+        return _inProgressMessage(days);
+      case PeriodStatus.endedToday:
+        return '今天顺利结束，给自己一点奖励，保持轻松。';
+      case PeriodStatus.ended:
+        return '距离上次生理期已经 $days 天，保持平衡的作息很重要。';
+      case PeriodStatus.noPeriod:
+        return '开始记录与关怀，让自己对身体更有掌控感。';
+    }
+  }
+
+  static List<CareTip> careTips(PeriodStatus status, int days) {
+    switch (status) {
+      case PeriodStatus.startedToday:
+        return const [
+          CareTip(Icons.bedtime, '多休息'),
+          CareTip(Icons.local_cafe, '暖热饮'),
+          CareTip(Icons.hot_tub, '热敷腹部'),
+        ];
+      case PeriodStatus.inProgress:
+        return _inProgressCareTips(days);
+      case PeriodStatus.endedToday:
+        return const [
+          CareTip(Icons.emoji_emotions, '放松心情'),
+          CareTip(Icons.self_improvement, '轻柔拉伸'),
+          CareTip(Icons.spa, '舒缓护理'),
+        ];
+      case PeriodStatus.ended:
+        return const [
+          CareTip(Icons.directions_walk, '保持运动'),
+          CareTip(Icons.restaurant, '营养均衡'),
+          CareTip(Icons.nightlight_round, '规律作息'),
+        ];
+      case PeriodStatus.noPeriod:
+        return const [
+          CareTip(Icons.edit_calendar, '记录周期'),
+          CareTip(Icons.lightbulb, '了解身体'),
+        ];
+    }
+  }
+
+  static String _inProgressMessage(int days) {
+    if (days <= 2) {
+      return '刚开始的这几天最容易疲惫，放慢脚步、让身体好好休息。';
+    } else if (days <= 4) {
+      return '已经第 $days 天了，适度热敷和补水能帮助舒缓不适。';
+    }
+    return '已进入第 $days 天，快到尾声，保持轻松心情与柔和拉伸。';
+  }
+
+  static List<CareTip> _inProgressCareTips(int days) {
+    if (days <= 2) {
+      return const [
+        CareTip(Icons.bedtime, '多休息'),
+        CareTip(Icons.local_cafe, '暖热饮'),
+        CareTip(Icons.hot_tub, '热敷腹部'),
+      ];
+    } else if (days <= 4) {
+      return const [
+        CareTip(Icons.local_drink, '补充水分'),
+        CareTip(Icons.self_improvement, '深呼吸'),
+        CareTip(Icons.spa, '轻柔拉伸'),
+      ];
+    }
+    return const [
+      CareTip(Icons.emoji_emotions, '保持好心情'),
+      CareTip(Icons.air, '舒展舒气'),
+      CareTip(Icons.directions_walk, '缓步散心'),
+    ];
   }
 }
 
