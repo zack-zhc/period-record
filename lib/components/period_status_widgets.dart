@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:period_record/models/period_status_logic.dart';
 import 'package:period_record/theme/app_colors.dart';
 export 'period_in_progress_widget.dart';
 export 'period_ended_widget.dart';
