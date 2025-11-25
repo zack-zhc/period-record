@@ -71,10 +71,33 @@ class AboutErrorView extends StatelessWidget {
 }
 
 // 主要内容视图组件
-class AboutContentView extends StatelessWidget {
+class AboutContentView extends StatefulWidget {
   const AboutContentView({super.key, required this.version});
 
   final String version;
+
+  @override
+  State<AboutContentView> createState() => _AboutContentViewState();
+}
+
+class _AboutContentViewState extends State<AboutContentView>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _orbitController;
+
+  @override
+  void initState() {
+    super.initState();
+    _orbitController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 18),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _orbitController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +121,7 @@ class AboutContentView extends StatelessWidget {
   Widget _buildHeroCard(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    final effectiveVersion = version.isNotEmpty ? version : '未知';
+    final effectiveVersion = widget.version.isNotEmpty ? widget.version : '未知';
 
     return Container(
       padding: const EdgeInsets.all(28),
@@ -119,15 +142,35 @@ class AboutContentView extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          Positioned(
-            top: -20,
-            right: -10,
-            child: _HeroBubble(color: colorScheme.onPrimary.withOpacity(0.08)),
-          ),
-          Positioned(
-            bottom: -30,
-            left: -20,
-            child: _HeroBubble(color: colorScheme.onPrimary.withOpacity(0.05)),
+          Positioned.fill(
+            child: AnimatedBuilder(
+              animation: _orbitController,
+              builder: (context, _) {
+                final progress = _orbitController.value;
+                return Stack(
+                  children: [
+                    Align(
+                      alignment: _edgeAlignment((progress + 0.25) % 1.0),
+                      child: Transform.translate(
+                        offset: const Offset(0, -20),
+                        child: _HeroBubble(
+                          color: colorScheme.onPrimary.withOpacity(0.08),
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: _edgeAlignment((progress + 0.75) % 1.0),
+                      child: Transform.translate(
+                        offset: const Offset(0, 20),
+                        child: _HeroBubble(
+                          color: colorScheme.onPrimary.withOpacity(0.05),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
           ),
           Align(
             alignment: Alignment.center,
@@ -261,6 +304,25 @@ class AboutContentView extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Alignment _edgeAlignment(double progress) {
+    final normalized = progress % 1.0;
+    final scaled = normalized * 4;
+    final segment = scaled.floor();
+    final localT = scaled - segment;
+
+    switch (segment) {
+      case 0:
+        return Alignment(-1 + 2 * localT, -1); // top edge L->R
+      case 1:
+        return Alignment(1, -1 + 2 * localT); // right edge T->B
+      case 2:
+        return Alignment(1 - 2 * localT, 1); // bottom edge R->L
+      case 3:
+      default:
+        return Alignment(-1, 1 - 2 * localT); // left edge B->T
+    }
   }
 }
 
