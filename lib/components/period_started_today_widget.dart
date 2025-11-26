@@ -20,7 +20,6 @@ class PeriodStartedTodayWidget extends StatelessWidget {
                   color,
             )
             .toList();
-    const dayText = '第1天';
     final supportMessage = PeriodStatusLogic.supportMessage(
       PeriodStatus.startedToday,
       0,
@@ -94,26 +93,6 @@ class PeriodStartedTodayWidget extends StatelessWidget {
                           ),
                         ),
                       ],
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.white.withValues(alpha: 0.18),
-                      borderRadius: BorderRadius.circular(18),
-                      border: Border.all(
-                        color: AppColors.white.withValues(alpha: 0.28),
-                      ),
-                    ),
-                    child: Text(
-                      dayText,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppColors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
                     ),
                   ),
                 ],
