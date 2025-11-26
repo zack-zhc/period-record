@@ -14,42 +14,33 @@ class NoPeriodWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textTheme = Theme.of(context).textTheme;
 
-    return Container(
-      margin: const EdgeInsets.all(20),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            width: 120,
-            height: 120,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: _getNoPeriodGradient(colors, isDark),
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.calendar_today_outlined,
-              size: 60,
-              color: _getNoPeriodIconColor(colors, isDark),
-            ),
-          ),
-          const SizedBox(height: 24),
+          _buildBadge(context, colors, isDark),
+          const SizedBox(height: 20),
+          _buildIconHalo(colors, isDark),
+          const SizedBox(height: 20),
           Text(
             '还没有记录生理期',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+            textAlign: TextAlign.center,
+            style: textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.w600,
               color: colors.onSurface,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           Text(
-            '点击下方按钮开始记录',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: colors.onSurfaceWithAlpha(ThemeColors.alpha60),
+            '记录下每一次生理期，帮助自己更好地了解身体节奏。准备好时，点击下方按钮开始吧。',
+            textAlign: TextAlign.center,
+            style: textTheme.bodyMedium?.copyWith(
+              color: colors.onSurfaceWithAlpha(ThemeColors.alpha70),
+              height: 1.5,
             ),
           ),
         ],
@@ -57,8 +48,14 @@ class NoPeriodWidget extends StatelessWidget {
     );
   }
 
-  List<Color> _getNoPeriodGradient(ThemeColors colors, bool isDark) {
-    return colors.noPeriodGradient;
+  Color _getBadgeColor(ThemeColors colors, bool isDark) {
+    return isDark ? colors.primaryWithAlpha(0.4) : colors.primary;
+  }
+
+  Color _getIconContainerColor(ThemeColors colors, bool isDark) {
+    return isDark
+        ? colors.surfaceContainerWithAlpha(0.4)
+        : colors.surfaceWithAlpha(0.8);
   }
 
   Color _getNoPeriodIconColor(ThemeColors colors, bool isDark) {
@@ -67,6 +64,49 @@ class NoPeriodWidget extends StatelessWidget {
     } else {
       return colors.primary;
     }
+  }
+
+  Widget _buildBadge(BuildContext context, ThemeColors colors, bool isDark) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 6),
+      decoration: BoxDecoration(
+        color: _getBadgeColor(colors, isDark),
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Text(
+        '温馨提示',
+        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+          color: colors.onPrimary,
+          letterSpacing: 0.4,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildIconHalo(ThemeColors colors, bool isDark) {
+    return SizedBox(
+      width: 96,
+      height: 96,
+      // decoration: BoxDecoration(
+      //   shape: BoxShape.circle,
+      //   color: _getIconContainerColor(colors, isDark),
+      //   border: Border.all(
+      //     color: colors.onSurfaceWithAlpha(ThemeColors.alpha10),
+      //     width: 1.5,
+      //   ),
+      //   boxShadow: [
+      //     BoxShadow(
+      //       color: colors.primaryWithAlpha(isDark ? 0.25 : 0.18),
+      //       blurRadius: 32,
+      //     ),
+      //   ],
+      // ),
+      child: Icon(
+        Icons.favorite_border,
+        size: 80,
+        color: _getNoPeriodIconColor(colors, isDark),
+      ),
+    );
   }
 }
 
