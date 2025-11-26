@@ -27,13 +27,11 @@ class _PrivacyDataPageState extends State<PrivacyDataPage> {
           padding: const EdgeInsets.only(top: 16.0, bottom: 24.0),
           children: [
             // 安全设置组
-            _buildSettingsGroup(
+            _buildSingleSetting(
               context,
               title: '安全设置',
-              children: [
-                // 生物识别
-                BiometricLockTile(forceShow: false),
-              ],
+              child: BiometricLockTile(forceShow: true),
+              subtitle: '使用生物识别技术保护您的隐私数据。',
             ),
 
             const SizedBox(height: 24),
@@ -142,15 +140,14 @@ class _PrivacyDataPageState extends State<PrivacyDataPage> {
         ),
 
         if (subtitle != null)
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 8.0,
-            ),
-            child: Text(
-              subtitle,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                subtitle,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
               ),
             ),
           ),

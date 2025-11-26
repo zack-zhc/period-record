@@ -68,20 +68,13 @@ class _BiometricLockTileState extends State<BiometricLockTile>
           scale: _scaleAnimation,
           child: ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-            leading: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: AppColors.of(context).secondaryContainer,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(
-                Icons.fingerprint,
-                color: AppColors.of(context).secondary,
-                size: 20,
-              ),
+            leading: Icon(
+              Icons.fingerprint,
+              color: AppColors.of(context).secondary,
+              // size: 20,
             ),
             title: const Text('使用生物识别解锁'),
-            subtitle: const Text('保护您的数据安全'),
+            // subtitle: const Text('保护您的数据安全'),
             trailing: Switch.adaptive(
               value: false,
               onChanged: null,
@@ -97,20 +90,13 @@ class _BiometricLockTileState extends State<BiometricLockTile>
       scale: _scaleAnimation,
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-        leading: Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: AppColors.of(context).secondaryContainer,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(
-            Icons.fingerprint,
-            color: AppColors.of(context).secondary,
-            size: 20,
-          ),
+        leading: Icon(
+          Icons.fingerprint,
+          color: AppColors.of(context).secondary,
+          // size: 20,
         ),
         title: const Text('使用生物识别解锁'),
-        subtitle: const Text('保护您的数据安全'),
+        // subtitle: const Text('保护您的数据安全'),
         trailing: Switch.adaptive(
           value: _biometricEnabled!,
           onChanged: _toggleBiometric,
