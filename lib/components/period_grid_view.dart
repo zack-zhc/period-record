@@ -71,9 +71,11 @@ class PeriodGridView extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // 左侧：开始/结束 两行信息
-                Expanded(
+                // 左侧：开始/结束 两行信息（使用 Flexible 保持 intrinsic size）
+                Flexible(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -113,11 +115,15 @@ class PeriodGridView extends StatelessWidget {
                   ),
                 ),
 
-                // 右侧：天数突出显示
-                const SizedBox(width: 12),
+                // 右侧：天数突出显示（设置最小宽度以保持布局稳定）
                 Container(
-                  width: 68,
+                  constraints: const BoxConstraints(minWidth: 48),
+                  // width: 48,
                   height: 68,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    // vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: colorScheme.primaryContainer,
                     borderRadius: BorderRadius.circular(12),
