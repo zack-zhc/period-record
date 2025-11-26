@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:period_record/theme/app_colors.dart';
 import 'package:provider/provider.dart';
 import 'package:period_record/period_provider.dart';
 
@@ -20,31 +21,17 @@ class PredictionSwitchTile extends StatelessWidget {
         }
         return Consumer<PeriodProvider>(
           builder:
-              (context, provider, _) => Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.analytics_outlined,
-                      size: 20,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    const SizedBox(width: 6),
-                    Expanded(
-                      child: Text(
-                        '显示生理期预测',
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    Switch(
-                      value: provider.showPrediction,
-                      onChanged:
-                          (v) async => await provider.setShowPrediction(v),
-                      activeColor: Theme.of(context).colorScheme.primary,
-                    ),
-                  ],
+              (context, provider, _) => ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                leading: Icon(
+                  Icons.analytics_outlined,
+                  color: AppColors.of(context).secondary,
+                ),
+                title: const Text('显示生理期预测'),
+                trailing: Switch.adaptive(
+                  value: provider.showPrediction,
+                  onChanged: (v) async => await provider.setShowPrediction(v),
+                  activeColor: Theme.of(context).colorScheme.primary,
                 ),
               ),
         );

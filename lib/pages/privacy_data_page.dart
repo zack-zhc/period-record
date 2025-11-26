@@ -3,7 +3,8 @@ import 'package:period_record/components/biometric_lock_tile.dart';
 import 'package:period_record/components/data_backup_tile.dart';
 import 'package:period_record/components/data_import_tile.dart';
 import 'package:period_record/components/prediction_switch_tile.dart';
-import 'package:period_record/theme/app_colors.dart';
+import 'package:period_record/components/single_setting_group.dart';
+// theme import moved to component where needed
 
 class PrivacyDataPage extends StatefulWidget {
   const PrivacyDataPage({super.key});
@@ -27,11 +28,10 @@ class _PrivacyDataPageState extends State<PrivacyDataPage> {
           padding: const EdgeInsets.only(top: 16.0, bottom: 24.0),
           children: [
             // 安全设置组
-            _buildSingleSetting(
-              context,
+            SingleSettingGroup(
               title: '安全设置',
-              child: BiometricLockTile(forceShow: true),
               subtitle: '使用生物识别技术保护您的隐私数据。',
+              child: BiometricLockTile(forceShow: false),
             ),
 
             const SizedBox(height: 24),
@@ -53,10 +53,9 @@ class _PrivacyDataPageState extends State<PrivacyDataPage> {
             const SizedBox(height: 24),
 
             // 隐私设置组
-            _buildSingleSetting(
-              context,
-              subtitle: '开启后，应用将显示基于历史数据的生理期预测信息。',
+            SingleSettingGroup(
               title: '预测设置',
+              subtitle: '开启后，应用将显示基于历史数据的生理期预测信息。',
               child: const PredictionSwitchTile(),
             ),
           ],
@@ -97,60 +96,6 @@ class _PrivacyDataPageState extends State<PrivacyDataPage> {
           ),
           child: Column(children: children),
         ),
-      ],
-    );
-  }
-
-  Widget _buildSingleSetting(
-    BuildContext context, {
-    String? subtitle,
-    required String title,
-    required Widget child,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // 分组标题 - 符合Material 3规范
-        Padding(
-          padding: const EdgeInsets.only(
-            left: 16.0,
-            top: 16.0,
-            bottom: 8,
-            // right: 16,
-          ),
-          child: Text(
-            title,
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-
-        // 分组内容卡片 - Material 3风格的卡片
-        Card(
-          elevation: 1,
-          shadowColor: Theme.of(context).colorScheme.shadow,
-          surfaceTintColor: AppColors.of(context).surfaceContainer,
-          margin: const EdgeInsets.symmetric(horizontal: 16.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(32),
-          ),
-          child: Column(children: [child]),
-        ),
-
-        if (subtitle != null)
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                subtitle,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ),
-          ),
       ],
     );
   }
