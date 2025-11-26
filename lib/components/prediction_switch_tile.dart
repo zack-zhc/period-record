@@ -24,21 +24,12 @@ class PredictionSwitchTile extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
                   children: [
-                    Container(
-                      margin: const EdgeInsets.only(right: 12),
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.primary.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Icon(
-                        Icons.analytics_outlined,
-                        size: 20,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
+                    Icon(
+                      Icons.analytics_outlined,
+                      size: 20,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
+                    const SizedBox(width: 6),
                     Expanded(
                       child: Text(
                         '显示生理期预测',

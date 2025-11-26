@@ -3,6 +3,7 @@ import 'package:period_record/components/biometric_lock_tile.dart';
 import 'package:period_record/components/data_backup_tile.dart';
 import 'package:period_record/components/data_import_tile.dart';
 import 'package:period_record/components/prediction_switch_tile.dart';
+import 'package:period_record/theme/app_colors.dart';
 
 class PrivacyDataPage extends StatefulWidget {
   const PrivacyDataPage({super.key});
@@ -54,13 +55,11 @@ class _PrivacyDataPageState extends State<PrivacyDataPage> {
             const SizedBox(height: 24),
 
             // 隐私设置组
-            _buildSettingsGroup(
+            _buildSingleSetting(
               context,
-              title: '隐私设置',
-              children: [
-                // 预测设置
-                const PredictionSwitchTile(),
-              ],
+              subtitle: '开启后，应用将显示基于历史数据的生理期预测信息。',
+              title: '预测设置',
+              child: const PredictionSwitchTile(),
             ),
           ],
         ),
@@ -100,6 +99,61 @@ class _PrivacyDataPageState extends State<PrivacyDataPage> {
           ),
           child: Column(children: children),
         ),
+      ],
+    );
+  }
+
+  Widget _buildSingleSetting(
+    BuildContext context, {
+    String? subtitle,
+    required String title,
+    required Widget child,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 分组标题 - 符合Material 3规范
+        Padding(
+          padding: const EdgeInsets.only(
+            left: 16.0,
+            top: 16.0,
+            bottom: 8,
+            // right: 16,
+          ),
+          child: Text(
+            title,
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+
+        // 分组内容卡片 - Material 3风格的卡片
+        Card(
+          elevation: 1,
+          shadowColor: Theme.of(context).colorScheme.shadow,
+          surfaceTintColor: AppColors.of(context).surfaceContainer,
+          margin: const EdgeInsets.symmetric(horizontal: 16.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(32),
+          ),
+          child: Column(children: [child]),
+        ),
+
+        if (subtitle != null)
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 8.0,
+            ),
+            child: Text(
+              subtitle,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ),
       ],
     );
   }
