@@ -28,10 +28,10 @@ class DaysDisplayWidget extends StatelessWidget {
     ).textTheme.bodyMedium?.copyWith(color: color);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: _getDaysDisplayBackgroundColor(colors, isDark, color),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: _getDaysDisplayBorderColor(colors, isDark, color),
         ),

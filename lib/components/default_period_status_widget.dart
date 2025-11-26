@@ -56,28 +56,12 @@ class DefaultPeriodStatusWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: 60,
-                    height: 60,
-                    decoration: BoxDecoration(
-                      color: AppColors.white.withValues(alpha: 0.14),
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: AppColors.white.withValues(alpha: 0.25),
-                      ),
-                    ),
-                    child: const Icon(
-                      Icons.calendar_month_outlined,
-                      size: 30,
-                      color: AppColors.white,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
                           title,
@@ -86,6 +70,7 @@ class DefaultPeriodStatusWidget extends StatelessWidget {
                           ).textTheme.titleMedium?.copyWith(
                             color: AppColors.white,
                             fontWeight: FontWeight.w700,
+                            letterSpacing: 0.2,
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -94,13 +79,15 @@ class DefaultPeriodStatusWidget extends StatelessWidget {
                           style: Theme.of(
                             context,
                           ).textTheme.bodySmall?.copyWith(
-                            color: AppColors.white.withValues(alpha: 0.8),
+                            color: AppColors.white.withValues(alpha: 0.85),
+                            height: 1.35,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(width: 12),
+
+                  // const SizedBox(width: 12),
                   DaysDisplayWidget(
                     days: days,
                     color: AppColors.white,
