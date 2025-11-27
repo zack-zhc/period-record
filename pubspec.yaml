@@ -1,7 +1,7 @@
 name: period_record
 description: '简单易用的生理期记录工具'
 publish_to: 'none'
-version: 0.4.76
+version: 0.4.88
 
 environment:
   sdk: ^3.7.2
