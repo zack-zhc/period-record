@@ -21,6 +21,7 @@ class HomePage extends StatelessWidget {
         );
 
         final isNoPeriod = statusInfo.status == PeriodStatus.noPeriod;
+        final isStartedToday = statusInfo.status == PeriodStatus.startedToday;
 
         return Scaffold(
           appBar: const HomeAppBar(),
@@ -30,7 +31,10 @@ class HomePage extends StatelessWidget {
             decoration: _buildBackgroundDecoration(context, statusInfo.status),
             child: Stack(
               children: [
-                if (isNoPeriod) ..._buildNoPeriodAmbientLayers(context),
+                if (isNoPeriod)
+                  ..._buildNoPeriodAmbientLayers(context)
+                else if (isStartedToday)
+                  ..._buildStartedTodayAmbientLayers(context),
                 Center(
                   child: Container(
                     margin: const EdgeInsets.all(16),
@@ -77,6 +81,22 @@ class HomePage extends StatelessWidget {
       );
     }
 
+    if (status == PeriodStatus.startedToday) {
+      final blended = _blendGradient(
+        colors.periodStartedGradient,
+        isDark,
+        lightBlend: 0.18,
+        darkBlend: 0.08,
+      );
+      return BoxDecoration(
+        gradient: LinearGradient(
+          colors: blended,
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      );
+    }
+
     return BoxDecoration(color: colors.surface);
   }
 
@@ -113,6 +133,83 @@ class HomePage extends StatelessWidget {
     ];
   }
 
+  List<Widget> _buildStartedTodayAmbientLayers(BuildContext context) {
+    final colors = AppColors.of(context);
+    return [
+      Positioned.fill(
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                AppColors.white.withValues(alpha: 0.07),
+                AppColors.transparent,
+              ],
+              stops: const [0.0, 0.6],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+        ),
+      ),
+      _buildAmbientCircle(
+        size: 320,
+        top: -140,
+        right: -60,
+        colors: colors,
+        opacity: 0.45,
+        baseColor: colors.error,
+      ),
+      _buildAmbientCircle(
+        size: 220,
+        bottom: 10,
+        left: -80,
+        colors: colors,
+        opacity: 0.35,
+        baseColor: colors.error,
+      ),
+      Align(
+        alignment: Alignment.bottomRight,
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 96, right: 32),
+          width: 180,
+          height: 180,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: RadialGradient(
+              colors: [
+                AppColors.white.withValues(alpha: 0.15),
+                AppColors.transparent,
+              ],
+            ),
+            border: Border.all(
+              color: AppColors.white.withValues(alpha: 0.12),
+              width: 1.2,
+            ),
+          ),
+        ),
+      ),
+    ];
+  }
+
+  List<Color> _blendGradient(
+    List<Color> colors,
+    bool isDark, {
+    required double lightBlend,
+    required double darkBlend,
+  }) {
+    return colors
+        .map(
+          (color) =>
+              Color.lerp(
+                color,
+                AppColors.white,
+                isDark ? darkBlend : lightBlend,
+              ) ??
+              color,
+        )
+        .toList();
+  }
+
   Widget _buildAmbientCircle({
     required double size,
     double? top,
@@ -121,6 +218,7 @@ class HomePage extends StatelessWidget {
     double? bottom,
     double opacity = 0.3,
     required ThemeColors colors,
+    Color? baseColor,
   }) {
     return Positioned(
       top: top,
@@ -133,7 +231,10 @@ class HomePage extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           gradient: RadialGradient(
-            colors: [colors.primaryWithAlpha(opacity), AppColors.transparent],
+            colors: [
+              (baseColor ?? colors.primary).withValues(alpha: opacity),
+              AppColors.transparent,
+            ],
           ),
         ),
       ),
