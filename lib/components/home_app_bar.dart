@@ -11,6 +11,9 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       title: Text('生理期记录'),
       centerTitle: true,
+      // backgroundColor: Colors.transparent,
+      // elevation: 0,
+      // surfaceTintColor: Colors.transparent,
       leading: IconButton(
         onPressed: () {
           Navigator.of(context).push(

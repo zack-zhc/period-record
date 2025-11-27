@@ -27,8 +27,12 @@ class HomePage extends StatelessWidget {
         final isInProgress = statusInfo.status == PeriodStatus.inProgress;
 
         return Scaffold(
+          extendBody: true,
+          // extendBodyBehindAppBar: true,
           appBar: const HomeAppBar(),
           body: AnimatedContainer(
+            width: double.infinity,
+            height: double.infinity,
             duration: const Duration(milliseconds: 450),
             curve: Curves.easeOutCubic,
             decoration: _buildBackgroundDecoration(context, statusInfo.status),
