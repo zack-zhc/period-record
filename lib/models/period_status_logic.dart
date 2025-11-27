@@ -147,6 +147,7 @@ class PeriodStatusLogic {
           CareTip(Icons.bedtime, '多休息'),
           CareTip(Icons.local_cafe, '暖热饮'),
           CareTip(Icons.hot_tub, '热敷腹部'),
+          CareTip(Icons.favorite, '温暖陪伴'),
         ];
       case PeriodStatus.inProgress:
         return _inProgressCareTips(days);
@@ -155,12 +156,14 @@ class PeriodStatusLogic {
           CareTip(Icons.emoji_emotions, '放松心情'),
           CareTip(Icons.self_improvement, '轻柔拉伸'),
           CareTip(Icons.spa, '舒缓护理'),
+          CareTip(Icons.local_florist, '香薰放松'),
         ];
       case PeriodStatus.ended:
         return const [
           CareTip(Icons.directions_walk, '保持运动'),
           CareTip(Icons.restaurant, '营养均衡'),
           CareTip(Icons.nightlight_round, '规律作息'),
+          CareTip(Icons.water_drop, '补充水分'),
         ];
       case PeriodStatus.noPeriod:
         return const [
@@ -185,18 +188,21 @@ class PeriodStatusLogic {
         CareTip(Icons.bedtime, '多休息'),
         CareTip(Icons.local_cafe, '暖热饮'),
         CareTip(Icons.hot_tub, '热敷腹部'),
+        CareTip(Icons.music_note, '舒缓音乐'),
       ];
     } else if (days <= 4) {
       return const [
         CareTip(Icons.local_drink, '补充水分'),
         CareTip(Icons.self_improvement, '深呼吸'),
         CareTip(Icons.spa, '轻柔拉伸'),
+        CareTip(Icons.health_and_safety, '贴心呵护'),
       ];
     }
     return const [
       CareTip(Icons.emoji_emotions, '保持好心情'),
       CareTip(Icons.air, '舒展舒气'),
       CareTip(Icons.directions_walk, '缓步散心'),
+      CareTip(Icons.self_improvement, '柔和伸展'),
     ];
   }
 }
