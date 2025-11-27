@@ -24,6 +24,7 @@ class HomePage extends StatelessWidget {
         final isStartedToday = statusInfo.status == PeriodStatus.startedToday;
         final isEndedToday = statusInfo.status == PeriodStatus.endedToday;
         final isEnded = statusInfo.status == PeriodStatus.ended;
+        final isInProgress = statusInfo.status == PeriodStatus.inProgress;
 
         return Scaffold(
           appBar: const HomeAppBar(),
@@ -37,6 +38,8 @@ class HomePage extends StatelessWidget {
                   ..._buildNoPeriodAmbientLayers(context)
                 else if (isStartedToday)
                   ..._buildStartedTodayAmbientLayers(context)
+                else if (isInProgress)
+                  ..._buildInProgressAmbientLayers(context)
                 else if (isEndedToday)
                   ..._buildEndedTodayAmbientLayers(context)
                 else if (isEnded)
@@ -119,6 +122,22 @@ class HomePage extends StatelessWidget {
       );
     }
 
+    if (status == PeriodStatus.inProgress) {
+      final blended = _blendGradient(
+        colors.periodInProgressGradient,
+        isDark,
+        lightBlend: 0.22,
+        darkBlend: 0.12,
+      );
+      return BoxDecoration(
+        gradient: LinearGradient(
+          colors: blended,
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      );
+    }
+
     if (status == PeriodStatus.ended) {
       final blended = _blendGradient(
         colors.defaultStatusGradient,
@@ -136,6 +155,68 @@ class HomePage extends StatelessWidget {
     }
 
     return BoxDecoration(color: colors.surface);
+  }
+
+  List<Widget> _buildInProgressAmbientLayers(BuildContext context) {
+    final colors = AppColors.of(context);
+    final accent = colors.periodInProgressGradient.first;
+    final secondary = colors.periodInProgressGradient.last;
+    return [
+      Positioned.fill(
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                AppColors.white.withValues(alpha: 0.04),
+                AppColors.transparent,
+              ],
+              stops: const [0.0, 0.65],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+      ),
+      _buildAmbientCircle(
+        size: 340,
+        top: -160,
+        right: -120,
+        colors: colors,
+        opacity: 0.45,
+        baseColor: accent,
+      ),
+      _buildAmbientCircle(
+        size: 240,
+        bottom: -40,
+        left: -70,
+        colors: colors,
+        opacity: 0.35,
+        baseColor: secondary,
+      ),
+      Align(
+        alignment: Alignment.centerRight,
+        child: Container(
+          margin: const EdgeInsets.only(right: 24, top: 40, bottom: 120),
+          width: 120,
+          height: 120,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(32),
+            border: Border.all(
+              color: AppColors.white.withValues(alpha: 0.18),
+              width: 1.2,
+            ),
+            gradient: LinearGradient(
+              colors: [
+                AppColors.white.withValues(alpha: 0.18),
+                AppColors.transparent,
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+        ),
+      ),
+    ];
   }
 
   List<Widget> _buildNoPeriodAmbientLayers(BuildContext context) {
