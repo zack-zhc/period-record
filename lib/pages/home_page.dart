@@ -22,6 +22,7 @@ class HomePage extends StatelessWidget {
 
         final isNoPeriod = statusInfo.status == PeriodStatus.noPeriod;
         final isStartedToday = statusInfo.status == PeriodStatus.startedToday;
+        final isEndedToday = statusInfo.status == PeriodStatus.endedToday;
 
         return Scaffold(
           appBar: const HomeAppBar(),
@@ -34,7 +35,9 @@ class HomePage extends StatelessWidget {
                 if (isNoPeriod)
                   ..._buildNoPeriodAmbientLayers(context)
                 else if (isStartedToday)
-                  ..._buildStartedTodayAmbientLayers(context),
+                  ..._buildStartedTodayAmbientLayers(context)
+                else if (isEndedToday)
+                  ..._buildEndedTodayAmbientLayers(context),
                 Center(
                   child: Container(
                     margin: const EdgeInsets.all(16),
@@ -97,6 +100,22 @@ class HomePage extends StatelessWidget {
       );
     }
 
+    if (status == PeriodStatus.endedToday) {
+      final blended = _blendGradient(
+        colors.periodEndedGradient,
+        isDark,
+        lightBlend: 0.16,
+        darkBlend: 0.08,
+      );
+      return BoxDecoration(
+        gradient: LinearGradient(
+          colors: blended,
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      );
+    }
+
     return BoxDecoration(color: colors.surface);
   }
 
@@ -127,6 +146,62 @@ class HomePage extends StatelessWidget {
             shape: BoxShape.circle,
             color: colors.primaryWithAlpha(0.07),
             border: Border.all(color: colors.primaryWithAlpha(0.12)),
+          ),
+        ),
+      ),
+    ];
+  }
+
+  List<Widget> _buildEndedTodayAmbientLayers(BuildContext context) {
+    final colors = AppColors.of(context);
+    final accent = colors.periodEndedGradient.first;
+    return [
+      Positioned.fill(
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                AppColors.white.withValues(alpha: 0.05),
+                AppColors.transparent,
+              ],
+              stops: const [0.0, 0.7],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+        ),
+      ),
+      _buildAmbientCircle(
+        size: 300,
+        top: -120,
+        left: -80,
+        colors: colors,
+        opacity: 0.35,
+        baseColor: accent,
+      ),
+      _buildAmbientCircle(
+        size: 220,
+        bottom: -40,
+        right: -60,
+        colors: colors,
+        opacity: 0.3,
+        baseColor: colors.secondary,
+      ),
+      Align(
+        alignment: Alignment.bottomLeft,
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 110, left: 18),
+          width: 150,
+          height: 150,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: RadialGradient(
+              colors: [
+                AppColors.white.withValues(alpha: 0.12),
+                AppColors.transparent,
+              ],
+            ),
+            border: Border.all(color: AppColors.white.withValues(alpha: 0.1)),
           ),
         ),
       ),
