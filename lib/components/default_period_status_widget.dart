@@ -17,14 +17,6 @@ class DefaultPeriodStatusWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final gradientColors =
-        colors.defaultStatusGradient
-            .map(
-              (color) =>
-                  Color.lerp(color, AppColors.white, isDark ? 0.08 : 0.2) ??
-                  color,
-            )
-            .toList();
     final supportMessage = PeriodStatusLogic.supportMessage(
       PeriodStatus.ended,
       days,
@@ -138,19 +130,30 @@ class DefaultPeriodStatusWidget extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Wrap(
-                  spacing: 12,
-                  runSpacing: 12,
-                  children:
-                      careTips
-                          .map(
-                            (tip) => _buildCareChip(
-                              context,
-                              icon: tip.icon,
-                              label: tip.label,
-                            ),
-                          )
-                          .toList(),
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    const spacing = 12.0;
+                    final maxWidth = constraints.maxWidth;
+                    final tileWidth = (maxWidth - spacing) / 2;
+
+                    return Wrap(
+                      spacing: spacing,
+                      runSpacing: 12,
+                      children:
+                          careTips
+                              .map(
+                                (tip) => SizedBox(
+                                  width: tileWidth,
+                                  child: _buildCareChip(
+                                    context,
+                                    icon: tip.icon,
+                                    label: tip.label,
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                    );
+                  },
                 ),
               ],
             ),
@@ -166,33 +169,6 @@ class DefaultPeriodStatusWidget extends StatelessWidget {
     } else {
       return colors.primaryWithAlpha(0.18);
     }
-  }
-
-  Widget _buildGlowCircle({
-    required double size,
-    double? top,
-    double? left,
-    double? right,
-    double? bottom,
-    required Color color,
-    double opacity = 0.2,
-  }) {
-    return Positioned(
-      top: top,
-      left: left,
-      right: right,
-      bottom: bottom,
-      child: Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: RadialGradient(
-            colors: [color.withValues(alpha: opacity), AppColors.transparent],
-          ),
-        ),
-      ),
-    );
   }
 
   Widget _buildCareChip(

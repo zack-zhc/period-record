@@ -36,19 +36,30 @@ class PeriodStartedTodayWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            children:
-                careTips
-                    .map(
-                      (tip) => _buildCareChip(
-                        context,
-                        icon: tip.icon,
-                        label: tip.label,
-                      ),
-                    )
-                    .toList(),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              const spacing = 10.0;
+              final maxWidth = constraints.maxWidth;
+              final tileWidth = (maxWidth - spacing) / 2;
+
+              return Wrap(
+                spacing: spacing,
+                runSpacing: 10,
+                children:
+                    careTips
+                        .map(
+                          (tip) => SizedBox(
+                            width: tileWidth,
+                            child: _buildCareChip(
+                              context,
+                              icon: tip.icon,
+                              label: tip.label,
+                            ),
+                          ),
+                        )
+                        .toList(),
+              );
+            },
           ),
         ],
       ),
