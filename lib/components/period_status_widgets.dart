@@ -6,7 +6,7 @@ export 'period_ended_widget.dart';
 export 'default_period_status_widget.dart';
 export 'days_display_widget.dart';
 
-/// 无记录状态组件
+/// 无记录状态组件 - Material 3 Expressive 风格
 class NoPeriodWidget extends StatelessWidget {
   const NoPeriodWidget({super.key});
 
@@ -16,31 +16,76 @@ class NoPeriodWidget extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final textTheme = Theme.of(context).textTheme;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+      decoration: BoxDecoration(
+        color: isDark ? colors.surfaceContainer : colors.surface,
+        borderRadius: BorderRadius.circular(32),
+        border: Border.all(color: colors.outline.withValues(alpha: 0.08)),
+        boxShadow: [
+          BoxShadow(
+            color: colors.onSurface.withValues(alpha: isDark ? 0.1 : 0.05),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Stack(
         children: [
-          _buildBadge(context, colors, isDark),
-          const SizedBox(height: 20),
-          _buildIconHalo(colors, isDark),
-          const SizedBox(height: 20),
-          Text(
-            '还没有记录生理期',
-            textAlign: TextAlign.center,
-            style: textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.w600,
-              color: colors.onSurface,
+          // 装饰性背景图形
+          Positioned(
+            top: -40,
+            right: -40,
+            child: Container(
+              width: 200,
+              height: 200,
+              decoration: BoxDecoration(
+                color: colors.primary.withValues(alpha: 0.05),
+                shape: BoxShape.circle,
+              ),
             ),
           ),
-          const SizedBox(height: 12),
-          Text(
-            '记录下每一次生理期，帮助自己更好地了解身体节奏。准备好时，点击下方按钮开始吧。',
-            textAlign: TextAlign.center,
-            style: textTheme.bodyMedium?.copyWith(
-              color: colors.onSurfaceWithAlpha(ThemeColors.alpha70),
-              height: 1.5,
+          Positioned(
+            bottom: -20,
+            left: -20,
+            child: Container(
+              width: 140,
+              height: 140,
+              decoration: BoxDecoration(
+                color: colors.secondary.withValues(alpha: 0.05),
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(32.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildExpressiveIcon(colors),
+                const SizedBox(height: 24),
+                Text(
+                  '还没有记录',
+                  style: textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: colors.onSurface,
+                    letterSpacing: -0.5,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  '记录生理期不仅是关注身体，\n更是爱自己的开始',
+                  style: textTheme.bodyLarge?.copyWith(
+                    color: colors.onSurfaceVariant,
+                    height: 1.5,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 32),
+                _buildFeatureRow(context, colors),
+              ],
             ),
           ),
         ],
@@ -48,63 +93,64 @@ class NoPeriodWidget extends StatelessWidget {
     );
   }
 
-  Color _getBadgeColor(ThemeColors colors, bool isDark) {
-    return isDark ? colors.primaryWithAlpha(0.4) : colors.primary;
-  }
-
-  Color _getIconContainerColor(ThemeColors colors, bool isDark) {
-    return isDark
-        ? colors.surfaceContainerWithAlpha(0.4)
-        : colors.surfaceWithAlpha(0.8);
-  }
-
-  Color _getNoPeriodIconColor(ThemeColors colors, bool isDark) {
-    if (isDark) {
-      return colors.onPrimaryContainer;
-    } else {
-      return colors.primary;
-    }
-  }
-
-  Widget _buildBadge(BuildContext context, ThemeColors colors, bool isDark) {
+  Widget _buildExpressiveIcon(ThemeColors colors) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 6),
+      width: 88,
+      height: 88,
       decoration: BoxDecoration(
-        color: _getBadgeColor(colors, isDark),
-        borderRadius: BorderRadius.circular(999),
+        color: colors.primaryContainer,
+        borderRadius: BorderRadius.circular(24),
       ),
-      child: Text(
-        '温馨提示',
-        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-          color: colors.onPrimary,
-          letterSpacing: 0.4,
-        ),
+      child: Icon(
+        Icons.volunteer_activism_rounded,
+        size: 40,
+        color: colors.onPrimaryContainer,
       ),
     );
   }
 
-  Widget _buildIconHalo(ThemeColors colors, bool isDark) {
-    return SizedBox(
-      width: 96,
-      height: 96,
-      // decoration: BoxDecoration(
-      //   shape: BoxShape.circle,
-      //   color: _getIconContainerColor(colors, isDark),
-      //   border: Border.all(
-      //     color: colors.onSurfaceWithAlpha(ThemeColors.alpha10),
-      //     width: 1.5,
-      //   ),
-      //   boxShadow: [
-      //     BoxShadow(
-      //       color: colors.primaryWithAlpha(isDark ? 0.25 : 0.18),
-      //       blurRadius: 32,
-      //     ),
-      //   ],
-      // ),
-      child: Icon(
-        Icons.favorite_border,
-        size: 80,
-        color: _getNoPeriodIconColor(colors, isDark),
+  Widget _buildFeatureRow(BuildContext context, ThemeColors colors) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _buildFeatureItem(context, colors, Icons.calendar_today_rounded, '记录'),
+        _buildDivider(colors),
+        _buildFeatureItem(context, colors, Icons.insights_rounded, '分析'),
+        _buildDivider(colors),
+        _buildFeatureItem(context, colors, Icons.spa_rounded, '呵护'),
+      ],
+    );
+  }
+
+  Widget _buildFeatureItem(
+    BuildContext context,
+    ThemeColors colors,
+    IconData icon,
+    String label,
+  ) {
+    return Row(
+      children: [
+        Icon(icon, size: 16, color: colors.primary),
+        const SizedBox(width: 8),
+        Text(
+          label,
+          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+            color: colors.onSurfaceVariant,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDivider(ThemeColors colors) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      width: 4,
+      height: 4,
+      decoration: BoxDecoration(
+        color: colors.outline.withValues(alpha: 0.3),
+        shape: BoxShape.circle,
       ),
     );
   }

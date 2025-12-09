@@ -77,14 +77,8 @@ class HomePage extends StatelessWidget {
     if (status == PeriodStatus.noPeriod) {
       final gradientColors =
           isDark
-              ? [
-                colors.surfaceContainerWithAlpha(0.85),
-                colors.surface.withValues(alpha: 0.95),
-              ]
-              : [
-                colors.noPeriodGradient.first.withValues(alpha: 0.75),
-                colors.surface,
-              ];
+              ? [colors.surface, colors.surface]
+              : [colors.surfaceContainer, colors.surfaceContainer];
       return BoxDecoration(
         gradient: LinearGradient(
           colors: gradientColors,
