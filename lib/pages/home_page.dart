@@ -138,15 +138,11 @@ class HomePage extends StatelessWidget {
     }
 
     if (status == PeriodStatus.ended) {
-      final blended = _blendGradient(
-        colors.defaultStatusGradient,
-        isDark,
-        lightBlend: 0.2,
-        darkBlend: 0.08,
-      );
+      // 使用 Tertiary 颜色作为基调，代表恢复与平衡
+      // 直接使用较深的颜色，确保 DefaultPeriodStatusWidget 的白色文字清晰可见
       return BoxDecoration(
         gradient: LinearGradient(
-          colors: blended,
+          colors: [colors.tertiary, colors.tertiary.withValues(alpha: 0.8)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
