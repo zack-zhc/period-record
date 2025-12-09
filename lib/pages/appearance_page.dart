@@ -102,9 +102,9 @@ class _AppearancePageState extends State<AppearancePage> {
   void _showAccentColorSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-      ),
+      // shape: const RoundedRectangleBorder(
+      //   borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+      // ),
       builder: (context) {
         return Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
@@ -241,9 +241,6 @@ class _AppearancePageState extends State<AppearancePage> {
   void _showFontSizeSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-      ),
       builder: (context) {
         return Consumer<FontProvider>(
           builder: (context, fontProvider, _) {
@@ -265,7 +262,6 @@ class _AppearancePageState extends State<AppearancePage> {
                     onChanged: (v) {
                       fontProvider.setFontScale(v);
                     },
-                    onChangeEnd: (_) => Navigator.of(context).pop(),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
@@ -273,14 +269,13 @@ class _AppearancePageState extends State<AppearancePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '示例文本',
+                          '示例文本：用于预览字体大小',
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(fontSize: 16 * fontScale),
                         ),
                         TextButton(
                           onPressed: () {
                             fontProvider.setFontScale(1.0);
-                            Navigator.of(context).pop();
                           },
                           child: const Text('恢复默认'),
                         ),
@@ -305,18 +300,11 @@ class _AppearancePageState extends State<AppearancePage> {
     // 符合Material 3的AppBar实现
     return AppBar(
       // Material 3中AppBar使用surface颜色作为背景
-      backgroundColor: Theme.of(context).colorScheme.surface,
       // 使用Material 3推荐的阴影效果
       elevation: 0,
       scrolledUnderElevation: 2,
       // 应用Material 3的标题样式
-      title: Text(
-        '外观',
-        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-          fontWeight: FontWeight.w600,
-          color: Theme.of(context).colorScheme.onSurface,
-        ),
-      ),
+      title: Text('外观'),
       leading: IconButton(
         onPressed: () => Navigator.of(context).pop(),
         icon: Icon(

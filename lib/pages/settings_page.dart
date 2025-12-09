@@ -16,11 +16,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       // 使用Material 3的AppBar设计
-      appBar: AppBar(
-        title: const Text('设置'),
-        centerTitle: false,
-        // 移除自定义背景色和elevation，使用Material 3的默认样式
-      ),
+      appBar: AppBar(title: const Text('设置'), centerTitle: false),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
