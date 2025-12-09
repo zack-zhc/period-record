@@ -1,5 +1,6 @@
 // 首先创建一个新的主页组件
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 import 'package:period_record/models/period_status_logic.dart';
 import 'package:period_record/theme/app_colors.dart';
 import 'package:provider/provider.dart';
@@ -364,61 +365,7 @@ class HomePage extends StatelessWidget {
   }
 
   List<Widget> _buildStartedTodayAmbientLayers(BuildContext context) {
-    final colors = AppColors.of(context);
-    return [
-      Positioned.fill(
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                AppColors.white.withValues(alpha: 0.07),
-                AppColors.transparent,
-              ],
-              stops: const [0.0, 0.6],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
-        ),
-      ),
-      _buildAmbientCircle(
-        size: 320,
-        top: -140,
-        right: -60,
-        colors: colors,
-        opacity: 0.45,
-        baseColor: colors.error,
-      ),
-      _buildAmbientCircle(
-        size: 220,
-        bottom: 10,
-        left: -80,
-        colors: colors,
-        opacity: 0.35,
-        baseColor: colors.error,
-      ),
-      Align(
-        alignment: Alignment.bottomRight,
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 96, right: 32),
-          width: 180,
-          height: 180,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: RadialGradient(
-              colors: [
-                AppColors.white.withValues(alpha: 0.15),
-                AppColors.transparent,
-              ],
-            ),
-            border: Border.all(
-              color: AppColors.white.withValues(alpha: 0.12),
-              width: 1.2,
-            ),
-          ),
-        ),
-      ),
-    ];
+    return [const StartedTodayAnimatedBackground()];
   }
 
   List<Color> _blendGradient(
@@ -468,6 +415,124 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// 动态移动的背景组件（用于生理期第一天）
+class StartedTodayAnimatedBackground extends StatefulWidget {
+  const StartedTodayAnimatedBackground({super.key});
+
+  @override
+  State<StartedTodayAnimatedBackground> createState() =>
+      _StartedTodayAnimatedBackgroundState();
+}
+
+class _StartedTodayAnimatedBackgroundState
+    extends State<StartedTodayAnimatedBackground>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 15),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // 使用鲜艳的红色
+    const warmBase = Color(0xFFFF5252);
+
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        final t = _controller.value;
+        Alignment begin;
+
+        // 顺时针移动：TopRight -> BottomRight -> BottomLeft -> TopLeft -> TopRight
+        if (t < 0.25) {
+          // TopRight -> BottomRight
+          begin =
+              Alignment.lerp(Alignment.topRight, Alignment.bottomRight, t * 4)!;
+        } else if (t < 0.5) {
+          // BottomRight -> BottomLeft
+          begin =
+              Alignment.lerp(
+                Alignment.bottomRight,
+                Alignment.bottomLeft,
+                (t - 0.25) * 4,
+              )!;
+        } else if (t < 0.75) {
+          // BottomLeft -> TopLeft
+          begin =
+              Alignment.lerp(
+                Alignment.bottomLeft,
+                Alignment.topLeft,
+                (t - 0.5) * 4,
+              )!;
+        } else {
+          // TopLeft -> TopRight
+          begin =
+              Alignment.lerp(
+                Alignment.topLeft,
+                Alignment.topRight,
+                (t - 0.75) * 4,
+              )!;
+        }
+
+        // end 始终在 begin 的对角方向
+        final end = Alignment(-begin.x, -begin.y);
+
+        return Stack(
+          children: [
+            // 动态渐变背景
+            Positioned.fill(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      warmBase.withValues(alpha: 0.5), // 红色部分
+                      AppColors.white.withValues(alpha: 0.1), // 白色部分
+                    ],
+                    begin: begin,
+                    end: end,
+                  ),
+                ),
+              ),
+            ),
+            // 底部暗色渐变遮罩（保证文字可读性）
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              height: 200,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      AppColors.transparent,
+                      AppColors.black.withValues(alpha: 0.3),
+                    ],
+                    stops: const [0.0, 1.0],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
