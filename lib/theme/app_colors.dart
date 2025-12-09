@@ -84,95 +84,37 @@ class ThemeColors {
 
   /// AppBar专用渐变
   List<Color> get appBarGradient {
-    final isDark = colorScheme.brightness == Brightness.dark;
-    if (isDark) {
-      return [primaryContainer, secondaryContainer];
-    } else {
-      return primaryGradient;
-    }
+    return [colorScheme.surface, colorScheme.surfaceContainer];
   }
 
   /// 状态组件专用渐变
   List<Color> get noPeriodGradient {
-    final isDark = colorScheme.brightness == Brightness.dark;
-    if (isDark) {
-      return [primaryContainer, secondaryContainer];
-    } else {
-      return [primaryWithAlpha(0.1), secondaryWithAlpha(0.1)];
-    }
+    return [colorScheme.surfaceContainerHighest, colorScheme.surfaceContainer];
   }
 
   List<Color> get periodStartedGradient {
-    final isDark = colorScheme.brightness == Brightness.dark;
-    if (isDark) {
-      return [
-        const Color(0xFFE57373), // 浅红色
-        const Color(0xFFEF5350), // 红色
-      ];
-    } else {
-      return [error, errorWithAlpha(alpha80)];
-    }
+    return [colorScheme.error, colorScheme.errorContainer];
   }
 
   List<Color> get periodInProgressGradient {
-    final isDark = colorScheme.brightness == Brightness.dark;
-    if (isDark) {
-      return [
-        const Color(0xFFF06292), // 浅粉色
-        const Color(0xFFEC407A), // 粉色
-      ];
-    } else {
-      return [error, errorWithAlpha(0.7)];
-    }
+    return [colorScheme.primary, colorScheme.primaryContainer];
   }
 
   List<Color> get periodEndedGradient {
-    final isDark = colorScheme.brightness == Brightness.dark;
-    if (isDark) {
-      return [
-        const Color(0xFF81C784), // 浅绿色
-        const Color(0xFF66BB6A), // 绿色
-      ];
-    } else {
-      return [primary, secondary];
-    }
+    return [colorScheme.secondary, colorScheme.secondaryContainer];
   }
 
   List<Color> get defaultStatusGradient {
-    final isDark = colorScheme.brightness == Brightness.dark;
-    if (isDark) {
-      return [
-        const Color(0xFF9575CD), // 浅紫色
-        const Color(0xFF7E57C2), // 紫色
-      ];
-    } else {
-      return [primaryWithAlpha(0.8), secondaryWithAlpha(0.8)];
-    }
+    return [colorScheme.surfaceContainerHighest, colorScheme.surfaceContainer];
   }
 
   /// Floating Action Button专用渐变
   List<Color> get addButtonGradient {
-    final isDark = colorScheme.brightness == Brightness.dark;
-    if (isDark) {
-      return [
-        const Color(0xFFE91E63), // 粉色
-        const Color(0xFFC2185B), // 深粉色
-      ];
-    } else {
-      return [primary, secondary];
-    }
+    return [colorScheme.primary, colorScheme.primaryContainer];
   }
 
   List<Color> get endButtonGradient {
-    final isDark = colorScheme.brightness == Brightness.dark;
-    if (isDark) {
-      return [
-        const Color(0xFF4CAF50), // 绿色
-        const Color(0xFF388E3C), // 深绿色
-      ];
-    } else {
-      return [error, errorWithAlpha(alpha80)];
-    }
+    return [colorScheme.tertiary, colorScheme.tertiaryContainer];
   }
 
   /// 背景渐变
