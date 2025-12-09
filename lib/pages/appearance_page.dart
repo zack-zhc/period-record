@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:period_record/components/theme_selector.dart';
+import 'package:period_record/font_provider.dart';
+import 'package:provider/provider.dart';
 
 class AppearancePage extends StatefulWidget {
   const AppearancePage({super.key});
@@ -9,6 +11,19 @@ class AppearancePage extends StatefulWidget {
 }
 
 class _AppearancePageState extends State<AppearancePage> {
+  // 本页的临时 UI 状态（建议后续持久化到 Provider/设置存储）
+  String _accentColorName = '系统默认';
+  Color _accentColor = Colors.blue;
+
+  // 常用强调色候选（名字用于展示）
+  final List<Map<String, Object>> _accentColorOptions = [
+    {'name': '粉色', 'color': Colors.pink},
+    {'name': '红色', 'color': Colors.red},
+    {'name': '紫色', 'color': Colors.purple},
+    {'name': '蓝色', 'color': Colors.blue},
+    {'name': '青色', 'color': Colors.teal},
+    {'name': '绿色', 'color': Colors.green},
+  ];
   @override
   Widget build(BuildContext context) {
     // 使用Material 3推荐的布局
@@ -56,83 +71,234 @@ class _AppearancePageState extends State<AppearancePage> {
       contentPadding: const EdgeInsets.symmetric(horizontal: 16),
       leading: Container(
         padding: const EdgeInsets.all(8),
-        child: Icon(
-          Icons.palette,
-          color: Theme.of(context).colorScheme.primary,
-          size: 24, // 稍大的图标更符合Material 3
+        child: CircleAvatar(
+          backgroundColor: _accentColor.withOpacity(0.14),
+          child: Icon(Icons.palette, color: _accentColor, size: 20),
         ),
       ),
       title: const Text('强调色'),
       subtitle: const Text('选择应用的主要颜色'),
-      trailing: Icon(
-        Icons.arrow_forward_ios,
-        size: 18,
-        color: Theme.of(context).colorScheme.onSurfaceVariant,
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: Text(
+              _accentColorName,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ),
+          Icon(
+            Icons.arrow_forward_ios,
+            size: 18,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+        ],
       ),
-      onTap: () {
-        // 使用Material 3的AlertDialog样式
-        showDialog(
-          context: context,
-          builder:
-              (context) => AlertDialog(
-                title: const Text('强调色设置'),
-                content: const Text('强调色设置功能正在开发中'),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('确定'),
-                  ),
-                ],
-                // 使用Material 3推荐的形状
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+      onTap: () => _showAccentColorSheet(context),
+    );
+  }
+
+  void _showAccentColorSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('选择强调色', style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 12,
+                runSpacing: 12,
+                children:
+                    _accentColorOptions.map((opt) {
+                      final name = opt['name'] as String;
+                      final color = opt['color'] as Color;
+                      final selected = color.value == _accentColor.value;
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _accentColor = color;
+                            _accentColorName = name;
+                          });
+                          Navigator.of(context).pop();
+                        },
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: 56,
+                              height: 56,
+                              decoration: BoxDecoration(
+                                color: color.withOpacity(0.12),
+                                shape: BoxShape.circle,
+                                border:
+                                    selected
+                                        ? Border.all(
+                                          color:
+                                              Theme.of(
+                                                context,
+                                              ).colorScheme.onSurface,
+                                          width: 2,
+                                        )
+                                        : null,
+                              ),
+                              child: Center(
+                                child: Container(
+                                  width: 28,
+                                  height: 28,
+                                  decoration: BoxDecoration(
+                                    color: color,
+                                    shape: BoxShape.circle,
+                                    boxShadow:
+                                        selected
+                                            ? [
+                                              BoxShadow(
+                                                color: color.withOpacity(0.24),
+                                                blurRadius: 6,
+                                              ),
+                                            ]
+                                            : null,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              name,
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
               ),
+              const SizedBox(height: 8),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    _accentColorName = '系统默认';
+                    _accentColor = Theme.of(context).colorScheme.primary;
+                  });
+                  Navigator.of(context).pop();
+                },
+                child: const Text('恢复默认'),
+              ),
+            ],
+          ),
         );
       },
     );
   }
 
   Widget _buildFontSizeTile(BuildContext context) {
+    final fontScale = context.watch<FontProvider>().fontScale;
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 16),
       leading: Container(
         padding: const EdgeInsets.all(8),
-        child: Icon(
-          Icons.text_fields,
-          color: Theme.of(context).colorScheme.primary,
-          size: 24, // 稍大的图标更符合Material 3
+        child: CircleAvatar(
+          backgroundColor: Theme.of(
+            context,
+          ).colorScheme.primary.withOpacity(0.12),
+          child: Icon(
+            Icons.text_fields,
+            color: Theme.of(context).colorScheme.primary,
+            size: 20,
+          ),
         ),
       ),
       title: const Text('字体大小'),
       subtitle: const Text('调整应用中的文字大小'),
-      trailing: Icon(
-        Icons.arrow_forward_ios,
-        size: 18,
-        color: Theme.of(context).colorScheme.onSurfaceVariant,
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: Text(
+              _fontScaleLabel(fontScale),
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ),
+          Icon(
+            Icons.arrow_forward_ios,
+            size: 18,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+        ],
       ),
-      onTap: () {
-        // 使用Material 3的AlertDialog样式
-        showDialog(
-          context: context,
-          builder:
-              (context) => AlertDialog(
-                title: const Text('字体大小设置'),
-                content: const Text('字体大小设置功能正在开发中'),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('确定'),
+      onTap: () => _showFontSizeSheet(context),
+    );
+  }
+
+  void _showFontSizeSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+      ),
+      builder: (context) {
+        return Consumer<FontProvider>(
+          builder: (context, fontProvider, _) {
+            final fontScale = fontProvider.fontScale;
+            return Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('字体大小', style: Theme.of(context).textTheme.titleMedium),
+                  const SizedBox(height: 12),
+                  Slider(
+                    min: FontProvider.minFontScale,
+                    max: FontProvider.maxFontScale,
+                    divisions: 6,
+                    value: fontScale,
+                    label: _fontScaleLabel(fontScale),
+                    onChanged: (v) {
+                      fontProvider.setFontScale(v);
+                    },
+                    onChangeEnd: (_) => Navigator.of(context).pop(),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '示例文本',
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(fontSize: 16 * fontScale),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            fontProvider.setFontScale(1.0);
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('恢复默认'),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
-                // 使用Material 3推荐的形状
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
               ),
+            );
+          },
         );
       },
     );
+  }
+
+  String _fontScaleLabel(double scale) {
+    if ((scale - 1.0).abs() < 0.01) return '中等';
+    return scale < 1.0 ? '较小' : '较大';
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
