@@ -22,14 +22,6 @@ class DefaultPeriodStatusWidget extends StatefulWidget {
 }
 
 class _DefaultPeriodStatusWidgetState extends State<DefaultPeriodStatusWidget> {
-  bool _isExpanded = false;
-
-  void _toggleExpanded() {
-    setState(() {
-      _isExpanded = !_isExpanded;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final supportMessage = PeriodStatusLogic.supportMessage(
@@ -53,26 +45,19 @@ class _DefaultPeriodStatusWidgetState extends State<DefaultPeriodStatusWidget> {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(20),
-        onTap: _toggleExpanded,
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeaderSection(context),
-              const SizedBox(height: 16),
-              _buildProgressIndicator(context),
-              const SizedBox(height: 20),
-              _buildSupportMessage(context, supportMessage),
-              if (_isExpanded) ...[
-                const SizedBox(height: 24),
-                _buildCareTipsSection(context, careTips),
-              ],
-              _buildExpandButton(context),
-            ],
-          ),
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeaderSection(context),
+            const SizedBox(height: 16),
+            _buildProgressIndicator(context),
+            const SizedBox(height: 20),
+            _buildSupportMessage(context, supportMessage),
+            const SizedBox(height: 24),
+            _buildCareTipsSection(context, careTips),
+          ],
         ),
       ),
     );
@@ -343,48 +328,6 @@ class _DefaultPeriodStatusWidgetState extends State<DefaultPeriodStatusWidget> {
                 size: 16,
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildExpandButton(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
-    return Align(
-      alignment: Alignment.centerRight,
-      child: GestureDetector(
-        onTap: _toggleExpanded,
-        child: MouseRegion(
-          cursor: SystemMouseCursors.click,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: colors.surfaceVariant.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  _isExpanded ? '收起建议' : '查看建议',
-                  style: textTheme.labelSmall?.copyWith(
-                    color: colors.primary,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(width: 4),
-                Icon(
-                  _isExpanded
-                      ? Icons.expand_less_rounded
-                      : Icons.expand_more_rounded,
-                  color: colors.primary,
-                  size: 16,
-                ),
-              ],
-            ),
           ),
         ),
       ),
