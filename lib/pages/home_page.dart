@@ -39,9 +39,7 @@ class HomePage extends StatelessWidget {
             decoration: _buildBackgroundDecoration(context, statusInfo.status),
             child: Stack(
               children: [
-                if (isNoPeriod)
-                  ..._buildNoPeriodAmbientLayers(context)
-                else if (isStartedToday)
+                if (isStartedToday)
                   ..._buildStartedTodayAmbientLayers(context)
                 else if (isInProgress)
                   ..._buildInProgressAmbientLayers(context)
@@ -72,20 +70,6 @@ class HomePage extends StatelessWidget {
   ) {
     final colors = AppColors.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    if (status == PeriodStatus.noPeriod) {
-      final gradientColors =
-          isDark
-              ? [colors.surface, colors.surface]
-              : [colors.surfaceContainer, colors.surfaceContainer];
-      return BoxDecoration(
-        gradient: LinearGradient(
-          colors: gradientColors,
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
-      );
-    }
 
     if (status == PeriodStatus.startedToday) {
       final blended = _blendGradient(
@@ -194,39 +178,6 @@ class HomePage extends StatelessWidget {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
             ),
-          ),
-        ),
-      ),
-    ];
-  }
-
-  List<Widget> _buildNoPeriodAmbientLayers(BuildContext context) {
-    final colors = AppColors.of(context);
-    return [
-      _buildAmbientCircle(
-        size: 260,
-        top: -80,
-        right: -30,
-        colors: colors,
-        opacity: 0.35,
-      ),
-      _buildAmbientCircle(
-        size: 180,
-        bottom: 40,
-        left: -20,
-        colors: colors,
-        opacity: 0.25,
-      ),
-      Align(
-        alignment: Alignment.bottomRight,
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 120, right: 24),
-          width: 140,
-          height: 140,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: colors.primaryWithAlpha(0.07),
-            border: Border.all(color: colors.primaryWithAlpha(0.12)),
           ),
         ),
       ),
