@@ -72,7 +72,7 @@ class PeriodStatusLogic {
       } else {
         return PeriodStatusInfo(
           status: PeriodStatus.ended,
-          title: '上一次生理期开始之后',
+          title: '恢复活力期',
           days: days,
         );
       }
