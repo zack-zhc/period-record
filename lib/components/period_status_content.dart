@@ -43,6 +43,7 @@ class PeriodStatusContent extends StatelessWidget {
         mainWidget = DefaultPeriodStatusWidget(
           title: statusInfo.title,
           days: statusInfo.days,
+          periods: periods,
         );
         break;
     }

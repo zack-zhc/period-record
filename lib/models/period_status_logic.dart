@@ -8,8 +8,9 @@ enum PeriodStatus { noPeriod, startedToday, inProgress, endedToday, ended }
 class CareTip {
   final IconData icon;
   final String label;
+  final String description;
 
-  const CareTip(this.icon, this.label);
+  const CareTip(this.icon, this.label, [this.description = '']);
 }
 
 /// 生理期状态信息模型
@@ -125,6 +126,34 @@ class PeriodStatusLogic {
     return daysLeft >= 0 ? daysLeft : 0;
   }
 
+  /// 计算基于历史数据的平均周期长度
+  /// 返回null表示无法计算（如历史数据不足）
+  static int? calculateAverageCycleLength(List<Period> periods) {
+    // 只考虑已完成的周期
+    final finishedPeriods =
+        periods.where((p) => p.start != null && p.end != null).toList();
+    if (finishedPeriods.length < 2) return null; // 至少需要2个周期才能计算
+
+    // 按开始时间排序
+    finishedPeriods.sort((a, b) => a.start!.compareTo(b.start!));
+
+    // 计算所有周期间隔
+    List<int> intervals = [];
+    for (int i = 1; i < finishedPeriods.length; i++) {
+      final prev = finishedPeriods[i - 1];
+      final curr = finishedPeriods[i];
+      final interval = curr.start!.difference(prev.start!).inDays;
+      if (interval > 0) {
+        intervals.add(interval);
+      }
+    }
+
+    if (intervals.isEmpty) return null;
+
+    // 返回平均周期长度
+    return (intervals.reduce((a, b) => a + b) / intervals.length).round();
+  }
+
   static String supportMessage(PeriodStatus status, int days) {
     switch (status) {
       case PeriodStatus.startedToday:
@@ -144,31 +173,63 @@ class PeriodStatusLogic {
     switch (status) {
       case PeriodStatus.startedToday:
         return const [
-          CareTip(Icons.bedtime, '多休息'),
-          CareTip(Icons.local_cafe, '暖热饮'),
-          CareTip(Icons.hot_tub, '热敷腹部'),
-          CareTip(Icons.favorite, '温暖陪伴'),
+          CareTip(
+            Icons.bedtime,
+            '多休息',
+            '保证每天7-8小时的充足睡眠，避免熬夜。可以尝试午休20-30分钟来补充体力。',
+          ),
+          CareTip(
+            Icons.local_cafe,
+            '暖热饮',
+            '饮用温热的红糖姜茶、桂圆红枣茶等，避免冷饮和咖啡因。温热饮品有助于缓解腹部不适。',
+          ),
+          CareTip(
+            Icons.hot_tub,
+            '热敷腹部',
+            '使用热水袋或暖宝宝在腹部热敷15-20分钟，温度控制在40-45℃。热敷能有效缓解痛经。',
+          ),
+          CareTip(Icons.favorite, '温暖陪伴', '与家人朋友多交流，获得情感支持。温暖的陪伴能减轻经期的不适感。'),
         ];
       case PeriodStatus.inProgress:
         return _inProgressCareTips(days);
       case PeriodStatus.endedToday:
         return const [
-          CareTip(Icons.emoji_emotions, '放松心情'),
-          CareTip(Icons.self_improvement, '轻柔拉伸'),
-          CareTip(Icons.spa, '舒缓护理'),
-          CareTip(Icons.local_florist, '香薰放松'),
+          CareTip(
+            Icons.emoji_emotions,
+            '放松心情',
+            '经期结束后情绪容易波动，可以听听音乐、看看书，或者进行冥想练习来放松心情。',
+          ),
+          CareTip(
+            Icons.self_improvement,
+            '轻柔拉伸',
+            '进行一些轻柔的瑜伽拉伸动作，如猫式、婴儿式，帮助身体恢复柔韧性。',
+          ),
+          CareTip(Icons.spa, '舒缓护理', '可以泡个温水澡，加入几滴薰衣草精油，帮助身心放松和恢复。'),
+          CareTip(Icons.local_florist, '香薰放松', '使用薰衣草、洋甘菊等舒缓香薰，帮助改善睡眠质量和情绪状态。'),
         ];
       case PeriodStatus.ended:
         return const [
-          CareTip(Icons.directions_walk, '保持运动'),
-          CareTip(Icons.restaurant, '营养均衡'),
-          CareTip(Icons.nightlight_round, '规律作息'),
-          CareTip(Icons.water_drop, '补充水分'),
+          CareTip(
+            Icons.directions_walk,
+            '保持运动',
+            '每天坚持30分钟的有氧运动，如快走、慢跑、游泳等，有助于提高新陈代谢。',
+          ),
+          CareTip(Icons.restaurant, '营养均衡', '多摄入富含铁质、蛋白质和维生素的食物，如瘦肉、豆类、绿叶蔬菜等。'),
+          CareTip(
+            Icons.nightlight_round,
+            '规律作息',
+            '保持规律的睡眠时间，每晚10点前入睡，保证7-8小时的优质睡眠。',
+          ),
+          CareTip(Icons.water_drop, '补充水分', '每天饮用至少8杯水，可以适量饮用温热的柠檬水或花草茶。'),
         ];
       case PeriodStatus.noPeriod:
         return const [
-          CareTip(Icons.edit_calendar, '记录周期'),
-          CareTip(Icons.lightbulb, '了解身体'),
+          CareTip(
+            Icons.edit_calendar,
+            '记录周期',
+            '定期记录月经周期，了解自己的身体规律，有助于及时发现异常情况。',
+          ),
+          CareTip(Icons.lightbulb, '了解身体', '学习月经周期的相关知识，了解不同阶段的身体变化和应对方法。'),
         ];
     }
   }
@@ -185,24 +246,24 @@ class PeriodStatusLogic {
   static List<CareTip> _inProgressCareTips(int days) {
     if (days <= 2) {
       return const [
-        CareTip(Icons.bedtime, '多休息'),
-        CareTip(Icons.local_cafe, '暖热饮'),
-        CareTip(Icons.hot_tub, '热敷腹部'),
-        CareTip(Icons.music_note, '舒缓音乐'),
+        CareTip(Icons.bedtime, '多休息', '经期前2天身体最需要休息，避免剧烈运动，保证充足睡眠。'),
+        CareTip(Icons.local_cafe, '暖热饮', '饮用温热的姜茶、红糖水等，避免咖啡因和冷饮，缓解腹部不适。'),
+        CareTip(Icons.hot_tub, '热敷腹部', '使用热水袋在腹部热敷15-20分钟，温度适宜，缓解痛经症状。'),
+        CareTip(Icons.music_note, '舒缓音乐', '听一些轻柔的音乐，帮助放松心情，减轻经期紧张感。'),
       ];
     } else if (days <= 4) {
       return const [
-        CareTip(Icons.local_drink, '补充水分'),
-        CareTip(Icons.self_improvement, '深呼吸'),
-        CareTip(Icons.spa, '轻柔拉伸'),
-        CareTip(Icons.health_and_safety, '贴心呵护'),
+        CareTip(Icons.local_drink, '补充水分', '经期第3-4天需要多补充水分，避免脱水，促进新陈代谢。'),
+        CareTip(Icons.self_improvement, '深呼吸', '进行深呼吸练习，每次5-10分钟，帮助缓解经期焦虑和不适。'),
+        CareTip(Icons.spa, '轻柔拉伸', '进行轻柔的瑜伽拉伸，避免剧烈运动，帮助缓解肌肉紧张。'),
+        CareTip(Icons.health_and_safety, '贴心呵护', '注意个人卫生，选择舒适的卫生用品，保持清洁干燥。'),
       ];
     }
     return const [
-      CareTip(Icons.emoji_emotions, '保持好心情'),
-      CareTip(Icons.air, '舒展舒气'),
-      CareTip(Icons.directions_walk, '缓步散心'),
-      CareTip(Icons.self_improvement, '柔和伸展'),
+      CareTip(Icons.emoji_emotions, '保持好心情', '经期后期情绪容易波动，保持积极心态，避免情绪波动影响身体。'),
+      CareTip(Icons.air, '舒展舒气', '进行深呼吸和舒展运动，帮助身体放松，促进血液循环。'),
+      CareTip(Icons.directions_walk, '缓步散心', '适当进行缓步散步，促进血液循环，缓解经期不适。'),
+      CareTip(Icons.self_improvement, '柔和伸展', '进行柔和的伸展运动，帮助身体恢复，避免剧烈运动。'),
     ];
   }
 }

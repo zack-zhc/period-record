@@ -1,157 +1,277 @@
 import 'package:flutter/material.dart';
 import 'package:period_record/models/period_status_logic.dart';
-import 'package:period_record/theme/app_colors.dart';
+import 'package:period_record/period.dart';
 
-/// 默认状态组件（非生理期、非预测期等常规状态）
-/// 采用 Material 3 Expressive 设计风格
-class DefaultPeriodStatusWidget extends StatelessWidget {
+/// 重新设计的生理期状态组件
+/// 采用 Material Design 3 设计规范，提供更好的视觉层次和用户体验
+class DefaultPeriodStatusWidget extends StatefulWidget {
   final String title;
   final int days;
+  final List<Period> periods;
 
   const DefaultPeriodStatusWidget({
     super.key,
     required this.title,
     required this.days,
+    required this.periods,
   });
+
+  @override
+  State<DefaultPeriodStatusWidget> createState() =>
+      _DefaultPeriodStatusWidgetState();
+}
+
+class _DefaultPeriodStatusWidgetState extends State<DefaultPeriodStatusWidget>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+  late Animation<double> _scaleAnimation;
+
+  bool _isExpanded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
+
+    _scaleAnimation = Tween<double>(begin: 0.95, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeOutBack),
+    );
+
+    _animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  void _toggleExpanded() {
+    setState(() {
+      _isExpanded = !_isExpanded;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final supportMessage = PeriodStatusLogic.supportMessage(
       PeriodStatus.ended,
-      days,
+      widget.days,
     );
-    final careTips = PeriodStatusLogic.careTips(PeriodStatus.ended, days);
+    final careTips = PeriodStatusLogic.careTips(
+      PeriodStatus.ended,
+      widget.days,
+    );
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _buildHeader(context),
-          const SizedBox(height: 32),
-          _buildSupportCard(context, supportMessage),
-          const SizedBox(height: 32),
-          _buildCareSection(context, careTips),
-        ],
+    return AnimatedBuilder(
+      animation: _animationController,
+      builder: (context, child) {
+        return Transform.scale(
+          scale: _scaleAnimation.value,
+          child: Opacity(opacity: _fadeAnimation.value, child: child),
+        );
+      },
+      child: _buildMainCard(context, supportMessage, careTips),
+    );
+  }
+
+  Widget _buildMainCard(
+    BuildContext context,
+    String supportMessage,
+    List<CareTip> careTips,
+  ) {
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(20),
+        onTap: _toggleExpanded,
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeaderSection(context),
+              const SizedBox(height: 16),
+              _buildProgressIndicator(context),
+              const SizedBox(height: 20),
+              _buildSupportMessage(context, supportMessage),
+              if (_isExpanded) ...[
+                const SizedBox(height: 24),
+                _buildCareTipsSection(context, careTips),
+              ],
+              _buildExpandButton(context),
+            ],
+          ),
+        ),
       ),
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeaderSection(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // 左侧图标区域
+        Container(
+          width: 48,
+          height: 48,
+          decoration: BoxDecoration(
+            color: colors.primaryContainer,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(
+            Icons.self_improvement_rounded,
+            color: colors.onPrimaryContainer,
+            size: 24,
+          ),
+        ),
+        const SizedBox(width: 16),
+        // 右侧内容区域
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: AppColors.white.withValues(alpha: 0.2),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.spa_rounded,
-                      color: AppColors.white,
-                      size: 28,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  _buildDaysDisplay(context),
-                ],
-              ),
-
-              const SizedBox(height: 16),
               Text(
-                title,
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: AppColors.white,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: -0.5,
+                widget.title,
+                style: textTheme.titleLarge?.copyWith(
+                  color: colors.onSurface,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 4),
               Text(
-                '持续记录与关怀，让身体保持平衡。',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: AppColors.white.withValues(alpha: 0.9),
-                  height: 1.5,
+                '今天是生理期过后第${widget.days}天',
+                style: textTheme.bodyMedium?.copyWith(
+                  color: colors.onSurfaceVariant,
                 ),
               ),
             ],
           ),
         ),
-
-        // const SizedBox(width: 16),
       ],
     );
   }
 
-  Widget _buildDaysDisplay(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      decoration: BoxDecoration(
-        color: AppColors.white.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: AppColors.white.withValues(alpha: 0.2),
-          width: 1,
+  Widget _buildProgressIndicator(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    // 基于历史数据计算平均周期长度
+    final averageCycleLength = PeriodStatusLogic.calculateAverageCycleLength(
+      widget.periods,
+    );
+    final nextPeriodPrediction =
+        PeriodStatusLogic.calculateNextPeriodPrediction(widget.periods);
+
+    // 如果无法预测，显示默认值
+    final cycleLength = averageCycleLength ?? 28;
+    final daysUntilNext = nextPeriodPrediction ?? (cycleLength - widget.days);
+
+    // 计算进度，确保不超出100%
+    final progress = widget.days / cycleLength;
+    final safeProgress = progress > 1.0 ? 1.0 : progress;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '周期进度',
+              style: textTheme.bodyMedium?.copyWith(
+                color: colors.onSurfaceVariant,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            Text(
+              '${(safeProgress * 100).toInt()}%',
+              style: textTheme.bodyMedium?.copyWith(
+                color: colors.primary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
         ),
-      ),
-      child: Row(
-        children: [
-          Text(
-            '$days',
-            style: Theme.of(context).textTheme.displaySmall?.copyWith(
-              color: AppColors.white,
-              fontWeight: FontWeight.w800,
-              height: 1.0,
-            ),
+        const SizedBox(height: 8),
+        LinearProgressIndicator(
+          value: safeProgress,
+          backgroundColor: colors.surfaceVariant,
+          color: colors.primary,
+          borderRadius: BorderRadius.circular(4),
+          minHeight: 6,
+        ),
+        const SizedBox(height: 4),
+        Text(
+          _buildProgressText(
+            daysUntilNext,
+            cycleLength,
+            nextPeriodPrediction != null,
           ),
-          const SizedBox(width: 4),
-          Text(
-            '天',
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-              color: AppColors.white.withValues(alpha: 0.9),
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      ),
+          style: textTheme.bodySmall?.copyWith(color: colors.onSurfaceVariant),
+        ),
+      ],
     );
   }
 
-  Widget _buildSupportCard(BuildContext context, String message) {
+  /// 构建进度文本
+  String _buildProgressText(
+    int daysUntilNext,
+    int cycleLength,
+    bool hasPrediction,
+  ) {
+    if (daysUntilNext <= 0) {
+      return '预计生理期即将开始';
+    } else if (hasPrediction) {
+      return '基于历史数据，距离下次生理期还有$daysUntilNext天';
+    } else {
+      return '基于$cycleLength天周期，距离下次生理期还有$daysUntilNext天';
+    }
+  }
+
+  Widget _buildSupportMessage(BuildContext context, String message) {
+    final colors = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Container(
-      padding: const EdgeInsets.all(24),
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.white.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(28),
+        color: colors.secondaryContainer.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: AppColors.white.withValues(alpha: 0.2),
+          color: colors.secondaryContainer.withOpacity(0.5),
           width: 1,
         ),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(
-            Icons.self_improvement_rounded,
-            color: AppColors.white,
-            size: 24,
+          Icon(
+            Icons.favorite_border_rounded,
+            color: colors.secondary,
+            size: 20,
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: 12),
           Expanded(
             child: Text(
               message,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: AppColors.white,
-                height: 1.5,
-                fontWeight: FontWeight.w500,
+              style: textTheme.bodyMedium?.copyWith(
+                color: colors.onSurface,
+                height: 1.6,
               ),
             ),
           ),
@@ -160,79 +280,227 @@ class DefaultPeriodStatusWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildCareSection(BuildContext context, List<CareTip> careTips) {
+  Widget _buildCareTipsSection(BuildContext context, List<CareTip> careTips) {
+    final colors = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          '日常建议',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            color: AppColors.white.withValues(alpha: 0.9),
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.1,
-          ),
+        Row(
+          children: [
+            Icon(
+              Icons.lightbulb_outline_rounded,
+              color: colors.primary,
+              size: 20,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              '今日关怀建议',
+              style: textTheme.titleMedium?.copyWith(
+                color: colors.onSurface,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 16),
-        LayoutBuilder(
-          builder: (context, constraints) {
-            const spacing = 12.0;
-            final maxWidth = constraints.maxWidth;
-            final tileWidth = (maxWidth - spacing) / 2;
+        ...careTips.asMap().entries.map((entry) {
+          final index = entry.key;
+          final tip = entry.value;
 
-            return Wrap(
-              spacing: spacing,
-              runSpacing: spacing,
-              children:
-                  careTips
-                      .map(
-                        (tip) => SizedBox(
-                          width: tileWidth,
-                          child: _buildCareChip(
-                            context,
-                            icon: tip.icon,
-                            label: tip.label,
-                          ),
-                        ),
-                      )
-                      .toList(),
-            );
-          },
-        ),
+          return Padding(
+            padding: EdgeInsets.only(
+              bottom: index == careTips.length - 1 ? 0 : 12,
+            ),
+            child: _buildCareTipItem(context, tip),
+          );
+        }),
       ],
     );
   }
 
-  Widget _buildCareChip(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: AppColors.white.withValues(alpha: 0.1),
-        border: Border.all(
-          color: AppColors.white.withValues(alpha: 0.15),
-          width: 1,
-        ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, size: 28, color: AppColors.white),
-          const SizedBox(height: 8),
-          Text(
-            label,
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-              color: AppColors.white,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 0.1,
+  Widget _buildCareTipItem(BuildContext context, CareTip tip) {
+    final colors = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    return GestureDetector(
+      onTap: () => _showCareTipDialog(context, tip),
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: colors.surfaceVariant.withOpacity(0.2),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: colors.outline.withOpacity(0.1),
+              width: 1,
             ),
           ),
-        ],
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: colors.primary.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(tip.icon, color: colors.primary, size: 16),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      tip.label,
+                      style: textTheme.bodyMedium?.copyWith(
+                        color: colors.onSurface,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      tip.description,
+                      style: textTheme.bodySmall?.copyWith(
+                        color: colors.onSurfaceVariant,
+                        height: 1.4,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: colors.outline,
+                size: 16,
+              ),
+            ],
+          ),
+        ),
       ),
+    );
+  }
+
+  Widget _buildExpandButton(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    return Align(
+      alignment: Alignment.centerRight,
+      child: GestureDetector(
+        onTap: _toggleExpanded,
+        child: MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: colors.surfaceVariant.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  _isExpanded ? '收起建议' : '查看建议',
+                  style: textTheme.labelSmall?.copyWith(
+                    color: colors.primary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Icon(
+                  _isExpanded
+                      ? Icons.expand_less_rounded
+                      : Icons.expand_more_rounded,
+                  color: colors.primary,
+                  size: 16,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showCareTipDialog(BuildContext context, CareTip tip) {
+    final colors = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // 标题区域
+                Row(
+                  children: [
+                    Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: colors.primary.withOpacity(0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(tip.icon, color: colors.primary, size: 24),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Text(
+                        tip.label,
+                        style: textTheme.headlineSmall?.copyWith(
+                          color: colors.onSurface,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                // 详细描述
+                Text(
+                  tip.description,
+                  style: textTheme.bodyMedium?.copyWith(
+                    color: colors.onSurfaceVariant,
+                    height: 1.6,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                // 操作按钮
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: FilledButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      '好的，我知道了',
+                      style: textTheme.labelLarge?.copyWith(
+                        color: colors.onPrimary,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
