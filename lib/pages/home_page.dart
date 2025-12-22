@@ -46,9 +46,7 @@ class HomePage extends StatelessWidget {
                 else if (isInProgress)
                   ..._buildInProgressAmbientLayers(context)
                 else if (isEndedToday)
-                  ..._buildEndedTodayAmbientLayers(context)
-                else if (isEnded)
-                  ..._buildEndedAmbientLayers(context),
+                  ..._buildEndedTodayAmbientLayers(context),
                 Center(
                   child: Container(
                     margin: const EdgeInsets.all(16),
@@ -131,18 +129,6 @@ class HomePage extends StatelessWidget {
       return BoxDecoration(
         gradient: LinearGradient(
           colors: blended,
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-      );
-    }
-
-    if (status == PeriodStatus.ended) {
-      // 使用 Tertiary 颜色作为基调，代表恢复与平衡
-      // 直接使用较深的颜色，确保 DefaultPeriodStatusWidget 的白色文字清晰可见
-      return BoxDecoration(
-        gradient: LinearGradient(
-          colors: [colors.tertiary, colors.tertiary.withValues(alpha: 0.8)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -241,63 +227,6 @@ class HomePage extends StatelessWidget {
             shape: BoxShape.circle,
             color: colors.primaryWithAlpha(0.07),
             border: Border.all(color: colors.primaryWithAlpha(0.12)),
-          ),
-        ),
-      ),
-    ];
-  }
-
-  List<Widget> _buildEndedAmbientLayers(BuildContext context) {
-    final colors = AppColors.of(context);
-    return [
-      Positioned.fill(
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                AppColors.white.withValues(alpha: 0.08),
-                AppColors.transparent,
-              ],
-              stops: const [0.0, 0.85],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
-      ),
-      _buildAmbientCircle(
-        size: 320,
-        top: -110,
-        right: -80,
-        colors: colors,
-        opacity: 0.25,
-        baseColor: AppColors.white,
-      ),
-      _buildAmbientCircle(
-        size: 220,
-        bottom: -60,
-        left: -60,
-        colors: colors,
-        opacity: 0.22,
-        baseColor: colors.defaultStatusGradient.last,
-      ),
-      Align(
-        alignment: Alignment.center,
-        child: Container(
-          width: 160,
-          height: 160,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: RadialGradient(
-              colors: [
-                AppColors.white.withValues(alpha: 0.12),
-                AppColors.transparent,
-              ],
-            ),
-            border: Border.all(
-              color: AppColors.white.withValues(alpha: 0.12),
-              width: 1.2,
-            ),
           ),
         ),
       ),

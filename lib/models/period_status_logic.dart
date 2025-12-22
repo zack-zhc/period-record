@@ -9,8 +9,14 @@ class CareTip {
   final IconData icon;
   final String label;
   final String description;
+  final String moreDetail;
 
-  const CareTip(this.icon, this.label, [this.description = '']);
+  const CareTip(
+    this.icon,
+    this.label, [
+    this.description = '',
+    this.moreDetail = '',
+  ]);
 }
 
 /// 生理期状态信息模型
@@ -213,14 +219,26 @@ class PeriodStatusLogic {
             Icons.directions_walk,
             '保持运动',
             '每天坚持30分钟的有氧运动，如快走、慢跑、游泳等，有助于提高新陈代谢。',
+            '运动能促进盆腔血液循环，改善卵巢功能，调节激素平衡。有氧运动可提高内啡肽水平，缓解经期不适症状。规律运动还能增强盆底肌肉力量，预防妇科疾病。建议选择中等强度运动，避免剧烈运动导致身体过度疲劳。',
           ),
-          CareTip(Icons.restaurant, '营养均衡', '多摄入富含铁质、蛋白质和维生素的食物，如瘦肉、豆类、绿叶蔬菜等。'),
+          CareTip(
+            Icons.restaurant,
+            '营养均衡',
+            '多摄入富含铁质、蛋白质和维生素的食物，如瘦肉、豆类、绿叶蔬菜等。',
+            '生理期后身体需要补充铁质来恢复血红蛋白水平。蛋白质是组织修复的基础，维生素B族和维生素C有助于铁质吸收。钙和镁能缓解经前紧张症状。建议增加深色蔬菜、坚果、全谷物摄入，避免高糖、高脂食物影响激素平衡。',
+          ),
           CareTip(
             Icons.nightlight_round,
             '规律作息',
             '保持规律的睡眠时间，每晚10点前入睡，保证7-8小时的优质睡眠。',
+            '充足睡眠对调节下丘脑-垂体-卵巢轴功能至关重要。深度睡眠时身体分泌生长激素，促进组织修复。规律的生物钟有助于稳定雌激素和孕激素水平，预防月经紊乱。睡眠不足会增加皮质醇水平，影响排卵和月经周期。',
           ),
-          CareTip(Icons.water_drop, '补充水分', '每天饮用至少8杯水，可以适量饮用温热的柠檬水或花草茶。'),
+          CareTip(
+            Icons.water_drop,
+            '补充水分',
+            '每天饮用至少8杯水，可以适量饮用温热的柠檬水或花草茶。',
+            '充足水分能维持血液容量，促进代谢废物排出，缓解经期水肿。水分不足会导致血液黏稠度增加，影响卵巢血液供应。温热的饮品能促进盆腔血液循环，缓解经期不适。避免含咖啡因饮料，因其可能加重经前紧张症状。',
+          ),
         ];
       case PeriodStatus.noPeriod:
         return const [

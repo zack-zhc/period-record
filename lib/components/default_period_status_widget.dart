@@ -41,24 +41,19 @@ class _DefaultPeriodStatusWidgetState extends State<DefaultPeriodStatusWidget> {
     String supportMessage,
     List<CareTip> careTips,
   ) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeaderSection(context),
-            const SizedBox(height: 16),
-            _buildProgressIndicator(context),
-            const SizedBox(height: 20),
-            _buildSupportMessage(context, supportMessage),
-            const SizedBox(height: 24),
-            _buildCareTipsSection(context, careTips),
-          ],
-        ),
+    return Padding(
+      padding: const EdgeInsets.only(top: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildHeaderSection(context),
+          const SizedBox(height: 16),
+          _buildProgressIndicator(context),
+          const SizedBox(height: 20),
+          _buildSupportMessage(context, supportMessage),
+          const SizedBox(height: 24),
+          _buildCareTipsSection(context, careTips),
+        ],
       ),
     );
   }
@@ -345,62 +340,111 @@ class _DefaultPeriodStatusWidgetState extends State<DefaultPeriodStatusWidget> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // 标题区域
-                Row(
-                  children: [
-                    Container(
-                      width: 48,
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: colors.primary.withOpacity(0.1),
-                        shape: BoxShape.circle,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // 标题区域
+                  Row(
+                    children: [
+                      Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: colors.primary.withOpacity(0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(tip.icon, color: colors.primary, size: 24),
                       ),
-                      child: Icon(tip.icon, color: colors.primary, size: 24),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Text(
+                          tip.label,
+                          style: textTheme.headlineSmall?.copyWith(
+                            color: colors.onSurface,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  // 简要描述
+                  Text(
+                    tip.description,
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: colors.onSurfaceVariant,
+                      height: 1.6,
                     ),
-                    const SizedBox(width: 16),
-                    Expanded(
+                  ),
+                  const SizedBox(height: 16),
+                  // 专业建议区域
+                  if (tip.moreDetail.isNotEmpty) ...[
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: colors.secondaryContainer.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: colors.secondaryContainer.withOpacity(0.3),
+                          width: 1,
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.medical_services_rounded,
+                                color: colors.secondary,
+                                size: 18,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                '专业医学建议',
+                                style: textTheme.bodyMedium?.copyWith(
+                                  color: colors.secondary,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            tip.moreDetail,
+                            style: textTheme.bodySmall?.copyWith(
+                              color: colors.onSurfaceVariant,
+                              height: 1.5,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                  ],
+                  // 操作按钮
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: FilledButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
                       child: Text(
-                        tip.label,
-                        style: textTheme.headlineSmall?.copyWith(
-                          color: colors.onSurface,
-                          fontWeight: FontWeight.w600,
+                        '好的，我知道了',
+                        style: textTheme.labelLarge?.copyWith(
+                          color: colors.onPrimary,
                         ),
                       ),
                     ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                // 详细描述
-                Text(
-                  tip.description,
-                  style: textTheme.bodyMedium?.copyWith(
-                    color: colors.onSurfaceVariant,
-                    height: 1.6,
                   ),
-                ),
-                const SizedBox(height: 24),
-                // 操作按钮
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: FilledButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text(
-                      '好的，我知道了',
-                      style: textTheme.labelLarge?.copyWith(
-                        color: colors.onPrimary,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );
